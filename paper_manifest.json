@@ -1,0 +1,33 @@
+{
+  "schema": "chinese_research_paper_module_v1",
+  "version": "1.1.0",
+  "based_on": "local nature-paper2ppt manifest version 2.0.0",
+  "always_load": [
+    "references/paper-workflow.md",
+    "references/terminology-ledger.md"
+  ],
+  "axes": {
+    "paper_type": {
+      "default": "discovery",
+      "multi": false,
+      "values": {
+        "discovery": "references/paper-types/discovery.md",
+        "methods": "references/paper-types/methods.md",
+        "resource": "references/paper-types/resource.md",
+        "clinical": "references/paper-types/clinical.md",
+        "materials": "references/paper-types/materials.md",
+        "review": "references/paper-types/review.md"
+      }
+    }
+  },
+  "on_demand": {
+    "evidence_assets": "references/paper-evidence-and-quality.md",
+    "visual_layout": "references/research-and-design.md",
+    "editable_reconstruction": "references/editable-refinement.md",
+    "formula_and_fonts": "references/visual-system-and-math.md"
+  },
+  "tools": {
+    "source": "scripts/paper_source.py",
+    "quality": "scripts/audit_paper_deck.py"
+  }
+}

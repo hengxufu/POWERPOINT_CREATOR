@@ -18,10 +18,14 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 ## 复用已有技能
 
 - 有 `presentation-skill` 工作区时，沿用其 outline、证据计划和 deck_ir，修改源文件，使用其 build/finalize/repair 流程，不能用本技能样例生成器替代现有源文件。
-- 论文/文献汇报使用 `nature-paper2ppt` 的 manifest 和实际 `static/core/` 文件，选对应论文类型；同时执行该技能质量检查。
+- 论文/文献汇报进入本包的论文模块：读取 [paper_manifest.json](paper_manifest.json) 及其always_load，只加载识别出的paper_type参考。遵循 [references/paper-workflow.md](references/paper-workflow.md) 的九步流程、术语表、证据图提取和修正验收。已有论文PPT仅做局部修改，不重新摄取整篇。
 - 新建独立 PPT 使用 `pptx` 的 PptxGenJS，或 `nature-paper2ppt` 允许的 python-pptx，保留生成源文件。
 - `scientific-slides` 的论证和演讲建议可以参考；其整页图片/PDF 默认路线与本任务编辑性要求冲突，不采用。
 - 若使用网页版 GPT 规划，走 `codex-chatgpt-bridge` 的 advice profile。连接失败则明确报告，没有网页版回复不能宣称已获规划。按用户授权可继续本地调研和执行。
+
+## 论文来源与验收工具
+
+`paper_source.py intake`读取指定PDF页或文本并保存可追溯源包；`crop`仅提取指定证据区域，裁剪状态默认为pending，实际查看后才能通过。PDF功能使用可选requirements-paper.txt。用 `audit_paper_deck.py`按显示页序检查结构和可选paper-plan来源记录，再结合编辑性、字体和渲染检查。详见 [references/paper-evidence-and-quality.md](references/paper-evidence-and-quality.md)；整合依据与取舍见 [PAPER2PPT_INTEGRATION.md](PAPER2PPT_INTEGRATION.md)。
 
 ## 编辑性边界
 

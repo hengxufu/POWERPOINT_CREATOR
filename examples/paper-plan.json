@@ -1,0 +1,30 @@
+{
+  "schema": "paper_deck_plan_v1",
+  "paper_type": "methods",
+  "source": {
+    "source_id": "paper-example",
+    "title": "合成示例：方法证据汇报",
+    "status": "synthetic_example"
+  },
+  "terminology": [
+    {
+      "canonical": "方法A",
+      "definition": "合成示例名称",
+      "variants": [],
+      "source_ref": "example"
+    }
+  ],
+  "slides": [
+    {
+      "page": 1,
+      "slide_id": "s01",
+      "role": "cover",
+      "composition": "claim-led",
+      "claim": "示例，不代表真实研究",
+      "claim_status": "example",
+      "source_refs": [],
+      "speaker_note_planned": true,
+      "figure_assets": []
+    }
+  ]
+}
