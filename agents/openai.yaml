@@ -1,0 +1,4 @@
+interface:
+  display_name: "中国科研汇报 PPT"
+  short_description: "可编辑科研 PPT、证据核对与逐页交互打磨"
+  default_prompt: "使用 $chinese-research-ppt 制作或打磨可编辑中文科研汇报，保留内容来源、原生对象和重建源文件。"
