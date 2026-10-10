@@ -37,7 +37,7 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 编辑性边界
 
-当需要统一中西文字体、LaTeX公式或提升图案与艺术字表现时，阅读 [references/visual-system-and-math.md](references/visual-system-and-math.md)。按用户要求同时设置中文与西文字体；公式保存LaTeX源并优先转为Office原生公式。实际接入生成资产后再称已使用艺术字。运行 `scripts/typography_check.py`，结合代表页与全篇渲染检查。
+当需要统一中西文字体、LaTeX公式或提升图案与艺术字表现时，阅读 [references/visual-system-and-math.md](references/visual-system-and-math.md)。按用户要求同时设置中文与西文字体；公式保存LaTeX源并优先转为Office原生公式。实际接入生成资产后再称已使用艺术字。运行 `scripts/typography_check.py`，同时检查字体冲突和缺失声明；需要修复现有PPT时用 `--normalize-to` 写入新文件，保留数学节点与非字体部件。修复后结合代表页与全篇渲染检查，不能把字体审计通过等同于视觉合格。
 
 涉及截图重建、复杂流程图、对象定位或局部文字精修时，阅读 [references/editable-refinement.md](references/editable-refinement.md)。使用 `scripts/deck_objects.py inspect` 按实际显示页序建立对象清单；简单文字和元数据修改可使用带哈希与旧值预条件的 patch。清单还提示未绑定连接线、较小的折算字号和图片替代文本缺失，警告需结合渲染人工判断。
 

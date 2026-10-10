@@ -6,7 +6,17 @@
 
 按用户当前要求，原生中文使用微软雅黑（OOXML a:ea 可写 Microsoft YaHei），西文/数字使用 Times New Roman（a:latin/a:cs）。混排段落同时声明两种字体，更新 theme、master、layout 和各页的显式样式，不能只设 python-pptx font.name。数学字体与伸缩符号须按公式引擎验证；校徽、证据图中的像素字和艺术字不受原生字体字段控制，披露这类边界。不要改坏原始证据图来假装统一字体。
 
-`python scripts/typography_check.py deck.pptx --out typography.json` 检查显式声明，并统计Office公式与LaTeX兼容图。它不验证像素字、字体安装或目标Office显示。
+`python scripts/typography_check.py deck.pptx --out typography.json` 检查普通文字、中英混排、图表文字、母版、版式与备注的显式声明，并统计Office公式与LaTeX兼容图。`missing_run_fonts`列出有实际中西文内容但缺少对应字体声明的文字；即便继承样式可能正确，也不会直接判为通过。
+
+需要统一现有作品时运行：
+
+```sh
+python scripts/typography_check.py original.pptx --normalize-to normalized.pptx --out typography.json
+```
+
+修复工具直接修改OOXML字体声明，保留字号、颜色、粗体、字符、原生对象与数学节点，不使用python-pptx重新保存整个作品。图片、嵌入数据、关系文件等不受处理的包部件保持字节一致。拒绝原地覆盖或覆盖已有输出。只将普通文字设为微软雅黑和Times New Roman，不强制替换OMML的数学字体；复杂数学应独立验证。
+
+修复后查看代表页和有图表的页面，尤其检查字体字宽变化导致的换行、表格挤压与溢出。通过字体审计不等于视觉验收通过。图表自动生成的刻度可能继承图表/主题默认字体；位图文字、字体安装和目标Office显示也需另行核对。回归检查：`python scripts/test_typography.py`。
 
 ## LaTeX公式
 
