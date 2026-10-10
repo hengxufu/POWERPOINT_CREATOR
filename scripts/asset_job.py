@@ -26,8 +26,8 @@ def prompt(spec):
     for key in ('element','slide_id','object_id'):
         if not isinstance(spec.get(key),str) or not spec[key].strip():
             raise ValueError('Missing '+key)
-    if spec.get('kind') not in ('ornament','concept','art_text'):
-        raise ValueError('kind must be ornament, concept or art_text')
+    if spec.get('kind') not in ('ornament','concept','art_text','icon','cutout'):
+        raise ValueError('kind must be ornament, concept, art_text, icon or cutout')
     if spec.get('kind')=='art_text' and not spec.get('exact_text'):
         raise ValueError('art_text requires exact_text')
     if not isinstance(spec.get('transparent',True),bool):

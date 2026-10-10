@@ -1,9 +1,17 @@
 ---
 name: chinese-research-ppt
-description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX，适用于组会、文献汇报、开题、学位答辩、基金与人才项目、科技奖答辩；整合现有 PPT 技能并检查内容证据和编辑性。
+description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX；新项目自动初始化网页版 GPT-6 规划与 GPT Image 2.5 单元素素材流程，最终由本地脚本逐对象组装并检查证据和编辑性。
 ---
 
 # 中国科研汇报 PPT
+
+## 强制初始化流程
+
+每个新建 PPT 工作空间都先完整阅读 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)，然后运行 `scripts/init_ppt_session.ps1`。脚本必须先创建本地工作空间，再直接尝试连接网页版；连接失败时保留工作空间和 `bridge-connect.json`，但不得宣称 GPT-6 或 GPT Image 2.5 已连接。`-SkipWebConnection` 仅限测试或用户明确要求的离线任务。
+
+网页版 GPT-6 负责叙事结构、逐页规划、信息密度、讲稿、证据缺口和全稿审查。GPT Image 2.5 只生成一个任务对应的一个独立小元素，允许类型为 `ornament`、`concept`、`art_text`、`icon`、`cutout`。严禁生成整页 PPT、完整页面布局、整页信息图、带标题正文页脚的合成画面、图表、表格、公式、实验结果图，或生成多元素拼贴后裁切。
+
+Codex 本地脚本必须负责原生标题正文、引文页码、图表表格公式、流程节点与连线、最终版式，以及把每个已验收元素作为独立图片对象写入 PPTX。GPT-6 的素材建议必须由 Codex 筛选；每个通过的元素分别建立任务、审查并登记到元素清单，再由 `scripts/compose_elements.py` 逐项插入。
 
 目标是论证清楚、证据可查、投影可读、对象可编辑，并支持人与模型持续修改。用户的学校模板、时间限制、评审通知优先于默认建议。
 
@@ -21,7 +29,7 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 - 论文/文献汇报进入本包的论文模块：读取 [paper_manifest.json](paper_manifest.json) 及其always_load，只加载识别出的paper_type参考。遵循 [references/paper-workflow.md](references/paper-workflow.md) 的九步流程、术语表、证据图提取和修正验收。已有论文PPT仅做局部修改，不重新摄取整篇。
 - 新建独立 PPT 使用 `pptx` 的 PptxGenJS，或 `nature-paper2ppt` 允许的 python-pptx，保留生成源文件。
 - `scientific-slides` 的论证和演讲建议可以参考；其整页图片/PDF 默认路线与本任务编辑性要求冲突，不采用。
-- 若使用网页版 GPT 规划，走 `codex-chatgpt-bridge` 的 advice profile。连接失败则明确报告，没有网页版回复不能宣称已获规划。按用户授权可继续本地调研和执行。
+- 新建工作空间必须按强制初始化流程连接网页版并让 GPT-6 承担规划；已有工作空间的局部修改可复用已记录的有效会话。连接失败则明确报告，没有网页版回复不能宣称已获规划，随后仅按用户授权继续本地工作。
 
 ## 论文来源与验收工具
 
@@ -49,7 +57,7 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 ## 验收
 
-局部生成素材的配色、光照、尺寸和视觉验收按 [references/visual-assets.md](references/visual-assets.md) 执行。素材通过 review 后，使用 asset_job.py placement 计算比例和有效分辨率；原生 picture 独立插入，图片生成不能取代原生排版。integrated 状态必须提供实际 PPTX 核对对象名和图像哈希。
+局部生成素材的配色、光照、尺寸和视觉验收按 [references/visual-assets.md](references/visual-assets.md) 执行。素材通过 review 后，使用 `asset_job.py placement` 计算比例和有效分辨率；将任务登记进 `asset_manifest.json`，再由 `compose_elements.py` 逐个插入为独立 picture。图片生成不能取代原生排版。integrated 状态必须提供实际 PPTX 核对对象名和图像哈希。
 
 运行对应制作技能的结构验证和渲染检查，再运行 `python scripts/audit_editability.py deck.pptx --out editability.json`。这个脚本只证明包内对象与数据部件存在，不能证明事实正确、图表数据可用或视觉美观。所有结果页人工核对来源、单位、样本量、误差条/检验含义及结论边界；未提供统计信息不得自动补全。
 

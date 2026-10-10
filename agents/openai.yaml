@@ -1,4 +1,4 @@
 interface:
   display_name: "中国科研汇报 PPT"
-  short_description: "可编辑科研 PPT、证据核对与逐页交互打磨"
-  default_prompt: "使用 $chinese-research-ppt 制作或打磨可编辑中文科研汇报，保留内容来源、原生对象和重建源文件。"
+  short_description: "GPT-6规划、Image 2.5单元素、本地脚本组装"
+  default_prompt: "使用 $chinese-research-ppt 初始化中文科研汇报工作空间，连接网页版 GPT-6 完成结构规划与审稿，让 GPT Image 2.5 每次只生成一个独立小元素，再由本地脚本以原生对象和独立图片对象组装、渲染并验证 PPTX。"

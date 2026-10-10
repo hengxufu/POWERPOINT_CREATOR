@@ -12,7 +12,11 @@
 
 可以先用 `scripts/asset_spec.py` 生成风格一致的单元素规格。支持 orbital_accent、spacecraft_concept、thermal_concept、section_wordart 四个预设；最后一个必须提供 --exact-text。例：`python scripts/asset_spec.py --preset orbital_accent --asset-id orbit-v1 --slide-id slide1 --object-id orbit-accent --out orbit.json`，再把 orbit.json 交给下方 prepare 命令。--palette 可覆盖主题。热红外预设是概念图，不能替代实测图；艺术字须保留原生语义文字。预设与 prepare 成功只代表任务包准备完成，不能称为已调用网页版或获得指定图像型号。
 
-使用 JSON 规格和任务目录。必填 `asset_id`、`element`、`kind`、`slide_id`、`object_id`。`kind` 为 ornament/concept/art_text；艺术字须填 `exact_text`。可选 style/palette/aspect/transparent/min_width/min_height。这些只是要求，不是网页 API 参数。
+新建 PPT 工作空间必须先按 [bridge-assisted-ppt.md](bridge-assisted-ppt.md) 初始化连接，并由 GPT-6 在逐页规划中提出候选素材。Codex 仅接受确实适合图像生成的单主体请求，再分别建立任务。
+
+使用 JSON 规格和任务目录。必填 `asset_id`、`element`、`kind`、`slide_id`、`object_id`。`kind` 为 ornament/concept/art_text/icon/cutout；艺术字须填 `exact_text`。可选 style/palette/aspect/transparent/min_width/min_height。这些只是要求，不是网页 API 参数。
+
+任务通过 review 后，把该任务目录作为独立条目登记到 `assets/asset_manifest.json`，最终使用 `scripts/compose_elements.py` 逐元素写入 PPTX。每个生成结果只能对应一个图片对象；不得生成一张多元素图再切割复用。
 
 ```powershell
 python scripts/asset_job.py prepare --spec element.json --job asset-jobs/atom-v1
