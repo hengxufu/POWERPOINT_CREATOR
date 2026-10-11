@@ -25,6 +25,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 制作与交互
 
+提高视觉丰富度或完整重设计时，读 [references/visual-composition.md](references/visual-composition.md)，使用扩展布局库，将主证据、局部放大、原生解读、同口径比较与单元素素材组合。网页规划须给出design_system、代表页及每页视觉层次；复杂程度服务于论证和可读性，不用装饰数量替代设计。
+
 网页规划取得后，必须按 [references/web-plan-handoff.md](references/web-plan-handoff.md) 使用`receive_web_plan.py`接收真实助手回复并保留观察证据，再拆分独立素材任务。解析或布局检查失败则修订规划，不直接进入全稿组装；素材任务按实际状态恢复，提交不明时禁止自动重发。
 
 国奖答辩、科研汇报、挑战杯和创新创业路演，先读 [references/chinese-defense-and-competition.md](references/chinese-defense-and-competition.md) 选择叙事与构图方案，并查用户当届规则。使用 `plan_workflow.py packet`准备网页版GPT-6规划任务；实际取得回复后，使用`jobs`拆成逐个元素任务。新增图标、产品概念、飘带和字标预设见asset_spec；不能把队列准备称为网页生成。Python原生图表和表格按 [references/python-native-data.md](references/python-native-data.md) 使用native_data.py，保留输入数据和嵌入工作簿。

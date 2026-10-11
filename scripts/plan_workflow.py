@@ -52,6 +52,10 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
 版式坐标采用13.333×7.5英寸；主标题、中文说明、数据标注均原生，中文微软雅黑，西文Times New Roman。
 预留证据图、概念元素、注释与引文的位置。不要用虚构事实填空。真实照片和证书不由图像模型生成。
 请特别展开封面、最关键的技术/经历页和最密集结果页；指出如何将参考风格转化为本项目的构图。
+额外输出design_system（背景、颜色角色、字号层级、间距、线条、材质与光照）和representative_slides（上述三类代表页）。
+每页增加visual_hierarchy（primary/secondary/annotation）、composition_notes和native_details；说明一个主焦点、证据与解读的关系、原生标注/连接线/局部放大的具体用途。复杂度来自内容关系，不靠无意义堆图。
+每条生成请求补充visual_context（slide_background、lighting、material、placement、avoid），并给建议box_inches；图标不混用线描和写实材质，艺术字只用于短章节词并另保留原生语义文字。
+给出全篇视觉节奏：封面、章节、解释、密集证据、结论之间如何切换；连续相同构图需说明理由。必要时分两页，不能为复杂程度牺牲字号和证据可读性。
 以严格评审者身份检查材料充分性、内容空洞、图文比例、布局重复、证据与装饰混淆。
 仅提供规划和批评，不执行shell、不写本地源、不生成整页图。
 '''
