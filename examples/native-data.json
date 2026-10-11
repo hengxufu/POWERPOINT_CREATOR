@@ -1,0 +1,298 @@
+{
+  "profile": "research",
+  "slides": [
+    {
+      "title": "原生数据对象｜column（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "column-editable",
+          "type": "chart",
+          "chart_type": "column",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜bar（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "bar-editable",
+          "type": "chart",
+          "chart_type": "bar",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜line（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "line-editable",
+          "type": "chart",
+          "chart_type": "line",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜area（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "area-editable",
+          "type": "chart",
+          "chart_type": "area",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜pie（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "pie-editable",
+          "type": "chart",
+          "chart_type": "pie",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜doughnut（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "doughnut-editable",
+          "type": "chart",
+          "chart_type": "doughnut",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "values": [
+                24,
+                48,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "原生数据对象｜scatter（合成示例）",
+      "takeaway": "保留可编辑图表和嵌入工作簿；不代表科学结论",
+      "items": [
+        {
+          "id": "scatter-editable",
+          "type": "chart",
+          "chart_type": "scatter",
+          "box": [
+            0.7,
+            2,
+            8,
+            4.5
+          ],
+          "source": "合成示例，非实测数据",
+          "unit": "示例得分",
+          "categories": [
+            "条件A",
+            "条件B",
+            "条件C"
+          ],
+          "series": [
+            {
+              "name": "合成序列",
+              "points": [
+                [
+                  1,
+                  24
+                ],
+                [
+                  2,
+                  48
+                ],
+                [
+                  3,
+                  65
+                ]
+              ]
+            }
+          ],
+          "x_unit": "示例时间"
+        }
+      ]
+    },
+    {
+      "title": "原生证据表｜合成示例",
+      "takeaway": "文字、列宽、单元格均可修改",
+      "items": [
+        {
+          "id": "table-editable",
+          "type": "table",
+          "box": [
+            0.7,
+            2.1,
+            11.8,
+            3.6
+          ],
+          "source": "能力演示，不是真实项目材料",
+          "unit": "not_applicable",
+          "column_weights": [
+            1,
+            2,
+            2
+          ],
+          "rows": [
+            [
+              "比较维度",
+              "方案A（示例）",
+              "方案B（示例）"
+            ],
+            [
+              "条件",
+              "相同测试条件",
+              "相同测试条件"
+            ],
+            [
+              "结果",
+              "24（合成数据）",
+              "48（合成数据）"
+            ],
+            [
+              "限制",
+              "未提供真实验证",
+              "未提供真实验证"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

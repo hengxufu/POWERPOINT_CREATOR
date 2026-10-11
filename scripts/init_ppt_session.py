@@ -33,6 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scenario", default="科研工作汇报")
     parser.add_argument("--audience", default="课题组与同行专家")
     parser.add_argument("--duration-min", type=int, default=20)
+    parser.add_argument("--profile", choices=['scholarship', 'research', 'challenge', 'innovation'], default='research')
     parser.add_argument("--project-root", required=True, type=Path)
     return parser.parse_args()
 
@@ -57,12 +58,16 @@ def main() -> int:
         "scenario": args.scenario,
         "audience": args.audience,
         "duration_min": args.duration_min,
+        "profile": args.profile,
         "project_root": str(project_root),
         "created_at": created_at,
         "planning_owner": "chatgpt-web:gpt-6-astra",
         "image_asset_owner": "chatgpt-web:gpt-image-2.5-sunburst",
         "assembly_owner": "codex-local-script",
         "connection_status": "pending",
+        "delivery_status": "draft",
+        "observed_planning_model": None,
+        "observed_image_model": None,
     }
     write_json(out / "session.json", session)
 
@@ -78,11 +83,13 @@ def main() -> int:
                 "type": "array",
                 "items": {
                     "type": "object",
-                    "required": ["slide_number", "title", "takeaway", "content_blocks", "speaker_notes", "asset_requests"],
+                    "required": ["slide_number", "title", "takeaway", "layout_family", "visual_rationale", "content_blocks", "speaker_notes", "asset_requests"],
                     "properties": {
                         "slide_number": {"type": "integer", "minimum": 1},
                         "title": {"type": "string"},
                         "takeaway": {"type": "string"},
+                        "layout_family": {"type": "string", "minLength": 1},
+                        "visual_rationale": {"type": "string", "minLength": 1},
                         "content_blocks": {"type": "array", "items": {"type": "object"}},
                         "speaker_notes": {"type": "string"},
                         "evidence": {"type": "array", "items": {"type": "object"}},
@@ -90,9 +97,13 @@ def main() -> int:
                             "type": "array",
                             "items": {
                                 "type": "object",
-                                "required": ["kind", "purpose", "single_subject_prompt"],
+                                "required": ["request_id", "kind", "purpose", "single_subject_prompt"],
                                 "properties": {
                                     "kind": {"enum": ["ornament", "concept", "art_text", "icon", "cutout"]},
+                                    "request_id": {"type": "string", "minLength": 1},
+                                    "decision": {"enum": ["generate_web", "native_or_source"]},
+                                    "decision_reason": {"type": "string"},
+                                    "replacement_object": {"type": "string"},
                                     "purpose": {"type": "string"},
                                     "single_subject_prompt": {"type": "string"},
                                 },
@@ -122,8 +133,14 @@ def main() -> int:
 - 不得把多个元素拼成一张图后再裁切。
 
 完成初稿后，再以严格评审者身份检查：是否有证据越界、逻辑跳跃、重复页、信息密度失衡、公式未解释、视觉请求不适合生成等问题。
+
+每页必须给layout_family与visual_rationale，说明构图如何帮助理解。content_blocks须提供具体text、data_ref或source_ref，不只列标题。素材请求逐项赋予request_id，默认generate_web；原生或来源图替代须说明理由。先规划封面、关键技术页和最密集结果页作为代表页；不要只输出通用三卡片模板或仅给封面配图。缺少材料时记录证据缺口，不编造内容。
 """
     (out / "planning" / "gpt6_task_packet.md").write_text(task_packet, encoding="utf-8")
+    from plan_workflow import PROFILES
+    profile = PROFILES[args.profile]
+    with (out / "planning" / "gpt6_task_packet.md").open('a', encoding='utf-8') as handle:
+        handle.write('\n场景方案：' + json.dumps(profile, ensure_ascii=False) + '\n具体风格遵循用户模板；候选版式按内容调整，不机械套用。\n')
 
     manifest = {
         "schema": "ppt_element_manifest_v1",
@@ -133,6 +150,16 @@ def main() -> int:
         "elements": [],
     }
     write_json(out / "assets" / "asset_manifest.json", manifest)
+
+    write_json(out / "qa" / "delivery_review.json", {
+        "schema": "research_ppt_delivery_review_v1",
+        "pptx_sha256": None,
+        "web_planning": {"session_url": None, "response_file": None},
+        "slides": [],
+        "unresolved_issues": ["Not yet produced, rendered or reviewed"],
+        "no_generated_assets_reason": None,
+        "layout_repetition_reason": None,
+    })
 
     contract = {
         "schema": "ppt_composition_contract_v1",

@@ -5,6 +5,12 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 # 中国科研汇报 PPT
 
+## 完整制作任务的完成条件
+
+完整制作或重设计时，先读 [references/production-and-delivery.md](references/production-and-delivery.md)。内容必须有具体论证与来源，构图围绕内容变化，素材需求必须实际生成、审查和入稿；不能用通用文字、空素材清单或单一三卡片模板完成全篇。先查看封面、关键技术页和密集结果页的渲染，再推广全篇。
+
+交付前运行 `scripts/delivery_gate.py`，核对逐页规划、网页生成任务、最终对象哈希及最终版本的逐页视觉审查。失败时保持草稿状态并明确缺项，继续完成可执行的修订。脚本通过只表示记录闭环，不代表自动判定美观；不得用自填审查记录代替实际查看渲染。
+
 ## 强制初始化流程
 
 每个新建 PPT 工作空间都先完整阅读 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)，然后运行 `scripts/init_ppt_session.ps1`。脚本必须先创建本地工作空间，再直接尝试连接网页版；连接失败时保留工作空间和 `bridge-connect.json`，但不得宣称 GPT-6 或 GPT Image 2.5 已连接。`-SkipWebConnection` 仅限测试或用户明确要求的离线任务。
@@ -16,6 +22,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 目标是论证清楚、证据可查、投影可读、对象可编辑，并支持人与模型持续修改。用户的学校模板、时间限制、评审通知优先于默认建议。
 
 ## 制作与交互
+
+国奖答辩、科研汇报、挑战杯和创新创业路演，先读 [references/chinese-defense-and-competition.md](references/chinese-defense-and-competition.md) 选择叙事与构图方案，并查用户当届规则。使用 `plan_workflow.py packet`准备网页版GPT-6规划任务；实际取得回复后，使用`jobs`拆成逐个元素任务。新增图标、产品概念、飘带和字标预设见asset_spec；不能把队列准备称为网页生成。Python原生图表和表格按 [references/python-native-data.md](references/python-native-data.md) 使用native_data.py，保留输入数据和嵌入工作簿。
 
 1. 确认场景、受众、时长、材料和学校/项目要求；已有信息不再询问。资料不足时只问会改变论证的关键问题。阅读 [references/research-and-design.md](references/research-and-design.md) 选择场景主线。
 2. 建立每页的 `slide_id`、核心问题/结论、来源、证据图、讲稿、预计讲述时间。结论标题必须受证据支持，未完成的研究用问题或假设标题。参考文献和研究图不能被装饰掩盖。

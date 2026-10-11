@@ -1,8 +1,8 @@
 param(
-  [ValidateSet('Version','AttachCdp','AttachExtension','OpenIsolated','Snapshot','Detach')]
+  [ValidateSet('Version','AttachCdp','AttachExtension','OpenIsolated','Snapshot','Detach','Close')]
   [string]$Action = 'Version',
   [ValidateSet('chrome','msedge')][string]$Browser = 'msedge',
-  [ValidatePattern('^[a-zA-Z0-9_-]+$')][string]$Session = 'ppt-chatgpt'
+  [ValidatePattern('^[a-zA-Z0-9_-]+$')][string]$Session = 'ppt-edge-isolated'
 )
 $ErrorActionPreference = 'Stop'
 $cliArgs = @('--yes','--package','@playwright/cli@0.1.22','playwright-cli')
@@ -15,6 +15,7 @@ else {
     'OpenIsolated' { $cliArgs += @('open','https://chatgpt.com',"--browser=$Browser",'--headed','--idle-timeout=600000') }
     'Snapshot' { $cliArgs += 'snapshot' }
     'Detach' { $cliArgs += 'detach' }
+    'Close' { $cliArgs += 'close' }
   }
 }
 & npx.cmd @cliArgs

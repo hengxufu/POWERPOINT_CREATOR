@@ -134,6 +134,8 @@ def main() -> int:
         "output_sha256": sha256(output),
         "manifest": str(manifest_path),
         "inserted_count": len(inserted),
+        "delivery_status": "draft_requires_delivery_gate",
+        "warning": "Composition alone does not establish that planned assets, content or visual review are complete.",
         "inserted": inserted,
         "whole_slide_generation_used": False,
     }

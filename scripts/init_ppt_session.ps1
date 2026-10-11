@@ -6,6 +6,7 @@ param(
     [string]$Scenario = '科研工作汇报',
     [string]$Audience = '课题组与同行专家',
     [int]$DurationMin = 20,
+    [ValidateSet('scholarship','research','challenge','innovation')][string]$Profile = 'research',
     [switch]$SkipWebConnection
 )
 
@@ -17,7 +18,7 @@ $workspacePath = [System.IO.Path]::GetFullPath($Workspace)
 $bundledPython = 'C:\Users\21797\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 $pythonExe = if (Test-Path -LiteralPath $bundledPython) { $bundledPython } else { (Get-Command python3 -ErrorAction Stop).Source }
 
-& $pythonExe $initializer --out $workspacePath --title $Title --scenario $Scenario --audience $Audience --duration-min $DurationMin --project-root $projectPath
+& $pythonExe $initializer --out $workspacePath --title $Title --scenario $Scenario --audience $Audience --duration-min $DurationMin --profile $Profile --project-root $projectPath
 if ($LASTEXITCODE -ne 0) { throw 'Local PPT workspace initialization failed.' }
 
 $connectionRecord = Join-Path $workspacePath 'bridge-connect.json'
@@ -48,7 +49,7 @@ if (-not (Test-Path -LiteralPath $bridge)) {
 }
 
 try {
-    $bridgeOutput = & $bridge -Action Connect -WorkspacePath $projectPath -Capability Auto -AllowPublicTunnel 2>&1
+    $bridgeOutput = & $bridge -Action Connect -WorkspacePath $projectPath -Capability Auto 2>&1
     $exitCode = $LASTEXITCODE
     $record = [ordered]@{
         schema = 'ppt_bridge_connection_v1'

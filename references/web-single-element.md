@@ -10,6 +10,8 @@
 
 ## 本地准备
 
+成套的答辩/竞赛规划先使用plan_workflow.py的packet，向网页版GPT-6实际发送；取得逐页JSON后使用jobs生成独立任务队列。asset_spec现在支持research_icon、product_concept、ribbon_accent、milestone_icon、brand_wordart、subject_cutout；用--element明确具体单主体，艺术字必须给--exact-text。这些入口负责准备，实际网页提交、下载和核对仍按下文执行。
+
 可以先用 `scripts/asset_spec.py` 生成风格一致的单元素规格。支持 orbital_accent、spacecraft_concept、thermal_concept、section_wordart 四个预设；最后一个必须提供 --exact-text。例：`python scripts/asset_spec.py --preset orbital_accent --asset-id orbit-v1 --slide-id slide1 --object-id orbit-accent --out orbit.json`，再把 orbit.json 交给下方 prepare 命令。--palette 可覆盖主题。热红外预设是概念图，不能替代实测图；艺术字须保留原生语义文字。预设与 prepare 成功只代表任务包准备完成，不能称为已调用网页版或获得指定图像型号。
 
 新建 PPT 工作空间必须先按 [bridge-assisted-ppt.md](bridge-assisted-ppt.md) 初始化连接，并由 GPT-6 在逐页规划中提出候选素材。Codex 仅接受确实适合图像生成的单主体请求，再分别建立任务。

@@ -1,4 +1,4 @@
 interface:
   display_name: "中国科研汇报 PPT"
   short_description: "GPT-6规划、Image 2.5单元素、本地脚本组装"
-  default_prompt: "使用 $chinese-research-ppt 初始化中文科研汇报工作空间，连接网页版 GPT-6 完成结构规划与审稿，让 GPT Image 2.5 每次只生成一个独立小元素，再由本地脚本以原生对象和独立图片对象组装、渲染并验证 PPTX。"
+  default_prompt: "使用 $chinese-research-ppt 制作有具体论证、证据和内容所需视觉复杂度的可编辑科研PPT。先阅读production-and-delivery，规划并渲染封面、关键技术页和密集结果页；实际执行网页版逐个元素生成、下载、审查与入稿，不能停在提示词或空素材清单。最终逐页查看渲染，并运行delivery_gate核对最终版本；缺项时保持草稿并继续修订，不虚报模型、生成或视觉验收。"

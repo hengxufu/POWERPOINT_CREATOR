@@ -22,6 +22,8 @@
 
 ## 2. 职责边界
 
+初始化支持`-Profile scholarship|research|challenge|innovation`，分别面向国奖、科研、挑战杯和创新创业。默认research。生成的规划任务包含场景叙事与候选构图，实际模型回复仍需浏览器取得。需要详细坐标候选可用plan_workflow.py packet。
+
 | 责任方 | 必须负责 | 禁止代替其他层完成 |
 |---|---|---|
 | 网页版 GPT-6 | 叙事结构、逐页规划、信息密度、讲稿、证据缺口、公式讲解要求、审稿与批评 | 不生成 PPTX，不设计成一张完整幻灯片图像 |
@@ -44,6 +46,7 @@
 ```json
 {
   "kind": "icon",
+  "request_id": "slide-04-sensor-icon",
   "slide_number": 4,
   "job_dir": "../../asset-jobs/slide-04-sensor-icon"
 }
@@ -62,6 +65,8 @@ python3 scripts/compose_elements.py `
 脚本逐项读取已审核的 `job.json` 与 `placement.json`，验证种类、状态、位置、面积、文件哈希和对象名，然后分别调用 `python-pptx` 插入。单个生成素材默认不得覆盖超过页面面积的 55%。
 
 ## 5. 最终 QA
+
+完整制作还须按 [production-and-delivery.md](production-and-delivery.md) 执行delivery_gate，逐项核对所有素材请求和最终版本的逐页审查。初始化或浏览器连接成功不等于素材已生成；空元素清单也不代表视觉目标已满足。
 
 - 渲染所有页面，检查遮挡、裁切、对比度、文本溢出和留白。
 - 确认标题、正文、公式、数据图、表格、引文与页码仍为原生对象。
