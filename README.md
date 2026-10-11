@@ -1,5 +1,7 @@
 # POWERPOINT_CREATOR
 
+每次制作或新会话恢复，入口为`scripts/start_ppt.ps1`。内嵌bridge核心控制程序位于bridge/scripts；严格顺序见[bridge-startup-contract](references/bridge-startup-contract.md)。启动先配置精确项目profile，再由当前Codex会话操作浏览器并核实模型/图像入口；本地配置成功不等于网页连通。在线delivery_gate会拒绝缺失、过期或关闭的连接记录。结束运行ppt_bridge Off。新增连接回归：`python scripts/test_bridge_session.py`。
+
 新增中国高校答辩/竞赛方案：scholarship（国奖）、research（科研）、challenge（挑战杯）、innovation（创新创业）。调研来源与适用边界见[场景参考](references/chinese-defense-and-competition.md)。
 
 ```powershell

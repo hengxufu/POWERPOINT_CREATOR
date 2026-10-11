@@ -7,16 +7,14 @@
 在项目根目录执行：
 
 ```powershell
-& scripts/init_ppt_session.ps1 `
+& scripts/start_ppt.ps1 `
   -ProjectRoot <项目根目录> `
   -Workspace <新建的PPT工作空间> `
   -Title <汇报题目> `
-  -Scenario <汇报场景> `
-  -Audience <听众> `
-  -DurationMin 20
+  -Profile research
 ```
 
-初始化脚本先创建本地工作空间，再调用 `codex-chatgpt-bridge` 的工作空间包装器，以 `Auto` 能力连接网页版。连接记录保存在 `bridge-connect.json`。若连接失败，本地工作空间必须保留，但不得声称 GPT-6 或 GPT Image 2.5 已连接。
+统一入口为scripts/start_ppt.ps1，新建与恢复均刷新任务连接。内嵌bridge通过ppt_bridge.ps1配置精确项目profile（Tunnel none），随后由当前Codex使用浏览器工具完成实际连接与模型观察；严格顺序见[bridge-startup-contract.md](bridge-startup-contract.md)。不使用上游Auto默认公网路线，不将本地MCP健康当作网页成功。连接记录保存在bridge-connect.json。
 
 `-SkipWebConnection` 只允许用于自动化测试，或用户明确要求离线执行的场景；真实的网页协作任务不得使用。
 

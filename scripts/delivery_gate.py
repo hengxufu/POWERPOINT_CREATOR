@@ -50,6 +50,10 @@ def check(workspace, pptx):
     if offline.get('instruction') and offline.get('reason'):
         warnings.append('User-authorized offline mode; do not claim web generation/planning')
     else:
+        from bridge_session import check as check_connection
+        connection = check_connection(workspace)
+        for problem in connection['problems']:
+            require(False, 'Connection: ' + problem)
         response = planning.get('response_file')
         require(bool(response), 'Missing actual web planning response')
         if response:

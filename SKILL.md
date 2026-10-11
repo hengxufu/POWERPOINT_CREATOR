@@ -13,7 +13,9 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 ## 强制初始化流程
 
-每个新建 PPT 工作空间都先完整阅读 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)，然后运行 `scripts/init_ppt_session.ps1`。脚本必须先创建本地工作空间，再直接尝试连接网页版；连接失败时保留工作空间和 `bridge-connect.json`，但不得宣称 GPT-6 或 GPT Image 2.5 已连接。`-SkipWebConnection` 仅限测试或用户明确要求的离线任务。
+每次在新活跃会话启动制作或恢复制作，必须先读内嵌 [bridge/SKILL.md](bridge/SKILL.md)、[bridge/USER_POLICY.md](bridge/USER_POLICY.md) 与 [references/bridge-startup-contract.md](references/bridge-startup-contract.md)，运行`start_ppt.ps1`，然后立即使用浏览器工具验证本任务登录、GPT-6选择器与图像入口。用户已要求此会话级自动流程，不重复询问普通连接准备；登录、公开隧道与权限升级仍遵循其授权边界。缺失或过期的连接合同不能通过在线delivery_gate。脚本退出0只代表对应步骤成功，不能笼统宣称两个模型已连通。
+
+新工作空间由start入口调用init_ppt_session.ps1创建；随后刷新内嵌bridge项目profile，并由当前Codex会话执行实际网页连接与验证。完整流程见 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)。失败保留工作空间和bridge-connect.json，保持草稿。`-SkipWebConnection`仅限测试或用户明确离线；不能用它绕过正式在线交付检查。
 
 网页版 GPT-6 负责叙事结构、逐页规划、信息密度、讲稿、证据缺口和全稿审查。GPT Image 2.5 只生成一个任务对应的一个独立小元素，允许类型为 `ornament`、`concept`、`art_text`、`icon`、`cutout`。严禁生成整页 PPT、完整页面布局、整页信息图、带标题正文页脚的合成画面、图表、表格、公式、实验结果图，或生成多元素拼贴后裁切。
 

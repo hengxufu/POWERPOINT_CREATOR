@@ -38,6 +38,13 @@ def main():
                'visual_review': {'note': 'Synthetic fixture only'}, 'verified_engine': None}
         manifest = {'elements': [{'request_id': 'r1', 'slide_number': 1, 'job_dir': 'job'}]}
         (root / 'planning/response.txt').write_text('Synthetic test response; not an actual web exchange.', encoding='utf-8')
+        from bridge_session import prepare
+        connection = prepare(root, root)
+        connection.update(local_profile_configured=True, browser_connected=True, image_tool_visible=True,
+                          planning_model='GPT-6 (synthetic fixture)', image_model='Image-2.5 (synthetic fixture)',
+                          observed_connection_id=connection['connection_id'],
+                          evidence=[{'file': 'renders/slide-01.png', 'sha256': digest(render)}])
+        (root / 'bridge-connect.json').write_text(json.dumps(connection), encoding='utf-8')
 
         def write(relative, data):
             (root / relative).write_text(json.dumps(data), encoding='utf-8')

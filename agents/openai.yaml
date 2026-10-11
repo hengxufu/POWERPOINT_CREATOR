@@ -1,4 +1,4 @@
 interface:
   display_name: "中国科研汇报 PPT"
   short_description: "GPT-6规划、Image 2.5单元素、本地脚本组装"
-  default_prompt: "使用 $chinese-research-ppt 制作有具体论证、证据和内容所需视觉复杂度的可编辑科研PPT。先阅读production-and-delivery，规划并渲染封面、关键技术页和密集结果页；实际执行网页版逐个元素生成、下载、审查与入稿，不能停在提示词或空素材清单。最终逐页查看渲染，并运行delivery_gate核对最终版本；缺项时保持草稿并继续修订，不虚报模型、生成或视觉验收。"
+  default_prompt: "使用 $chinese-research-ppt。先读内嵌bridge/SKILL.md和bridge-startup-contract，运行start_ppt绑定当前项目并立即用浏览器工具验证登录、GPT-6选择器和图像入口，完成bridge_session观察与Check；不能跳到生成器。按production-and-delivery制作具体内容、代表页与逐个网页素材，原生构建数据对象、保留LaTeX源和混排字体。最终逐页查看渲染并运行delivery_gate；缺连接、素材或审查保持草稿，不虚报成功。结束执行ppt_bridge Off。"

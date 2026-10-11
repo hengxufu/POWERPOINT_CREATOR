@@ -68,6 +68,7 @@ def main() -> int:
         "delivery_status": "draft",
         "observed_planning_model": None,
         "observed_image_model": None,
+        "bridge_contract_required": True,
     }
     write_json(out / "session.json", session)
 
