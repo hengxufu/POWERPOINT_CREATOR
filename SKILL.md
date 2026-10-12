@@ -75,6 +75,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 局部 AI 素材
 
+学习北航模板配饰或扩充更精致的局部元素时，阅读 [references/beihang-ornament-layouts.md](references/beihang-ornament-layouts.md)。用对象位置分析提炼锚点、尺度差、层叠与留白，再交网页版规划，先生成3个独立样本再决定是否扩充12个候选。用ornament_library.py准备单元素任务；本地提案、网页真实建议、已生成图片必须分别记状态，失败不冒充成功。
+
 网页工具失败或需要恢复连接时，阅读 [references/browser-connection.md](references/browser-connection.md)，使用经实测的官方 Playwright CLI 替代连接。接入、发送、生成和下载分别验证；等待必需的浏览器人为授权时继续本地准备，不虚报网页版已连通。
 
 当用户要求网页版 image2.5/image-2.5 单元素生成，或正在制作的 PPT 确实需要局部位图素材时，阅读 [references/web-single-element.md](references/web-single-element.md)，可先用 `scripts/asset_spec.py` 生成主题一致的单元素规格，再用 `scripts/asset_job.py` 准备任务、检查下载素材并登记替换位置。这个流程由当前 Codex 会话通过浏览器工具执行，不是后台服务；不需要开启本地文件 bridge 或公开隧道就能发送非敏感提示词。已有授权覆盖同范围生成和微调，不重复询问。

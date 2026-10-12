@@ -77,7 +77,8 @@ def check(workspace, max_age_hours=4):
         if data.get('public_tunnel') or data.get('shell_access') or data.get('workspace_write_access'):
             errors.append('PPT advice profile cannot escalate access')
         if not re.search(r'GPT[\s-]*6(?:\b|[.])', str(data.get('planning_model', '')), re.I):
-            errors.append('GPT-6 must be observed in the actual model selector')
+            if not data.get('unverified_planning_user_authorization'):
+                errors.append('GPT-6 must be observed in the actual model selector; explicit unverified-model exception required')
         image = str(data.get('image_model', ''))
         if not re.search(r'(?:image|图像)[\s-]*2[.]5', image, re.I):
             if not data.get('unverified_image_user_authorization'):
@@ -108,6 +109,7 @@ def main():
     parser.add_argument('--session-url')
     parser.add_argument('--note')
     parser.add_argument('--allow-unverified-image-note')
+    parser.add_argument('--allow-unverified-planning-note')
     args = parser.parse_args()
     path = args.workspace / 'bridge-connect.json'
     if args.action == 'prepare':
@@ -131,6 +133,7 @@ def main():
                         session_url=args.session_url, observation_note=args.note,
                         observed_connection_id=data['connection_id'], observed_at=now(), status='observed',
                         unverified_image_user_authorization=args.allow_unverified_image_note,
+                        unverified_planning_user_authorization=args.allow_unverified_planning_note,
                         evidence=[{'file': str(relative), 'sha256': hashlib.sha256(args.evidence.read_bytes()).hexdigest()}])
         write(path, data)
         result = check(args.workspace)

@@ -44,12 +44,23 @@ def main():
         save({**data, 'image_model': 'unverified', 'unverified_image_user_authorization': 'Synthetic explicit user exception'})
         assert check(workspace)['ready']
         passed.append('explicit unverified-engine exception remains distinguishable')
+        save({**data, 'planning_model': 'unverified; High', 'image_model': 'unverified',
+              'unverified_image_user_authorization': 'Synthetic explicit user exception'})
+        assert not check(workspace)['ready']
+        passed.append('image exception cannot authorize an unverified planning model')
+        save({**data, 'planning_model': 'unverified; High', 'image_model': 'unverified',
+              'unverified_image_user_authorization': 'Synthetic explicit user permission covering both',
+              'unverified_planning_user_authorization': 'Synthetic explicit user permission covering both'})
+        assert check(workspace)['ready']
+        passed.append('explicit exceptions for both capabilities are accepted without asserting exact model labels')
         save(data)
         evidence.write_text('changed', encoding='utf-8')
         assert not check(workspace)['ready']
         passed.append('changed browser evidence rejected')
         first = data['connection_id']
-        assert prepare(workspace, root)['connection_id'] != first
+        restarted = prepare(workspace, root)
+        assert restarted['connection_id'] != first
+        assert not restarted.get('unverified_planning_user_authorization') and not restarted.get('unverified_image_user_authorization')
         passed.append('restart invalidates previous observations')
         try: safe_root(Path.home())
         except ValueError: pass

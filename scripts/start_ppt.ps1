@@ -18,8 +18,14 @@ foreach($pair in @(@('--workspace',$Workspace),@('--title',$Title),@('--profile'
  if($pair[1]){$arguments+=@($pair[0],$pair[1])}
 }
 if($PSBoundParameters.ContainsKey('DurationMin')){$arguments+=@('--duration',[string]$DurationMin)}
-$prepared=& $python @arguments
-if($LASTEXITCODE -ne 0){throw 'Automatic brief/workspace preparation failed'}
+$previousPythonEncoding=$env:PYTHONIOENCODING
+try {
+ $env:PYTHONIOENCODING='utf-8'
+ $prepared=& $python @arguments
+ if($LASTEXITCODE -ne 0){throw 'Automatic brief/workspace preparation failed'}
+} finally {
+ if($null -eq $previousPythonEncoding){Remove-Item Env:\PYTHONIOENCODING -ErrorAction SilentlyContinue}else{$env:PYTHONIOENCODING=$previousPythonEncoding}
+}
 $context=$prepared | ConvertFrom-Json
 $Workspace=$context.workspace
 Write-Host "Planning packet: $($context.planning_packet)"

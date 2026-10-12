@@ -101,6 +101,15 @@ class AutomationTests(unittest.TestCase):
             prepare(self.root, duration=0)
         self.assertFalse(self.workspace.exists())
 
+    def test_unknown_planning_submission_is_preserved_before_new_plan(self):
+        prepare(self.root)
+        write(self.workspace / 'planning/web-design-dispatch.json',
+              {'state': 'submission_unknown', 'send_action_attempted': True,
+               'actual_planning_response_received': False})
+        resumed = status(self.workspace)
+        self.assertEqual(resumed['next_action'], 'recover_original_planning_conversation_do_not_resubmit')
+        self.assertFalse(resumed['planning_dispatch']['actual_planning_response_received'])
+
 
 if __name__ == '__main__':
     unittest.main()

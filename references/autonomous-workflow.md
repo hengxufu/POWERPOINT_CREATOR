@@ -39,6 +39,7 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 |---|---|
 | observe_browser_and_check_connection | 实际观察、登记证据并Check；准备本地资料可并行进行 |
 | receive_actual_web_plan | 发送规划包并通过receive_web_plan接收真实回复 |
+| recover_original_planning_conversation_do_not_resubmit | 规划发送超时且结果不明；恢复原任务页确认消息与回复，禁止在新对话重发；设计派发记录位于planning/web-design-dispatch.json |
 | repair_received_plan | 根据具体错误修订规划，不重做已通过的素材 |
 | continue_asset_jobs | 按asset_actions逐个推进，实际查看图片后才能review |
 | assemble_native_deck_then_render_and_run_delivery_gate | 原生组装、代表页与全篇渲染检查、运行交付检查 |

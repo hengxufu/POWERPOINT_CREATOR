@@ -199,6 +199,13 @@ def status(workspace):
               'delivery_status': 'draft', 'connection': connection, 'asset_actions': [],
               'next_action': None, 'local_actions': ['inspect_candidate_sources', 'prepare_native_content_and_equation_sources',
                                                    'reserve_beihang_identity_and_footer_regions']}
+    dispatch_path = workspace / 'planning/web-design-dispatch.json'
+    if dispatch_path.is_file():
+        dispatch = load(dispatch_path)
+        if dispatch.get('state') == 'submission_unknown':
+            result.update(next_action='recover_original_planning_conversation_do_not_resubmit',
+                          planning_dispatch=dispatch)
+            return result
     plan_path = workspace / 'planning/deck_plan.json'
     if not plan_path.exists():
         result['next_action'] = 'receive_actual_web_plan' if connection['ready'] else 'observe_browser_and_check_connection'

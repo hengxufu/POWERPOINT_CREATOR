@@ -84,6 +84,11 @@ def check(workspace, pptx):
         connection = check_connection(workspace)
         for problem in connection['problems']:
             require(False, 'Connection: ' + problem)
+        connection_record = load(workspace / 'bridge-connect.json') if (workspace / 'bridge-connect.json').is_file() else {}
+        if connection_record.get('unverified_planning_user_authorization'):
+            warnings.append('Planning used user-authorized web chat with unverified exact model; do not label it verified GPT-6.')
+        if connection_record.get('unverified_image_user_authorization'):
+            warnings.append('Image generation used user-authorized web capability with unverified exact engine; do not label it verified Image 2.5.')
         response = planning.get('response_file')
         require(bool(response), 'Missing actual web planning response')
         if response:
