@@ -23,6 +23,9 @@ def main():
         prs = Presentation()
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         slide.shapes.add_picture(str(image), Inches(1), Inches(1)).name = 's1/icon'
+        for index in range(39):
+            text = slide.shapes.add_textbox(Inches((index % 10) * .8), Inches(2 + (index // 10) * .5), Inches(.7), Inches(.4))
+            text.text = f'Test {index}'
         prs.save(deck)
         plan = {'slides': [{'slide_number': 1, 'title': 'Synthetic fixture', 'takeaway': 'Test evidence reconciliation',
                             'layout_family': 'figure-analysis', 'visual_rationale': 'Synthetic test only',

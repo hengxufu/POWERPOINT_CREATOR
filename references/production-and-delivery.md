@@ -28,6 +28,8 @@ assets/asset_manifest.json每项补充request_id，对应唯一请求。不要�
 
 ## 最终作品证据核对
 
+每页必须至少40个独立元素，封面、章节页和结尾也检查。组装后先运行audit_element_density.py检查实际对象数量；报告按页给element_count、deficit与suggested_web_asset_requests。Codex将提案按本页内容具体化，加入实际deck_plan的asset_requests，再用网页版逐个生成和现有任务流水线审核、插入。重新渲染后再审查，不能使用空文本、隐藏或画布外对象补数。delivery_gate将不足40的页面判为草稿；数量通过也不能替代可读性、内容和证据审查。
+
 初始化产生qa/delivery_review.json空记录，默认未验收。完成最终组装后按实际页面顺序补充：
 
 - 顶层pptx_sha256；web_planning的session_url和实际response_file。离线例外使用offline_user_authorization.instruction与reason。

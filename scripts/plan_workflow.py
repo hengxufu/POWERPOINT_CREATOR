@@ -56,6 +56,7 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
 每页增加visual_hierarchy（primary/secondary/annotation）、composition_notes和native_details；说明一个主焦点、证据与解读的关系、原生标注/连接线/局部放大的具体用途。复杂度来自内容关系，不靠无意义堆图。
 每条生成请求补充visual_context（slide_background、lighting、material、placement、avoid），并给建议box_inches；图标不混用线描和写实材质，艺术字只用于短章节词并另保留原生语义文字。
 给出全篇视觉节奏：封面、章节、解释、密集证据、结论之间如何切换；连续相同构图需说明理由。必要时分两页，不能为复杂程度牺牲字号和证据可读性。
+每一页至少40个独立PPT元素，封面、章节页、结尾页同样适用。每页提供element_budget（native_objects、generated_objects、total），规划真实独立对象而不是拆分文字段落或表格单元格凑数。总数不足40时，将缺口逐项列为网页版单元素asset_requests；每条给出具体主体、用途、布局位置和风格，逐个生成后由脚本插入。图表、表格、公式与科学标注保持原生，补充图片不能代替证据。按此密度规划留白与层级，先检查代表页可读性，再推广全篇。
 以严格评审者身份检查材料充分性、内容空洞、图文比例、布局重复、证据与装饰混淆。
 仅提供规划和批评，不执行shell、不写本地源、不生成整页图。
 '''

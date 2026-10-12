@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import copy
 import json
 import subprocess
 import sys
@@ -33,7 +34,7 @@ def run(*args: object, expect_success: bool = True) -> subprocess.CompletedProce
 
 
 def main() -> int:
-    with tempfile.TemporaryDirectory(prefix="research-ppt-skill-", dir=HERE.parent, ignore_cleanup_errors=True) as temporary:
+    with tempfile.TemporaryDirectory(prefix="research-ppt-skill-", dir=HERE.parent) as temporary:
         root = Path(temporary)
         workspace = root / "workspace"
         run(
@@ -63,15 +64,12 @@ def main() -> int:
         dump(job / "job.json", {
             "status": "accepted",
             "spec": {"kind": "icon", "slide_id": "slide-01", "object_id": "sensor"},
-            "asset_file": asset.name,
-            "sha256": digest,
-        })
-        dump(job / "placement.json", {
-            "schema": "single_element_placement_v1",
             "asset_file": str(asset),
-            "asset_sha256": digest,
-            "image_box_inches": [1.0, 1.0, 2.0, 2.0],
+            "sha256": digest,
+            "technical_checks": {"width": 600, "height": 600, "subject_bbox_px": [60, 60, 540, 540]},
         })
+        run(sys.executable, HERE / "asset_job.py", "placement", "--job", job,
+            "--box", 1, 1, 2, 2, "--canvas", 10, 7.5)
         manifest = root / "manifest.json"
         dump(manifest, {
             "schema": "ppt_element_manifest_v1",
@@ -86,6 +84,54 @@ def main() -> int:
         assert len(pictures) == 1
         assert hashlib.sha256(pictures[0].image.blob).hexdigest() == digest
         assert json.loads(report.read_text(encoding="utf-8"))["whole_slide_generation_used"] is False
+        assert json.loads(report.read_text(encoding="utf-8"))["manifest_sha256"] == hashlib.sha256(manifest.read_bytes()).hexdigest()
+
+        valid_placement = json.loads((job / "placement.json").read_text(encoding="utf-8"))
+        mutations = [
+            ("wrong-job-hash", "asset_sha256", "0" * 64, "placement hash differs"),
+            ("wrong-object", "object_id", "other", "placement object_id mismatch"),
+            ("stretched", "image_box_inches", [1, 1, 2, 1], "would stretch"),
+            ("nonfinite", "image_box_inches", [float('nan'), 1, 2, 2], "non-finite"),
+            ("oversized", "image_box_inches", [0, 0, 7, 7], "area limit"),
+        ]
+        for name, field, value, message in mutations:
+            broken = copy.deepcopy(valid_placement)
+            broken[field] = value
+            dump(job / "placement.json", broken)
+            rejected = run(sys.executable, HERE / "compose_elements.py", "--pptx", source,
+                           "--manifest", manifest, "--out", root / f"{name}.pptx",
+                           "--report", root / f"{name}.json", expect_success=False)
+            assert message in rejected.stderr, rejected.stderr
+            assert not (root / f"{name}.pptx").exists()
+        dump(job / "placement.json", valid_placement)
+
+        replacement = root / "replacement.png"
+        Image.new("RGBA", (600, 600), (255, 0, 0, 255)).save(replacement)
+        broken = {**valid_placement, "asset_file": str(replacement),
+                  "asset_sha256": hashlib.sha256(replacement.read_bytes()).hexdigest()}
+        dump(job / "placement.json", broken)
+        rejected = run(sys.executable, HERE / "compose_elements.py", "--pptx", source,
+                       "--manifest", manifest, "--out", root / "substitution.pptx",
+                       "--report", root / "substitution.json", expect_success=False)
+        assert "differs from accepted job" in rejected.stderr
+        dump(job / "placement.json", valid_placement)
+
+        rejected = run(sys.executable, HERE / "compose_elements.py", "--pptx", source,
+                       "--manifest", manifest, "--out", root / "same.pptx",
+                       "--report", root / "same.pptx", expect_success=False)
+        assert "different paths" in rejected.stderr
+        assert not (root / "same.pptx").exists()
+
+        # A matching name on another page would make later integration ambiguous.
+        duplicate_source = root / "duplicate-source.pptx"
+        duplicate = Presentation(str(source))
+        second = duplicate.slides.add_slide(duplicate.slide_layouts[6])
+        second.shapes.add_picture(str(asset), 0, 0).name = "slide-01/sensor"
+        duplicate.save(duplicate_source)
+        rejected = run(sys.executable, HERE / "compose_elements.py", "--pptx", duplicate_source,
+                       "--manifest", manifest, "--out", root / "duplicate.pptx",
+                       "--report", root / "duplicate.json", expect_success=False)
+        assert "already exists in deck" in rejected.stderr
 
         bad_manifest = root / "bad-manifest.json"
         dump(bad_manifest, {

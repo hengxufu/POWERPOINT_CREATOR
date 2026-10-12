@@ -126,6 +126,7 @@ def main() -> int:
 - 场景：{args.scenario}
 - 受众：{args.audience}
 - 时长：{args.duration_min} 分钟
+- 每一页至少40个独立PPT对象；每页列出element_budget。原生对象不足时把缺口列成逐个网页版素材请求，单元素生成、审核、插入后重新计数。
 - 输出必须符合 `deck_plan.schema.json`，保存为 `deck_plan.json`。
 - 你负责叙事结构、逐页论点、信息密度、讲稿、证据缺口和全稿审查。
 - 不生成 PPTX，不生成任何整页幻灯片图像，也不输出把标题、正文、页脚烘焙在一起的画面。
@@ -164,6 +165,8 @@ def main() -> int:
 
     contract = {
         "schema": "ppt_composition_contract_v1",
+        "minimum_elements_per_slide": 40,
+        "element_deficit_strategy": "generate_individual_web_assets_then_compose_and_reaudit",
         "generated_asset_policy": {
             "one_independent_element_per_job": True,
             "allowed_kinds": ["ornament", "concept", "art_text", "icon", "cutout"],

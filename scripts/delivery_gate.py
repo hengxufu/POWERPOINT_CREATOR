@@ -39,6 +39,10 @@ def check(workspace, pptx):
     except (OSError, ValueError, KeyError) as error:
         return {'ready': False, 'status': 'draft', 'problems': [str(error)], 'warnings': []}
     deck_hash = digest(pptx)
+    from audit_element_density import audit as audit_density
+    density = audit_density(pptx, plan=plan)
+    for page in density['slides']:
+        require(page['deficit'] == 0, f"Page {page['slide_number']}: {page['element_count']}/40 elements; generate and compose {page['deficit']} independent web elements")
     require(review.get('pptx_sha256') == deck_hash, 'Review belongs to another PPTX revision')
     slides = plan.get('slides', [])
     require(len(slides) == len(prs.slides) and bool(slides), 'Plan does not cover every actual slide')
@@ -125,6 +129,7 @@ def check(workspace, pptx):
     require(bool(requests) or bool(review.get('no_generated_assets_reason')), 'No image requests: explain the visual strategy instead of silently skipping images')
     return {'ready': not problems, 'status': 'review_evidence_complete' if not problems else 'draft',
             'pptx_sha256': deck_hash, 'problems': problems, 'warnings': warnings,
+            'element_density': density,
             'limits': ['Review notes are human/agent attestations, not automatic proof of aesthetics or factual accuracy.',
                        'Run editability, typography and source audits separately.']}
 

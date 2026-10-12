@@ -5,7 +5,17 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 # 中国科研汇报 PPT
 
+技能维护与离线回归测试只执行相关文件检查和合成测试；此类任务不触发制作启动、网页素材生成或正式交付流程。完整制作、重设计和新会话恢复制作仍须执行下面的启动与验收要求。
+
+## 简短请求也要主动完成流程
+
+用户只说“制作”“继续”“优化”时，完整阅读 [references/autonomous-workflow.md](references/autonomous-workflow.md)。用可省略参数的 `start_ppt.ps1` 自动准备工作空间、识别场景、补齐可逆默认值并保留需求来源；读取自动生成的完整规划包，不要求用户自己写长提示词。恢复时运行 `auto_workflow.py status --workspace <workspace> --write`，按真实状态推进到下一步并继续执行，不停在状态报告或计划。网页观察、逐个素材、公式说明、原生数据、字体、代表页与全篇审查由技能主动落实。
+
+已有对话与项目材料足以决定的内容不再询问。默认值可用于题目措辞、时长、风格和版式；事实、数据、引文、网页证据与授权只能来自实际来源。存在会改变研究论证的关键材料缺口时才提问，并继续不依赖该答案的工作。
+
 ## 完整制作任务的完成条件
+
+每一页至少40个独立PPT元素，适用于封面、章节、正文与结尾页。规划时逐页给element_budget；组装后运行 `audit_element_density.py --pptx <deck> --plan <deck_plan.json> --out <workspace>/qa/element-density.json`。不足部分按页面主题生成网页版单元素请求，补入实际deck_plan的asset_requests，再按prepare→submit→download→review→placement→manifest→compose执行。提案不能记作已生成。补入后重计数、重渲染和重新视觉审查，delivery_gate对不足40的页面保持草稿。计数递归展开组，不将组本身、段落、表格单元格、空文本框、隐藏或画布外对象重复计入；图表和表格各按一个对象计。素材保持独立主体与完整留白，不生成整页，不用不可见对象补数。
 
 完整制作或重设计时，先读 [references/production-and-delivery.md](references/production-and-delivery.md)。内容必须有具体论证与来源，构图围绕内容变化，素材需求必须实际生成、审查和入稿；不能用通用文字、空素材清单或单一三卡片模板完成全篇。先查看封面、关键技术页和密集结果页的渲染，再推广全篇。
 

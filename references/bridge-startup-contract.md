@@ -2,6 +2,8 @@
 
 完整制作、重设计及新会话恢复制作均遵循此顺序。同一活跃会话内的微调复用尚有效的连接，不为每次改字重启。用户明确离线时保留其原话及原因，不能宣称网页流程完成。
 
+用户简短请求不需要逐项提供启动参数。`start_ppt.ps1` 参数均可省略，自动从当前项目、唯一已有工作空间、保存需求和可逆默认值补齐；新增要求通过 `-Request` 传入。自动推断和断点恢复按 [autonomous-workflow.md](autonomous-workflow.md) 执行。存在多个候选工作空间时先结合当前对话确定目标，仍无法确定才询问，不按文件时间猜测。
+
 1. 读bridge/SKILL.md及bridge/USER_POLICY.md。用当前实际项目根调用scripts/start_ppt.ps1；ProjectRoot与唯一AllowedRoot必须完全相同，新会话刷新连接ID。禁止携带上个项目profile、自动使用公网、计划任务或宽根例外。
 2. start调用内嵌controller Configure（Tunnel none），只保存独立项目profile。成功仅为local_profile_configured，不是浏览器或模型成功。原DevSpace提供写工具/shell，不能把L1策略冒充技术隔离；默认不启动这个MCP服务，不绕过此限制。直接浏览器任务不需要把本地文件公开。
 3. Codex立即用当前会话浏览器工具取得新鲜状态、定位本任务ChatGPT标签页、核实登录、查看模型选择器及图像入口。网页GPT-6负责规划，Codex修改源。不要读取无关聊天或认证输入。浏览器使用工具的文档约束优先；CLI替代仅在当前工具规则允许时使用。

@@ -46,7 +46,7 @@
   "kind": "icon",
   "request_id": "slide-04-sensor-icon",
   "slide_number": 4,
-  "job_dir": "../../asset-jobs/slide-04-sensor-icon"
+  "job_dir": "../asset-jobs/slide-04-sensor-icon"
 }
 ```
 
@@ -61,6 +61,8 @@ python3 scripts/compose_elements.py `
 ```
 
 脚本逐项读取已审核的 `job.json` 与 `placement.json`，验证种类、状态、位置、面积、文件哈希和对象名，然后分别调用 `python-pptx` 插入。单个生成素材默认不得覆盖超过页面面积的 55%。
+
+`job_dir` 相对元素清单所在目录解析。placement 必须由 `asset_job.py placement` 生成；其对象标识、素材路径和哈希必须与已审核任务一致。组装时保持图片原始宽高比，跨页对象名也不得重复，PPTX 与审计报告必须使用不同输出路径。旧 placement 被拒绝后应重新计算，不能手改哈希绕过校验。
 
 ## 5. 最终 QA
 
