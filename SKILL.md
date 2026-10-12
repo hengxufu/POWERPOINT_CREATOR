@@ -15,6 +15,8 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 ## 完整制作任务的完成条件
 
+本用户要求全篇北航主题，默认自动启用beihang-blue。完整阅读 [references/beihang-theme.md](references/beihang-theme.md)，复用已打包的真实校徽与中英校名组合图；每页保留稳定身份、原生校名署名、章节导航和页码，封面/章节/结尾可加强校园影像。主题身份与内容版式分层，不让所有页面重复构图。不生成、重画、拉伸校徽或猜测院系。规划、原生组装与delivery_gate均核对主题合同和实际源图哈希；不靠文字声明统一风格。用户明确要求其他学校或关闭校级主题时记录具体指令，不能误用北航标志。维护任务无需制作无关示例PPT。
+
 每一页至少40个独立PPT元素，适用于封面、章节、正文与结尾页。规划时逐页给element_budget；组装后运行 `audit_element_density.py --pptx <deck> --plan <deck_plan.json> --out <workspace>/qa/element-density.json`。不足部分按页面主题生成网页版单元素请求，补入实际deck_plan的asset_requests，再按prepare→submit→download→review→placement→manifest→compose执行。提案不能记作已生成。补入后重计数、重渲染和重新视觉审查，delivery_gate对不足40的页面保持草稿。计数递归展开组，不将组本身、段落、表格单元格、空文本框、隐藏或画布外对象重复计入；图表和表格各按一个对象计。素材保持独立主体与完整留白，不生成整页，不用不可见对象补数。
 
 完整制作或重设计时，先读 [references/production-and-delivery.md](references/production-and-delivery.md)。内容必须有具体论证与来源，构图围绕内容变化，素材需求必须实际生成、审查和入稿；不能用通用文字、空素材清单或单一三卡片模板完成全篇。先查看封面、关键技术页和密集结果页的渲染，再推广全篇。

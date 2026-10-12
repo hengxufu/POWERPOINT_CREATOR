@@ -35,6 +35,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--duration-min", type=int, default=20)
     parser.add_argument("--profile", choices=['scholarship', 'research', 'challenge', 'innovation'], default='research')
     parser.add_argument("--project-root", required=True, type=Path)
+    parser.add_argument('--theme-profile', choices=['beihang-blue', 'beihang-green', 'beihang-ginkgo', 'none'], default='beihang-blue')
+    parser.add_argument('--theme-reason', default='')
     return parser.parse_args()
 
 
@@ -46,6 +48,10 @@ def main() -> int:
         raise SystemExit(f"Refusing to initialize an existing path: {out}")
     if args.duration_min <= 0:
         raise SystemExit("--duration-min must be positive")
+    if args.theme_profile == 'none' and not args.theme_reason.strip():
+        raise SystemExit('Disabling school theme requires the specific user instruction')
+    from beihang_theme import contract as theme_contract
+    theme = theme_contract(args.theme_profile) if args.theme_profile != 'none' else {'theme_profile': 'none', 'user_instruction': args.theme_reason}
 
     out.mkdir(parents=True)
     for relative in DIRECTORIES:
@@ -69,8 +75,11 @@ def main() -> int:
         "observed_planning_model": None,
         "observed_image_model": None,
         "bridge_contract_required": True,
+        "theme_profile": args.theme_profile,
+        "theme_reason": args.theme_reason,
     }
     write_json(out / "session.json", session)
+    write_json(out / 'planning/theme-contract.json', theme)
 
     plan_schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -143,6 +152,7 @@ def main() -> int:
     profile = PROFILES[args.profile]
     with (out / "planning" / "gpt6_task_packet.md").open('a', encoding='utf-8') as handle:
         handle.write('\n场景方案：' + json.dumps(profile, ensure_ascii=False) + '\n具体风格遵循用户模板；候选版式按内容调整，不机械套用。\n')
+        handle.write('\n全篇主题合同：' + json.dumps(theme, ensure_ascii=False) + '\n每页提供section和theme_variant；design_system写theme_profile。真实北航校徽和中英校名直接复用本地源图，禁止生成或改造；预留身份图和页脚区域。\n')
 
     manifest = {
         "schema": "ppt_element_manifest_v1",
@@ -165,6 +175,8 @@ def main() -> int:
 
     contract = {
         "schema": "ppt_composition_contract_v1",
+        "theme_profile": args.theme_profile,
+        "theme_reason": args.theme_reason,
         "minimum_elements_per_slide": 40,
         "element_deficit_strategy": "generate_individual_web_assets_then_compose_and_reaudit",
         "generated_asset_policy": {

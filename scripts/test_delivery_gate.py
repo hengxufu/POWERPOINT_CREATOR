@@ -88,6 +88,34 @@ def main():
         write('planning/deck_plan.json', bad)
         assert not check(root, deck)['ready']
         passed.append('heading-only content fails')
+        reset()
+        # Theme-enabled synthetic workspace must reconcile actual source images, not names alone.
+        from beihang_theme import apply as apply_theme, PREFIX
+        theme_plan = copy.deepcopy(plan)
+        theme_plan['design_system'] = {'theme_profile': 'beihang-blue'}
+        theme_plan['slides'][0]['section'] = '合成测试'
+        theme_plan['slides'][0]['slide_id'] = 's1'
+        themed_deck = root / 'themed.pptx'
+        theme_result = apply_theme(deck, theme_plan, themed_deck)
+        assert theme_result['ready'], theme_result['problems']
+        write('composition_contract.json', {'theme_profile': 'beihang-blue'})
+        write('planning/deck_plan.json', theme_plan)
+        themed_review = copy.deepcopy(review)
+        themed_review['pptx_sha256'] = digest(themed_deck)
+        themed_review['slides'][0]['rendered_from_sha256'] = digest(themed_deck)
+        write('qa/delivery_review.json', themed_review)
+        assert check(root, themed_deck)['ready']
+        passed.append('enabled Beihang theme reconciles original source image and recurring objects')
+        damaged = Presentation(themed_deck)
+        identity = next(s for s in damaged.slides[0].shapes if s.name == PREFIX + 'identity')
+        damaged.slides[0].shapes._spTree.remove(identity._element)
+        damaged.save(themed_deck)
+        themed_review['pptx_sha256'] = digest(themed_deck)
+        themed_review['slides'][0]['rendered_from_sha256'] = digest(themed_deck)
+        write('qa/delivery_review.json', themed_review)
+        result = check(root, themed_deck)
+        assert not result['ready'] and any('Theme:' in p for p in result['problems'])
+        passed.append('missing recurring identity fails even when final deck hash and density reconcile')
     for name in passed:
         print('PASS:', name)
     print(f'{len(passed)} offline checks passed')

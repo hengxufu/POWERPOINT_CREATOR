@@ -9,6 +9,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from asset_job import prepare
 from layout_catalog import LAYOUTS
+from beihang_theme import contract as theme_contract, PROFILES as THEME_PROFILES
 
 PROFILES = {
     'scholarship': {'name': '国奖答辩·成长与证据', 'palette': '深红 #991F28、暖金 #C49A4A、白色',
@@ -33,15 +34,20 @@ PROFILES = {
 def packet(args):
     brief = args.brief.read_text(encoding='utf-8')
     profile = PROFILES[args.profile]
+    theme_profile = getattr(args, 'theme_profile', 'beihang-blue')
+    theme = theme_contract(theme_profile) if theme_profile != 'none' else {'theme_profile': 'none'}
+    palette = ('主色 #' + THEME_PROFILES[theme_profile] + '、白色、深灰正文；科学图配色保留语义') if theme_profile != 'none' else profile['palette']
     if args.out.exists():
         raise FileExistsError(args.out)
     args.out.mkdir(parents=True)
     payload = {'requested_profile': args.profile, **profile, 'brief': brief,
+               'theme_contract': theme, 'effective_palette': palette,
                'web_response_received': False, 'observed_model': None}
     (args.out / 'planning-input.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
     prompt = f'''请实际规划一份中国高校{profile['name']}可编辑PPT。先分析材料，再逐页规划，再审查。
 材料：\n{brief}\n
-设计候选：{profile['palette']}。用户模板优先。叙事参考：{profile['arc']}。
+设计候选：{palette}。用户模板优先。叙事参考：{profile['arc']}。
+全篇主题合同：{json.dumps(theme, ensure_ascii=False)}。
 候选构图：{', '.join(profile['layouts'])}；按内容选择，避免连续重复，不能全篇三卡片。
 局部素材候选：{profile['assets']}。
 请输出一个JSON对象：deck_thesis、audience、evidence_gaps、review_checklist、slides。
@@ -57,6 +63,7 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
 每条生成请求补充visual_context（slide_background、lighting、material、placement、avoid），并给建议box_inches；图标不混用线描和写实材质，艺术字只用于短章节词并另保留原生语义文字。
 给出全篇视觉节奏：封面、章节、解释、密集证据、结论之间如何切换；连续相同构图需说明理由。必要时分两页，不能为复杂程度牺牲字号和证据可读性。
 每一页至少40个独立PPT元素，封面、章节页、结尾页同样适用。每页提供element_budget（native_objects、generated_objects、total），规划真实独立对象而不是拆分文字段落或表格单元格凑数。总数不足40时，将缺口逐项列为网页版单元素asset_requests；每条给出具体主体、用途、布局位置和风格，逐个生成后由脚本插入。图表、表格、公式与科学标注保持原生，补充图片不能代替证据。按此密度规划留白与层级，先检查代表页可读性，再推广全篇。
+遵循材料中的theme_contract；未明确其他学校时，本用户默认beihang-blue。全篇贯穿真实北航校徽+中英校名组合、原生校名署名、章节文字与页码四类对象。design_system写theme_profile及recurring_elements，每页写section（1到24字的具体章节名）及theme_variant（cover/section/content/closing）。右上角x=.79W,y=.025H,w=.185W,h=.075H和底部y=.925H以下为固定身份预留区，正文避开。封面/章节/结尾可复用本地校园照片；正文克制。真实校徽/校名/校园照片属于已有源素材，不列为generate_web，不用生成通用航天图标代替学校身份，不猜院系归属。不把模板观察颜色称为官方VI。主题固定但每页证据构图仍需变化；四个主题对象只计四个，不复制标志凑40。
 以严格评审者身份检查材料充分性、内容空洞、图文比例、布局重复、证据与装饰混淆。
 仅提供规划和批评，不执行shell、不写本地源、不生成整页图。
 '''
@@ -70,6 +77,8 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
 def jobs(args):
     plan = json.loads(args.plan.read_text(encoding='utf-8-sig'))
     profile = PROFILES[args.profile]
+    theme_profile = plan.get('design_system', {}).get('theme_profile')
+    palette = ('主色 #' + THEME_PROFILES[theme_profile] + '、白色、深灰；仅次级概念与装饰') if theme_profile in THEME_PROFILES else profile['palette']
     requests = []
     used = set()
     for slide in plan['slides']:
@@ -82,7 +91,7 @@ def jobs(args):
             used.add(identifier)
             spec = {'asset_id': request.get('asset_id', identifier), 'kind': request['kind'],
                     'element': request['single_subject_prompt'], 'slide_id': slide['slide_id'],
-                    'object_id': request['object_id'], 'palette': request.get('palette', profile['palette']),
+                    'object_id': request['object_id'], 'palette': request.get('palette', palette),
                     'transparent': True, 'min_width': 1024, 'min_height': 1024,
                     'aspect': request.get('aspect', '3:1' if request['kind'] == 'art_text' else '1:1'),
                     'style': request.get('style', profile['name'] + '；清晰、精致、统一材质与光照'),
@@ -113,6 +122,7 @@ if __name__ == '__main__':
     commands = parser.add_subparsers(dest='command', required=True)
     command = commands.add_parser('packet')
     command.add_argument('--brief', type=Path, required=True)
+    command.add_argument('--theme-profile', choices=[*THEME_PROFILES, 'none'], default='beihang-blue')
     command.set_defaults(func=packet)
     command = commands.add_parser('jobs')
     command.add_argument('--plan', type=Path, required=True)

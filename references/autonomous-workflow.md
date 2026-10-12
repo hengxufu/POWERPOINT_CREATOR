@@ -17,6 +17,7 @@
 优先级是明确参数、当前请求中可识别的要求、该工作空间上次保存的需求、材料文件名、默认值。自动保存每个字段的来源与历次用户要求；恢复任务时保留上次参数和已有素材任务。
 
 - 默认科研汇报、20分钟、同行与课题组受众、16:9。
+- 默认beihang-blue贯穿主题，自动带入本地模板源素材与身份预留区，详见[beihang-theme.md](beihang-theme.md)。无需用户再次提醒北航元素。旧工作空间启动时迁移主题合同并修订受影响布局；主题切换不清空已派发素材或网页证据。绿园/银杏可用-ThemeProfile选择；明确其他学校或关闭主题用none，并以-ThemeReason记录用户指令。
 - 每页至少40个独立对象。脚本检测缺口后自动提出逐个网页版素材请求，Codex结合页面论证确定具体主体和摆放位置，将其加入实际规划并执行生成、审核和组装。不要只报告缺口后停止。修订后重跑计数与视觉检查。
 - 请求中出现国奖/奖学金、挑战杯、创新创业/创业路演时选择对应场景；已有工作空间保持原场景，除非新要求明确改变。
 - 题目优先使用《书名号中的题目》；否则沿用已有题目。新项目只有一个PDF/PPTX候选时可用其文件名作草稿题目，否则暂用项目名。
@@ -42,6 +43,7 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | continue_asset_jobs | 按asset_actions逐个推进，实际查看图片后才能review |
 | assemble_native_deck_then_render_and_run_delivery_gate | 原生组装、代表页与全篇渲染检查、运行交付检查 |
 | repair_delivery_gaps | 修复实际delivery_check指出的缺项 |
+| repair_recurring_beihang_theme | 修复规划section与主题合同，添加/更新四个贯穿对象，处理预留区冲突，再渲染与核验 |
 | supplement_individual_web_elements | 将element_density中的缺口提案按本页内容具体化并登记到规划，逐个网页生成、组装、重渲染 |
 | close_task_bridge_and_deliver | 关闭本次控制会话，交付已核验版本与来源 |
 

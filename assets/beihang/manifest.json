@@ -1,0 +1,505 @@
+{
+  "schema": "beihang_source_assets_v1",
+  "source_directory": "D:\\Myself\\PPT模板\\北航PPT模板",
+  "provenance_status": "user_provided_templates_not_official_brand_standard",
+  "reuse_scope": "User-requested local presentations; no claim of public redistribution rights.",
+  "assets": {
+    "wordmark-blue.png": {
+      "file": "wordmark-blue.png",
+      "sha256": "a81923bf4b08763588b3d5b663c9e2591dfab8fdbabd6321b7082ac8075f4bbb",
+      "role": "university_identity",
+      "source_file": "北京航空航天大学工作汇报ppt模板蓝(2).pptx",
+      "source_part": "ppt/media/image3.png",
+      "source_sha256": "f1a0e8050cbf2a68038b09f4f1efc16ec488527dc154ec1ea7bc1e16d91fec9b",
+      "transform": "none"
+    },
+    "campus-panorama.png": {
+      "file": "campus-panorama.png",
+      "sha256": "985ea6fbe785762fbdc279167148786deadd91b39934223b050861888284a7a3",
+      "role": "campus_photo",
+      "source_file": "北京航空航天大学工作汇报ppt模板蓝(2).pptx",
+      "source_part": "ppt/media/image1.png",
+      "source_sha256": "f1a0e8050cbf2a68038b09f4f1efc16ec488527dc154ec1ea7bc1e16d91fec9b",
+      "transform": "none"
+    },
+    "main-building.jpeg": {
+      "file": "main-building.jpeg",
+      "sha256": "a8bf923ae4525e1b4f6a4275937fa8c976b253bc3348b6f904d1a7b5289e13a7",
+      "role": "campus_photo",
+      "source_file": "北航PPT模板.pptx",
+      "source_part": "ppt/media/image3.jpeg",
+      "source_sha256": "d24e8e3169bd149801147407b538c6efbab5fcf50eb6b61a412174ab107693da",
+      "transform": "none"
+    }
+  },
+  "templates": [
+    {
+      "file": "10.pptx",
+      "sha256": "fa985e8026840306a3c7a60aa87ed56bba46d49bcdd32a497567751c453b7f1b",
+      "slide_count": 29,
+      "common_explicit_colors": [
+        [
+          "000000",
+          510
+        ],
+        [
+          "FFFFFF",
+          203
+        ],
+        [
+          "44CEB9",
+          129
+        ],
+        [
+          "2A566D",
+          82
+        ],
+        [
+          "8AA3BD",
+          66
+        ],
+        [
+          "D95181",
+          34
+        ],
+        [
+          "44546A",
+          29
+        ],
+        [
+          "E7E6E6",
+          29
+        ]
+      ]
+    },
+    {
+      "file": "6.pptx",
+      "sha256": "e368f6c740f2ccb915a9bbd11321672a1fd7e652b2c5db12fbcd4387ae16d735",
+      "slide_count": 32,
+      "common_explicit_colors": [
+        [
+          "000000",
+          257
+        ],
+        [
+          "FFFFFF",
+          172
+        ],
+        [
+          "778495",
+          16
+        ],
+        [
+          "4276AA",
+          16
+        ],
+        [
+          "F0F0F0",
+          8
+        ],
+        [
+          "178AA1",
+          8
+        ],
+        [
+          "40A693",
+          8
+        ],
+        [
+          "5268A5",
+          8
+        ]
+      ]
+    },
+    {
+      "file": "9.pptx",
+      "sha256": "eef89f060a9e3176797f65e6aa1566bc54c32372a018553935eab5ddf32a0f03",
+      "slide_count": 24,
+      "common_explicit_colors": [
+        [
+          "000000",
+          184
+        ],
+        [
+          "FFFFFF",
+          66
+        ],
+        [
+          "4D78BF",
+          58
+        ],
+        [
+          "42B6A0",
+          42
+        ],
+        [
+          "B81D2B",
+          24
+        ],
+        [
+          "E72918",
+          11
+        ],
+        [
+          "F39E02",
+          9
+        ],
+        [
+          "E47071",
+          9
+        ]
+      ]
+    },
+    {
+      "file": "北京航空航天大学工作汇报ppt模板蓝(2).pptx",
+      "sha256": "f1a0e8050cbf2a68038b09f4f1efc16ec488527dc154ec1ea7bc1e16d91fec9b",
+      "slide_count": 15,
+      "common_explicit_colors": [
+        [
+          "005BAB",
+          98
+        ],
+        [
+          "FFFFFF",
+          52
+        ],
+        [
+          "0058E0",
+          46
+        ],
+        [
+          "3B424B",
+          22
+        ],
+        [
+          "F8F8F8",
+          15
+        ],
+        [
+          "000000",
+          12
+        ],
+        [
+          "1066A5",
+          9
+        ],
+        [
+          "0068B7",
+          8
+        ]
+      ]
+    },
+    {
+      "file": "北航PPT模板.pptx",
+      "sha256": "d24e8e3169bd149801147407b538c6efbab5fcf50eb6b61a412174ab107693da",
+      "slide_count": 9,
+      "common_explicit_colors": [
+        [
+          "0C49B7",
+          61
+        ],
+        [
+          "FFFFFF",
+          48
+        ],
+        [
+          "1F497D",
+          8
+        ],
+        [
+          "3889F5",
+          4
+        ],
+        [
+          "000000",
+          3
+        ],
+        [
+          "4F81BD",
+          2
+        ],
+        [
+          "00723E",
+          1
+        ],
+        [
+          "FAFFFD",
+          1
+        ]
+      ]
+    },
+    {
+      "file": "北航PPT模版（绿园绿）.pptx",
+      "sha256": "27bdc85a16f3f539f91a08c7ad9a6c7934111ad0764c4eca79f690ca309fb8b9",
+      "slide_count": 16,
+      "common_explicit_colors": [
+        [
+          "357452",
+          47
+        ],
+        [
+          "000000",
+          19
+        ],
+        [
+          "E7E6E6",
+          15
+        ],
+        [
+          "27443D",
+          9
+        ],
+        [
+          "28D666",
+          8
+        ],
+        [
+          "2A4438",
+          8
+        ],
+        [
+          "57A66D",
+          8
+        ],
+        [
+          "E8EBF2",
+          4
+        ]
+      ]
+    },
+    {
+      "file": "模板蓝色(2).pptx",
+      "sha256": "a99b719b5562ca88429f5f0b72c612afc9a355ce1cd61fd79f30dce9591467a0",
+      "slide_count": 17,
+      "common_explicit_colors": [
+        [
+          "FFFFFF",
+          153
+        ],
+        [
+          "100F0D",
+          60
+        ],
+        [
+          "000000",
+          49
+        ],
+        [
+          "3EA0FF",
+          46
+        ],
+        [
+          "0059AF",
+          37
+        ],
+        [
+          "4276AA",
+          32
+        ],
+        [
+          "1E1E1E",
+          26
+        ],
+        [
+          "276A9A",
+          24
+        ]
+      ]
+    },
+    {
+      "file": "模版立体(2).pptx",
+      "sha256": "fb497f28306a4feb1680982cc1a6197ab42a51cec04944a546980c715f1ca994",
+      "slide_count": 20,
+      "common_explicit_colors": [
+        [
+          "FFFFFF",
+          860
+        ],
+        [
+          "000000",
+          800
+        ],
+        [
+          "6997FF",
+          402
+        ],
+        [
+          "3B71E4",
+          246
+        ],
+        [
+          "5446F7",
+          198
+        ],
+        [
+          "E7EEFF",
+          68
+        ],
+        [
+          "778495",
+          52
+        ],
+        [
+          "BBD6FF",
+          39
+        ]
+      ]
+    },
+    {
+      "file": "模版绿色(1).pptx",
+      "sha256": "d5e3e5f27b051beb176f26aa67427c041484981bd3b40df6c579360a0ccc1148",
+      "slide_count": 17,
+      "common_explicit_colors": [
+        [
+          "699E71",
+          143
+        ],
+        [
+          "000000",
+          118
+        ],
+        [
+          "FFFFFF",
+          96
+        ],
+        [
+          "AACAAC",
+          28
+        ],
+        [
+          "61986A",
+          28
+        ],
+        [
+          "A6A6A6",
+          12
+        ],
+        [
+          "100F0D",
+          8
+        ],
+        [
+          "D9D9D9",
+          5
+        ]
+      ]
+    },
+    {
+      "file": "模版绿色.pptx",
+      "sha256": "d5e3e5f27b051beb176f26aa67427c041484981bd3b40df6c579360a0ccc1148",
+      "slide_count": 17,
+      "common_explicit_colors": [
+        [
+          "699E71",
+          143
+        ],
+        [
+          "000000",
+          118
+        ],
+        [
+          "FFFFFF",
+          96
+        ],
+        [
+          "AACAAC",
+          28
+        ],
+        [
+          "61986A",
+          28
+        ],
+        [
+          "A6A6A6",
+          12
+        ],
+        [
+          "100F0D",
+          8
+        ],
+        [
+          "D9D9D9",
+          5
+        ]
+      ]
+    },
+    {
+      "file": "模版黄色(1).pptx",
+      "sha256": "c76eb5953a9d41dfff410df55c004cf34356459cdf3e4e60b95508e2a1874539",
+      "slide_count": 17,
+      "common_explicit_colors": [
+        [
+          "9F9C2B",
+          160
+        ],
+        [
+          "6F7416",
+          132
+        ],
+        [
+          "FFFFFF",
+          85
+        ],
+        [
+          "A6A6A6",
+          58
+        ],
+        [
+          "EAE9BD",
+          45
+        ],
+        [
+          "100F0D",
+          20
+        ],
+        [
+          "919633",
+          14
+        ],
+        [
+          "000000",
+          14
+        ]
+      ]
+    },
+    {
+      "file": "模版黄色.pptx",
+      "sha256": "c76eb5953a9d41dfff410df55c004cf34356459cdf3e4e60b95508e2a1874539",
+      "slide_count": 17,
+      "common_explicit_colors": [
+        [
+          "9F9C2B",
+          160
+        ],
+        [
+          "6F7416",
+          132
+        ],
+        [
+          "FFFFFF",
+          85
+        ],
+        [
+          "A6A6A6",
+          58
+        ],
+        [
+          "EAE9BD",
+          45
+        ],
+        [
+          "100F0D",
+          20
+        ],
+        [
+          "919633",
+          14
+        ],
+        [
+          "000000",
+          14
+        ]
+      ]
+    }
+  ]
+}

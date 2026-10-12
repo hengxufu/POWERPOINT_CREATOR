@@ -39,6 +39,32 @@ def check(workspace, pptx):
     except (OSError, ValueError, KeyError) as error:
         return {'ready': False, 'status': 'draft', 'problems': [str(error)], 'warnings': []}
     deck_hash = digest(pptx)
+    theme_declarations = []
+    for relative in ('session.json', 'composition_contract.json', 'planning/theme-contract.json', 'planning/auto-brief.json'):
+        path = workspace / relative
+        if path.is_file():
+            declaration = load(path)
+            if declaration.get('theme_profile'):
+                theme_declarations.append(declaration['theme_profile'])
+    if plan.get('design_system', {}).get('theme_profile'):
+        theme_declarations.append(plan['design_system']['theme_profile'])
+    theme_audit = None
+    if theme_declarations:
+        require(len(set(theme_declarations)) == 1, 'Conflicting theme profiles in planning/session/composition contracts')
+        profile = theme_declarations[0]
+        if profile.startswith('beihang-'):
+            from beihang_theme import audit as audit_theme
+            try:
+                theme_audit = audit_theme(pptx, plan, profile)
+                for problem in theme_audit['problems']:
+                    require(False, 'Theme: ' + problem)
+            except (ValueError, KeyError, OSError) as error:
+                require(False, 'Theme: ' + str(error))
+        elif profile == 'none':
+            session = load(workspace / 'session.json') if (workspace / 'session.json').is_file() else {}
+            require(bool(session.get('theme_reason', '').strip()), 'Theme disabled without a specific recorded user instruction')
+        else:
+            require(False, 'Unsupported theme profile')
     from audit_element_density import audit as audit_density
     density = audit_density(pptx, plan=plan)
     for page in density['slides']:
@@ -130,6 +156,7 @@ def check(workspace, pptx):
     return {'ready': not problems, 'status': 'review_evidence_complete' if not problems else 'draft',
             'pptx_sha256': deck_hash, 'problems': problems, 'warnings': warnings,
             'element_density': density,
+            'beihang_theme': theme_audit,
             'limits': ['Review notes are human/agent attestations, not automatic proof of aesthetics or factual accuracy.',
                        'Run editability, typography and source audits separately.']}
 

@@ -6,13 +6,15 @@ param(
  [ValidateSet('scholarship','research','challenge','innovation')][string]$Profile,
  [string]$Request,
  [string]$Audience,
- [int]$DurationMin
+ [int]$DurationMin,
+ [ValidateSet('beihang-blue','beihang-green','beihang-ginkgo','none')][string]$ThemeProfile,
+ [string]$ThemeReason
 )
 $ErrorActionPreference='Stop'
 $bundled=Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 $python=if(Test-Path -LiteralPath $bundled){$bundled}else{(Get-Command python -ErrorAction Stop).Source}
 $arguments=@((Join-Path $PSScriptRoot 'auto_workflow.py'),'prepare','--project-root',$ProjectRoot)
-foreach($pair in @(@('--workspace',$Workspace),@('--title',$Title),@('--profile',$Profile),@('--request',$Request),@('--audience',$Audience))){
+foreach($pair in @(@('--workspace',$Workspace),@('--title',$Title),@('--profile',$Profile),@('--request',$Request),@('--audience',$Audience),@('--theme-profile',$ThemeProfile),@('--theme-reason',$ThemeReason))){
  if($pair[1]){$arguments+=@($pair[0],$pair[1])}
 }
 if($PSBoundParameters.ContainsKey('DurationMin')){$arguments+=@('--duration',[string]$DurationMin)}
