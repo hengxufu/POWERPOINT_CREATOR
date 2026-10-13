@@ -9,6 +9,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from asset_job import prepare
 from layout_catalog import LAYOUTS
+from design_layout import DESIGN_BRIEF
+from experimental_figures import FIGURE_BRIEF
 from beihang_theme import contract as theme_contract, PROFILES as THEME_PROFILES
 
 PROFILES = {
@@ -70,6 +72,8 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
     (args.out / 'gpt6-task-packet.md').write_text(prompt, encoding='utf-8')
     (args.out / 'layout-recipes.json').write_text(json.dumps(LAYOUTS, ensure_ascii=False, indent=2), encoding='utf-8')
     with (args.out / 'gpt6-task-packet.md').open('a', encoding='utf-8') as handle:
+        handle.write('\n元素设计与排版合同：\n' + DESIGN_BRIEF)
+        handle.write('\n实验数据图合同：\n' + FIGURE_BRIEF)
         handle.write('\n以下是可调整的原生构图起点，按真实内容选取并修订，不能照搬占位框：\n' + json.dumps(LAYOUTS, ensure_ascii=False))
     print(args.out)
 

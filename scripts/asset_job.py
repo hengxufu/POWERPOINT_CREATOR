@@ -52,7 +52,7 @@ def prompt(spec):
         lines.append('这是概念性插画，不是实验图或科学证据；不要捏造数据、测量值或未经说明的机制关系。')
     context=spec.get('visual_context',{})
     if not isinstance(context,dict): raise ValueError('visual_context must be an object')
-    for key,label in [('slide_background','使用页背景'),('lighting','光照'),('material','材质'),('placement','摆放位置'),('avoid','额外避免')]:
+    for key,label in [('slide_background','使用页背景'),('lighting','光照'),('material','材质'),('placement','摆放位置'),('viewpoint','视角'),('silhouette','轮廓'),('edge_treatment','边缘处理'),('detail_level','缩小后的细节'),('optical_padding','光学留白'),('avoid','额外避免')]:
         if context.get(key): lines.append(label+'：'+str(context[key]))
     if context: lines.append('这些是局部素材适配条件，不要把背景色、文字区或幻灯片本身画进图中。')
     return '\n'.join(lines)

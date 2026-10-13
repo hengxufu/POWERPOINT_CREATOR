@@ -1,0 +1,4 @@
+# Optional complex scientific-figure route; basic editable PPT charts do not need these.
+numpy>=1.24,<3
+matplotlib>=3.8,<4
+PyMuPDF>=1.24,<2

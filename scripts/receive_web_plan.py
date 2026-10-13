@@ -62,6 +62,8 @@ def receive(reply, evidence, session_url, model, out):
     raw = reply.read_text(encoding='utf-8-sig').strip()
     match = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw)
     plan = validate(json.loads(match.group(1) if match else raw))
+    from design_layout import audit
+    layout_report = audit(plan)
     proof = evidence.read_bytes()
     if not proof:
         raise ValueError('Nonempty actual browser observation required')
@@ -71,11 +73,15 @@ def receive(reply, evidence, session_url, model, out):
     (out/'assistant-reply.txt').write_text(raw, encoding='utf-8')
     (out/'browser-observation.bin').write_bytes(proof)
     (out/'deck_plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
+    layout_report['plan_sha256'] = hashlib.sha256((out/'deck_plan.json').read_bytes()).hexdigest()
+    (out/'layout-plan-audit.json').write_text(json.dumps(layout_report, ensure_ascii=False, indent=2), encoding='utf-8')
     provenance = {'schema': 'observed_web_plan_v1', 'session_url': session_url, 'observed_model': model,
                   'response_file': 'assistant-reply.txt', 'response_sha256': hashlib.sha256(raw.encode()).hexdigest(),
                   'evidence_file': 'browser-observation.bin', 'evidence_sha256': hashlib.sha256(proof).hexdigest(),
                   'verification_limit': 'Operator-supplied visible observation; does not authenticate backend model or factual claims',
                   'status': 'received_requires_content_and_visual_review'}
+    provenance['layout_geometry_errors'] = layout_report['geometry_errors']
+    provenance['layout_warnings'] = layout_report['warnings']
     (out/'provenance.json').write_text(json.dumps(provenance, ensure_ascii=False, indent=2), encoding='utf-8')
     return provenance
 

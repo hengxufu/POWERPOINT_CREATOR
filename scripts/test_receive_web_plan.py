@@ -41,6 +41,11 @@ class PlanTests(unittest.TestCase):
             args = (reply, evidence, 'https://chatgpt.com/c/test-fixture', 'GPT-6', root/'out')
             receive(*args)
             self.assertTrue((root/'out/deck_plan.json').is_file())
+            report = json.loads((root/'out/layout-plan-audit.json').read_text(encoding='utf-8'))
+            self.assertTrue(report['visual_review_required'])
+            self.assertGreater(report['geometry_errors'], 0)  # Legacy fixture lacks IDs/asset boxes; never silently certified.
+            import hashlib
+            self.assertEqual(report['plan_sha256'], hashlib.sha256((root/'out/deck_plan.json').read_bytes()).hexdigest())
             with self.assertRaises(FileExistsError): receive(*args)
             with self.assertRaises(ValueError): receive(reply,evidence,'https://example.com','GPT-6',root/'bad')
             with self.assertRaises(ValueError): receive(reply,evidence,args[2],'unverified',root/'bad')

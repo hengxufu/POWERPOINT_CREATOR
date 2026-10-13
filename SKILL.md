@@ -37,6 +37,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 制作与交互
 
+优化单元素设计、视觉美化与布局排版时，读 [references/element-design-and-layout.md](references/element-design-and-layout.md)。先确定内容关系，再选择布局，声明视觉角色、阅读顺序、设计令牌与对齐组；单元素合同补齐视角、轮廓、边缘、缩小后细节与光学留白。组装前用 `scripts/design_layout.py` 对规划做几何预检，再依据真实渲染精修；不能用几何通过代替视觉验收或40对象检查。
+
 提高视觉丰富度或完整重设计时，读 [references/visual-composition.md](references/visual-composition.md)，使用扩展布局库，将主证据、局部放大、原生解读、同口径比较与单元素素材组合。网页规划须给出design_system、代表页及每页视觉层次；复杂程度服务于论证和可读性，不用装饰数量替代设计。
 
 网页规划取得后，必须按 [references/web-plan-handoff.md](references/web-plan-handoff.md) 使用`receive_web_plan.py`接收真实助手回复并保留观察证据，再拆分独立素材任务。解析或布局检查失败则修订规划，不直接进入全稿组装；素材任务按实际状态恢复，提交不明时禁止自动重发。
@@ -58,6 +60,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 - 新建工作空间必须按强制初始化流程连接网页版并让 GPT-6 承担规划；已有工作空间的局部修改可复用已记录的有效会话。连接失败则明确报告，没有网页版回复不能宣称已获规划，随后仅按用户授权继续本地工作。
 
 ## 论文来源与验收工具
+
+实验数据图与复杂科研图读取 [references/experimental-data-figures.md](references/experimental-data-figures.md)。常规图保留native_data原生路径；复杂图融合本地nature-figure与nature-statistics的源数据、实验单位、误差、多panel与渲染QA流程。用 `experimental_figures.py prepare/run` 接入5类明确字段映射的CSV模板，其他图型走Nature专属绘图源；不猜统计、不自动排除、不将数据图送图像模型。保留数据/绘图源/向量导出，按实际入稿尺寸检查，不把可重建图片冒充PPT原生图表。
 
 `paper_source.py intake`读取指定PDF页或文本并保存可追溯源包；`crop`仅提取指定证据区域，裁剪状态默认为pending，实际查看后才能通过。PDF功能使用可选requirements-paper.txt。用 `audit_paper_deck.py`按显示页序检查结构和可选paper-plan来源记录，再结合编辑性、字体和渲染检查。详见 [references/paper-evidence-and-quality.md](references/paper-evidence-and-quality.md)；整合依据与取舍见 [PAPER2PPT_INTEGRATION.md](PAPER2PPT_INTEGRATION.md)。
 

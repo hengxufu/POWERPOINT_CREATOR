@@ -63,6 +63,11 @@ def build(out, selected=None):
                 'transparent': True, 'min_width': 1024, 'min_height': 1024,
                 'visual_context': {'slide_background': '白色；不得把白色背景画进透明原图',
                                    'lighting': style['lighting'], 'material': style['material'],
+                                   'viewpoint': '系列统一轻微三分之四视角；环形主体保持轮廓清晰',
+                                   'silhouette': '完整单一主体；缩小到目标摆放尺寸仍可辨识，不靠微粒填充',
+                                   'edge_treatment': '克制精密倒角、干净alpha边缘；无白边或光晕',
+                                   'detail_level': '细节服务轮廓，避免缩小后成为噪点的微刻纹',
+                                   'optical_padding': '四周约10%安全留白；后续按实际主体检查视觉重心，不拉伸',
                                    'placement': '独立小元素；按本库对应recipe后续选择位置，不能画出PPT布局',
                                    'avoid': '不生成校徽校名、真实校园建筑、数据图、公式或科研结果；不做拼贴，不复制主题标志凑数'}}
         prompt(spec)

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 LAYOUTS = {
+    'equation-explainer': {'best_for': '公式推导与物理含义联合解释', 'zones': {'native_equation_steps': [.7, 1.85, 7.2, 2.7], 'native_symbol_units': [8.3, 1.85, 4.25, 2.7], 'physical_interpretation': [.7, 4.9, 7.2, 1.55], 'assumptions_and_limits': [8.3, 4.9, 4.25, 1.55]}, 'assembly': '公式优先原生且保留LaTeX源；符号、单位、假设与结论独立可编辑，不将公式交图像模型；超过可读容量拆推导步骤'},
     'evidence-zoom': {'best_for': '整体证据与局部细节联合解释', 'zones': {'source_figure': [.7, 1.85, 7.4, 4.75], 'detail_crop': [8.5, 1.85, 4.1, 2.6], 'native_interpretation': [8.5, 4.75, 4.1, 1.65]}, 'assembly': '保留整体图；放大区域来自真实源并标明对应位置，原生框线连接；禁止生成科学细节'},
     'technical-layers': {'best_for': '系统层级与模块协作', 'zones': {'native_architecture': [.7, 1.9, 8.2, 4.65], 'single_component': [9.35, 1.9, 3.25, 2.15], 'interface_conditions': [9.35, 4.4, 3.25, 2.1]}, 'assembly': '原生分层底板、模块、接口与箭头；颜色编码层级，独立部件插画只辅助识别'},
     'validation-dashboard': {'best_for': '同一论点的多项验证', 'zones': {'main_native_chart': [.7, 1.9, 7.1, 4.65], 'secondary_evidence': [8.25, 1.9, 4.35, 2.8], 'conditions_and_limits': [8.25, 5, 4.35, 1.5]}, 'assembly': '主图占优，副证据与条件分区；统一变量颜色与单位，不能把多个小图压成不可读仪表盘'},
@@ -24,7 +25,7 @@ LAYOUTS = {
     'growth-timeline': {'best_for': '个人成长与项目里程碑', 'zones': {'native_timeline': [.7, 2.2, 11.9, 1.3], 'evidence_photo': [.7, 4, 4.5, 2.3], 'milestone_explanation': [5.6, 4, 7, 2.3]}},
     'photo-evidence': {'best_for': '真实实践与实验场景', 'zones': {'real_photo': [6.7, 1.8, 5.9, 4.7], 'claim': [.7, 1.9, 5.5, 1.2], 'specific_contribution': [.7, 3.4, 5.5, 2.7]}},
     'traction-chart': {'best_for': '增长/趋势与落地', 'zones': {'native_chart': [.7, 2, 8.4, 4.5], 'metric_explanation': [9.5, 2, 3.1, 4.5]}},
-    'section-wordmark': {'best_for': '章节切换', 'zones': {'native_section_title': [2.1, 2.3, 9.1, 1.2], 'optional_art_text': [4.4, 4, 4.5, 1.2], 'single_ornament': [9.8, .7, 2.6, 1.5]}},
+    'section-wordmark': {'best_for': '章节切换', 'zones': {'native_section_title': [2.1, 2.3, 9.1, 1.2], 'optional_art_text': [4.4, 4, 4.5, 1.2], 'single_ornament': [9.8, 1.1, 2.6, 1.1]}},
 }
 
 
@@ -34,6 +35,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.out.exists():
         raise FileExistsError(args.out)
-    args.out.write_text(json.dumps({'canvas_inches': [13.333, 7.5], 'shared_title_box': [.65, .4, 12, 1],
-                                    'source_footer_box': [.65, 6.9, 11.8, .3], 'recipes': LAYOUTS,
+    args.out.write_text(json.dumps({'canvas_inches': [13.333, 7.5], 'shared_title_box': [.65, .4, 9.5, 1],
+                                    'source_footer_box': [.65, 6.62, 11.8, .25], 'recipes': LAYOUTS,
                                     'limits': 'Starting geometry only; adjust after rendering real content.'}, ensure_ascii=False, indent=2), encoding='utf-8')
