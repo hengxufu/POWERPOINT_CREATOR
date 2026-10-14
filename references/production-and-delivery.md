@@ -18,7 +18,7 @@
 
 ## 真正执行网页版单元素生成
 
-asset_requests中每项写request_id、kind、purpose、single_subject_prompt。默认decision为generate_web。依次执行现有asset_spec/asset_job及web_task流程：准备 → 实际提交 → 等待原对话结果 → 下载 → 技术与视觉检查 → placement → manifest → compose → 核对最终PPT中的对象与哈希。先完整阅读web-single-element.md和browser-connection.md，按实际可用入口执行；不要把任务规格或连接成功当成素材生成成功。
+asset_requests中每项写request_id、kind、purpose、single_subject_prompt。默认decision为generate_web。依次执行现有asset_spec/asset_job及web_task流程：准备任务与必要资料 → 真实附件上传/完整消息发送 → 记录资料交接与实际提交 → 等待原对话结果 → 下载 → 技术与视觉检查 → placement → manifest → compose → 核对最终PPT中的对象与哈希。先完整阅读web-single-element.md和browser-connection.md，按实际可用入口执行；不要把任务规格或连接成功当成素材生成成功。
 
 assets/asset_manifest.json每项补充request_id，对应唯一请求。不要只给封面生成一个装饰，然后忽略其他页已经规划的需求。保持每次只生成一个元素，不用整页图、不用拼贴后裁切。已有适用资产可以复用并追溯，不因重复使用而重新计为新生成。
 
@@ -32,7 +32,7 @@ assets/asset_manifest.json每项补充request_id，对应唯一请求。不要�
 
 初始化产生qa/delivery_review.json空记录，默认未验收。完成最终组装后按实际页面顺序补充：
 
-- 顶层pptx_sha256；web_planning的session_url和实际response_file。离线例外使用offline_user_authorization.instruction与reason。
+- 顶层pptx_sha256；web_planning的session_url、实际response_file和material_bundle（来自真实接收器provenance）；GPT及每个Image任务均核对必要资料交接。离线例外使用offline_user_authorization.instruction与reason。
 - 每页slide_number、render_file、render_sha256、rendered_from_sha256。先渲染、实际查看后填记录；修改PPT后旧审查失效，需要重渲染并更新。
 - content_review、visual_review、evidence_review分别包含status和具体note。内容检查解释是否空洞；视觉检查记录层级、图文关系、留白、遮挡、对比及与参考的差距；证据检查来源与结论边界。没有科学论断的封面也应说明该项为什么通过。
 - unresolved_issues列出尚未处理的问题；全部解决后才设为空数组。没有生成需求时填写no_generated_assets_reason，构图需要高度重复时填写layout_repetition_reason。

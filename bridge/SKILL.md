@@ -13,4 +13,6 @@ scripts中包含从本机codex-chatgpt-bridge复制的workspace/controller/local
 
 网页采用当前可用浏览器工具，仅读取本任务页面；Codex执行所有源修改与验证。页面登录/CAPTCHA由人完成。结束按ppt_bridge Off关闭本次控制会话；只关闭自己创建的浏览器标签页，不关闭用户已有窗口。
 
+路线规则以 [../references/browser-connection.md](../references/browser-connection.md) 为准：优先Codex内置浏览器，实际受阻或缺必要文件传输能力时切官方Playwright CLI；bridge不是另一个图像引擎或OpenAI官方CLI。两条路线均必须按 [../references/planning-material-handoff.md](../references/planning-material-handoff.md) 在规划阶段准备GPT与Image必要资料并实际送达对应任务。只给路径、Configure成功或CLI可运行都不能代替资料送达和网页验证。
+
 核心程序来源是本地安装版本（2026-10-11），未复制runtime、账户配置、状态目录或认证文件。第三方DevSpace/Node运行时不包含在包内，原程序的依赖与许可不被本包MIT许可重新授权。运行时启动能力未验证时不得报告MCP已连通。

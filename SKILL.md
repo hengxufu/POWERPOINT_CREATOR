@@ -7,6 +7,14 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 技能维护与离线回归测试只执行相关文件检查和合成测试；此类任务不触发制作启动、网页素材生成或正式交付流程。完整制作、重设计和新会话恢复制作仍须执行下面的启动与验收要求。
 
+调研或修改技能时，读 [references/maintenance-and-validation.md](references/maintenance-and-validation.md)，按真实改动选择回归检查，明确项目副本与已安装技能的边界。
+
+## 网页路线与必要资料
+
+按 [references/browser-connection.md](references/browser-connection.md) 选择本次最佳路线：默认优先Codex内置浏览器；不可用、一次有依据的重试仍失败，或缺少必需上传/下载能力时，使用内嵌bridge协调的官方Playwright CLI。CLI是命令行接口（非CIL），“官方”指Playwright，不将本地bridge称为OpenAI官方产品。实际登录、资料上传、回复/生成与原图下载决定是否可用；控制器或CLI启动成功不等于网页版连通。提交不明先恢复原聊天，不换路线重发。
+
+无论使用哪条路线，规划阶段必须执行 [references/planning-material-handoff.md](references/planning-material-handoff.md)：实际读资料并同时准备GPT的论证/规划资料与Image的单元素参考资料。通过完整正文或真实附件送达，不能只给本地路径、文件名或空泛主题；每个图像任务还须带入对应资料，不能假设不同聊天共享上下文。规划接收、图片提交及delivery_gate检查资料版本、目标对话和真实交接观察。准备好的包不是上传记录；缺关键资料时保留缺项并推进不依赖它的工作。
+
 ## 简短请求也要主动完成流程
 
 用户只说“制作”“继续”“优化”时，完整阅读 [references/autonomous-workflow.md](references/autonomous-workflow.md)。用可省略参数的 `start_ppt.ps1` 自动准备工作空间、识别场景、补齐可逆默认值并保留需求来源；读取自动生成的完整规划包，不要求用户自己写长提示词。恢复时运行 `auto_workflow.py status --workspace <workspace> --write`，按真实状态推进到下一步并继续执行，不停在状态报告或计划。网页观察、逐个素材、公式说明、原生数据、字体、代表页与全篇审查由技能主动落实。
@@ -27,7 +35,7 @@ description: 制作、优化和逐页打磨中国科研汇报的可编辑 PPTX�
 
 每次在新活跃会话启动制作或恢复制作，必须先读内嵌 [bridge/SKILL.md](bridge/SKILL.md)、[bridge/USER_POLICY.md](bridge/USER_POLICY.md) 与 [references/bridge-startup-contract.md](references/bridge-startup-contract.md)，运行`start_ppt.ps1`，然后立即使用浏览器工具验证本任务登录、GPT-6选择器与图像入口。用户已要求此会话级自动流程，不重复询问普通连接准备；登录、公开隧道与权限升级仍遵循其授权边界。缺失或过期的连接合同不能通过在线delivery_gate。脚本退出0只代表对应步骤成功，不能笼统宣称两个模型已连通。
 
-新工作空间由start入口调用init_ppt_session.ps1创建；随后刷新内嵌bridge项目profile，并由当前Codex会话执行实际网页连接与验证。完整流程见 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)。失败保留工作空间和bridge-connect.json，保持草稿。`-SkipWebConnection`仅限测试或用户明确离线；不能用它绕过正式在线交付检查。
+新工作空间由start入口调用init_ppt_session.ps1创建；随后刷新内嵌bridge项目profile，并由当前Codex会话执行实际网页连接与验证。完整流程见 [references/bridge-assisted-ppt.md](references/bridge-assisted-ppt.md)。失败保留工作空间和bridge-connect.json，保持草稿。维护测试不调用制作启动入口；用户明确离线时记录授权与网页缺项，不能绕过正式在线交付检查。
 
 网页版 GPT-6 负责叙事结构、逐页规划、信息密度、讲稿、证据缺口和全稿审查。GPT Image 2.5 只生成一个任务对应的一个独立小元素，允许类型为 `ornament`、`concept`、`art_text`、`icon`、`cutout`。严禁生成整页 PPT、完整页面布局、整页信息图、带标题正文页脚的合成画面、图表、表格、公式、实验结果图，或生成多元素拼贴后裁切。
 
@@ -81,7 +89,7 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 学习北航模板配饰或扩充更精致的局部元素时，阅读 [references/beihang-ornament-layouts.md](references/beihang-ornament-layouts.md)。用对象位置分析提炼锚点、尺度差、层叠与留白，再交网页版规划，先生成3个独立样本再决定是否扩充12个候选。用ornament_library.py准备单元素任务；本地提案、网页真实建议、已生成图片必须分别记状态，失败不冒充成功。
 
-网页工具失败或需要恢复连接时，阅读 [references/browser-connection.md](references/browser-connection.md)，使用经实测的官方 Playwright CLI 替代连接。接入、发送、生成和下载分别验证；等待必需的浏览器人为授权时继续本地准备，不虚报网页版已连通。
+网页工具失败或需要恢复连接时，阅读 [references/browser-connection.md](references/browser-connection.md)，根据本次实际观察选择内置浏览器或官方 Playwright CLI。接入、发送、生成和下载分别验证；等待必需的浏览器人为授权时继续本地准备，不虚报网页版已连通。
 
 当用户要求网页版 image2.5/image-2.5 单元素生成，或正在制作的 PPT 确实需要局部位图素材时，阅读 [references/web-single-element.md](references/web-single-element.md)，可先用 `scripts/asset_spec.py` 生成主题一致的单元素规格，再用 `scripts/asset_job.py` 准备任务、检查下载素材并登记替换位置。这个流程由当前 Codex 会话通过浏览器工具执行，不是后台服务；不需要开启本地文件 bridge 或公开隧道就能发送非敏感提示词。已有授权覆盖同范围生成和微调，不重复询问。
 
@@ -92,5 +100,7 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 局部生成素材的配色、光照、尺寸和视觉验收按 [references/visual-assets.md](references/visual-assets.md) 执行。素材通过 review 后，使用 `asset_job.py placement` 计算比例和有效分辨率；将任务登记进 `asset_manifest.json`，再由 `compose_elements.py` 逐个插入为独立 picture。图片生成不能取代原生排版。integrated 状态必须提供实际 PPTX 核对对象名和图像哈希。
 
 运行对应制作技能的结构验证和渲染检查，再运行 `python scripts/audit_editability.py deck.pptx --out editability.json`。这个脚本只证明包内对象与数据部件存在，不能证明事实正确、图表数据可用或视觉美观。所有结果页人工核对来源、单位、样本量、误差条/检验含义及结论边界；未提供统计信息不得自动补全。
+
+编辑性报告按实际显示页序给slide_number，逐图追踪图表→工作簿关系；检查charts中的status，不以embedded_workbooks总数代替逐图检查。缺失、外链或损坏工作簿须修复或明确披露。工作簿存在仍需对照源数据、图表缓存与实际修改结果。阅读顺序和替代文本按editable-refinement的检查执行；缺少实际PowerPoint/屏幕阅读器验证时明确其未测。
 
 交付 PPTX、可重建源、数据/来源、实际使用资产和 QA 记录。写明实际查看过哪些渲染页、哪些检查未完成；无可靠渲染器时不得宣称视觉验收通过。操作演示至少包含改一个中文标题、更新图表数值、改表格单元格，重建后再次检查。样例脚本 `scripts/demo.py` 仅用于能力演示，所有数值标注为示例。

@@ -10,7 +10,7 @@
 & scripts/start_ppt.ps1 -Request '把现有材料做成15分钟科研汇报，详细解释公式'
 ```
 
-入口先调用 `auto_workflow.py prepare`，再刷新本任务Bridge profile。Codex随后立即按启动合同操作实际浏览器，验证登录、选择器及图像入口。读取 `planning/automation-input.json` 中的 `planning_packet` 路径，使用自动生成的完整规划包。不能把准备完成或状态输出当作任务结束。
+入口先调用 `auto_workflow.py prepare`，再刷新本任务Bridge profile。Codex随后立即按启动合同操作实际浏览器，验证登录、选择器及图像入口。读取 `planning/automation-input.json` 中的 `planning_packet` 路径，使用自动生成的完整规划包。先读[必要资料交接](planning-material-handoff.md)，填好自动创建的material-selection.json再运行prepare生成GPT/Image资料包；planning_packet本身仅为提示词，实际发送planning_material_bundle里的message.txt及必要附件。不能把准备完成或状态输出当作任务结束。
 
 ## 自动补齐需求
 
@@ -38,7 +38,9 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | 状态 | Codex应执行 |
 |---|---|
 | observe_browser_and_check_connection | 实际观察、登记证据并Check；准备本地资料可并行进行 |
-| receive_actual_web_plan | 发送规划包并通过receive_web_plan接收真实回复 |
+| prepare_planning_materials | 实际读资料，填写material-selection.json中GPT与Image两份范围；运行auto_workflow prepare生成版本化资料包 |
+| transfer_planning_materials | 上传必要附件并发送完整message.txt，保存真实观察并登记material_handoff record |
+| receive_actual_web_plan | 核对已交接资料，通过receive_web_plan接收真实回复，不能重复发送 |
 | recover_original_planning_conversation_do_not_resubmit | 规划发送超时且结果不明；恢复原任务页确认消息与回复，禁止在新对话重发；设计派发记录位于planning/web-design-dispatch.json |
 | repair_received_plan | 根据具体错误修订规划，不重做已通过的素材 |
 | continue_asset_jobs | 按asset_actions逐个推进，实际查看图片后才能review |

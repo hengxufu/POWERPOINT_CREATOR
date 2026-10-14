@@ -35,6 +35,16 @@ PROFILES = {
 
 def packet(args):
     brief = args.brief.read_text(encoding='utf-8')
+    if getattr(args, 'materials', None):
+        from material_handoff import select, load, inside
+        from bridge_session import safe_root
+        if not getattr(args, 'project_root', None):
+            raise ValueError('--project-root required with --materials')
+        root = safe_root(args.project_root)
+        inside(root, args.out)
+        selection = load(inside(root, args.materials))
+        select(root, selection, 'gpt')
+        select(root, selection, 'image')
     profile = PROFILES[args.profile]
     theme_profile = getattr(args, 'theme_profile', 'beihang-blue')
     theme = theme_contract(theme_profile) if theme_profile != 'none' else {'theme_profile': 'none'}
@@ -75,6 +85,17 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
         handle.write('\n元素设计与排版合同：\n' + DESIGN_BRIEF)
         handle.write('\n实验数据图合同：\n' + FIGURE_BRIEF)
         handle.write('\n以下是可调整的原生构图起点，按真实内容选取并修订，不能照搬占位框：\n' + json.dumps(LAYOUTS, ensure_ascii=False))
+        handle.write('\n资料合同：先确认正文资料与附件可读取。每页evidence引用资料ID和页码/图号；每个asset_request给material_ids，选取Image必需的主体/风格参考。文件路径不是文件内容；缺资料先报告，不推断。\n')
+    if getattr(args, 'materials', None):
+        from material_handoff import prepare as prepare_materials
+        if not getattr(args, 'project_root', None):
+            raise ValueError('--project-root required with --materials')
+        prepare_materials(args.project_root, args.materials, 'gpt', args.out / 'gpt6-task-packet.md',
+                          args.out / 'gpt-materials', 'gpt-planning')
+        image_brief = args.out / 'image-planning-context.md'
+        image_brief.write_text('本项目Image共用资料。逐元素任务另补主体、用途、准确文字、尺寸、背景、构图与科学边界。只生成单个局部元素，不生成整页、图表或实验结果。', encoding='utf-8')
+        prepare_materials(args.project_root, args.materials, 'image', image_brief,
+                          args.out / 'image-materials', 'image-planning-context')
     print(args.out)
 
 
@@ -100,6 +121,8 @@ def jobs(args):
                     'aspect': request.get('aspect', '3:1' if request['kind'] == 'art_text' else '1:1'),
                     'style': request.get('style', profile['name'] + '；清晰、精致、统一材质与光照'),
                     'visual_context': request.get('visual_context', {})}
+            if 'material_ids' in request:
+                spec['material_ids'] = request['material_ids']
             if request['kind'] == 'art_text':
                 spec['exact_text'] = request['exact_text']
                 spec['min_height'] = 384
@@ -107,6 +130,17 @@ def jobs(args):
             from asset_job import prompt
             prompt(spec)
             requests.append((identifier, slide['slide_number'], spec))
+    if getattr(args, 'materials', None):
+        from material_handoff import select, load, inside
+        from bridge_session import safe_root
+        if not getattr(args, 'project_root', None):
+            raise ValueError('--project-root required with --materials')
+        root = safe_root(args.project_root)
+        inside(root, args.out)
+        selection = load(inside(root, args.materials))
+        select(root, selection, 'gpt')
+        for _, _, spec in requests:
+            select(root, selection, 'image', spec.get('material_ids'))
     if args.out.exists():
         raise FileExistsError('Use a new queue version; never overwrite dispatched jobs')
     args.out.mkdir(parents=True)
@@ -115,7 +149,8 @@ def jobs(args):
         spec_path = args.out / (identifier + '.spec.json')
         spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding='utf-8')
         job_dir = args.out / identifier
-        prepare(SimpleNamespace(spec=spec_path, job=job_dir))
+        prepare(SimpleNamespace(spec=spec_path, job=job_dir, materials=getattr(args, 'materials', None),
+                                project_root=getattr(args, 'project_root', None)))
         queue.append({'request_id': identifier, 'slide_number': number, 'job_dir': identifier, 'state': 'prepared_not_submitted'})
     (args.out / 'queue.json').write_text(json.dumps({'schema': 'web_element_queue_v1', 'jobs': queue}, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({'prepared_jobs': len(queue), 'actual_web_submissions': 0}, ensure_ascii=False))
@@ -134,5 +169,7 @@ if __name__ == '__main__':
     for command in commands.choices.values():
         command.add_argument('--profile', choices=PROFILES, required=True)
         command.add_argument('--out', type=Path, required=True)
+        command.add_argument('--materials', type=Path, help='Reviewed material selection for both GPT and Image')
+        command.add_argument('--project-root', type=Path)
     args = parser.parse_args()
     args.func(args)

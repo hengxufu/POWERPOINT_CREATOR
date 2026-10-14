@@ -54,11 +54,17 @@ def validate(plan):
     return plan
 
 
-def receive(reply, evidence, session_url, model, out):
+def receive(reply, evidence, session_url, model, out, materials=None):
     if not re.fullmatch(r'https://chatgpt\.com/c/[A-Za-z0-9-]+', session_url):
         raise ValueError('Observed ChatGPT conversation URL required')
     if not re.search(r'\bGPT[- ]?6\b', model, re.I):
         raise ValueError('Observed GPT-6 label required')
+    from material_handoff import check as check_materials
+    if materials is None:
+        raise ValueError('Transferred planning material packet required')
+    material_check = check_materials(materials, target='gpt', session_url=session_url, task_id='gpt-planning')
+    if not material_check['ready']:
+        raise ValueError('Planning materials: ' + '; '.join(material_check['problems']))
     raw = reply.read_text(encoding='utf-8-sig').strip()
     match = re.fullmatch(r'```(?:json)?\s*([\s\S]*?)\s*```', raw)
     plan = validate(json.loads(match.group(1) if match else raw))
@@ -76,6 +82,8 @@ def receive(reply, evidence, session_url, model, out):
     layout_report['plan_sha256'] = hashlib.sha256((out/'deck_plan.json').read_bytes()).hexdigest()
     (out/'layout-plan-audit.json').write_text(json.dumps(layout_report, ensure_ascii=False, indent=2), encoding='utf-8')
     provenance = {'schema': 'observed_web_plan_v1', 'session_url': session_url, 'observed_model': model,
+                  'material_bundle': str(Path(materials).resolve()),
+                  'material_packet_sha256': hashlib.sha256((Path(materials)/'packet.json').read_bytes()).hexdigest(),
                   'response_file': 'assistant-reply.txt', 'response_sha256': hashlib.sha256(raw.encode()).hexdigest(),
                   'evidence_file': 'browser-observation.bin', 'evidence_sha256': hashlib.sha256(proof).hexdigest(),
                   'verification_limit': 'Operator-supplied visible observation; does not authenticate backend model or factual claims',
@@ -92,5 +100,6 @@ if __name__ == '__main__':
         parser.add_argument('--'+name, type=Path, required=True)
     parser.add_argument('--session-url', required=True)
     parser.add_argument('--model', required=True)
+    parser.add_argument('--materials', required=True, type=Path)
     args = parser.parse_args()
-    print(json.dumps(receive(args.reply, args.evidence, args.session_url, args.model, args.out), ensure_ascii=False))
+    print(json.dumps(receive(args.reply, args.evidence, args.session_url, args.model, args.out, args.materials), ensure_ascii=False))

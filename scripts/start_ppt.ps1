@@ -29,6 +29,7 @@ try {
 $context=$prepared | ConvertFrom-Json
 $Workspace=$context.workspace
 Write-Host "Planning packet: $($context.planning_packet)"
+Write-Host "Material selection: $($context.material_selection). Inspect and supply necessary content to BOTH GPT and Image before dispatch. Paths alone are not materials."
 & (Join-Path $PSScriptRoot 'ppt_bridge.ps1') -Action Prepare -ProjectRoot $ProjectRoot -Workspace $Workspace
 if($LASTEXITCODE -ne 0){throw 'Startup failed; retain draft state'}
-Write-Host 'NEXT REQUIRED: observe the task browser, verify login/model/image entry, record evidence via bridge_session observe, run ppt_bridge Check. Do not skip directly to deck generation.'
+Write-Host 'NEXT REQUIRED: prefer the built-in browser; on verified failure use the official Playwright CLI. Verify login/model/image entry, record actual route via bridge_session observe, run ppt_bridge Check. Prepare and transfer necessary material packets before planning/generation.'

@@ -37,17 +37,23 @@ def main():
                               'rendered_from_sha256': digest(deck),
                               **{key: {'status': 'pass', 'note': 'Synthetic test attestation only'} for key in ('content_review', 'visual_review', 'evidence_review')}}]}
         job = {'transport': 'chatgpt_web', 'status': 'accepted', 'history': [{'status': 'submitted'}],
-               'spec': {'slide_id': 's1', 'object_id': 'icon'}, 'sha256': digest(image),
+               'spec': {'slide_id': 's1', 'object_id': 'icon', 'asset_id': 'icon'}, 'sha256': digest(image),
+               'session_url': 'https://chatgpt.com/c/SYNTHETIC-FIXTURE',
                'visual_review': {'note': 'Synthetic fixture only'}, 'verified_engine': None}
         manifest = {'elements': [{'request_id': 'r1', 'slide_number': 1, 'job_dir': 'job'}]}
         (root / 'planning/response.txt').write_text('Synthetic test response; not an actual web exchange.', encoding='utf-8')
         from bridge_session import prepare
         connection = prepare(root, root)
         connection.update(local_profile_configured=True, browser_connected=True, image_tool_visible=True,
+                          browser_route='builtin_browser', route_reason='Synthetic route selection',
                           planning_model='GPT-6 (synthetic fixture)', image_model='Image-2.5 (synthetic fixture)',
                           observed_connection_id=connection['connection_id'],
                           evidence=[{'file': 'renders/slide-01.png', 'sha256': digest(render)}])
         (root / 'bridge-connect.json').write_text(json.dumps(connection), encoding='utf-8')
+        from test_material_handoff import fixture_bundle
+        fixture_bundle(root, root/'planning/materials', url=job['session_url'])
+        fixture_bundle(root, root/'assets/job/materials', target='image', task_id='icon', url=job['session_url'], prompt_file=root/'assets/job/prompt.txt')
+        review['web_planning']['material_bundle'] = 'planning/materials'
 
         def write(relative, data):
             (root / relative).write_text(json.dumps(data), encoding='utf-8')
@@ -70,6 +76,8 @@ def main():
             ('qa/delivery_review.json', {**review, 'pptx_sha256': 'old'}, 'stale deck review fails'),
             ('qa/delivery_review.json', {**review, 'slides': []}, 'missing page review fails'),
             ('qa/delivery_review.json', {**review, 'web_planning': {}}, 'missing web response fails'),
+            ('qa/delivery_review.json', {**review, 'web_planning': {**review['web_planning'], 'material_bundle': ''}}, 'missing planning materials fails'),
+            ('assets/job/job.json', {**job, 'session_url': 'https://chatgpt.com/c/another'}, 'image materials cannot be reused in another chat without transfer'),
         ]
         for relative, data, name in mutations:
             reset()

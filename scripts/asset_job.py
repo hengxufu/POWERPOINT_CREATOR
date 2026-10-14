@@ -61,11 +61,25 @@ def prepare(args):
     spec=json.loads(Path(args.spec).read_text(encoding='utf-8'))
     result=prompt(spec)
     job=Path(args.job)
+    if getattr(args,'materials',None):
+        from material_handoff import select, load, inside
+        from bridge_session import safe_root
+        if not getattr(args,'project_root',None): raise ValueError('--project-root required with --materials')
+        root=safe_root(args.project_root)
+        inside(root, job)
+        selection=load(inside(root, args.materials))
+        select(root, selection, 'gpt')
+        select(root, selection, 'image', spec.get('material_ids'))
     job.mkdir(parents=True,exist_ok=False)
     (job/'prompt.txt').write_text(result,encoding='utf-8')
     write(job/'job.json', {'version':1,'transport':'chatgpt_web','requested_engine':'image-2.5',
                           'verified_engine':None,'status':'prepared','spec':spec,
                           'history':[{'at':now(),'status':'prepared'}]})
+    if getattr(args,'materials',None):
+        from material_handoff import prepare as prepare_materials
+        if not getattr(args,'project_root',None): raise ValueError('--project-root required with --materials')
+        prepare_materials(args.project_root, args.materials, 'image', job/'prompt.txt', job/'materials',
+                          spec['asset_id'], spec.get('material_ids'))
 
 def event(args):
     job=Path(args.job); data=read(job)
@@ -76,6 +90,9 @@ def event(args):
             raise ValueError('Submission already recorded; inspect the existing web session')
         if not args.session_url or not re.fullmatch(r'https://chatgpt\.com/c/[A-Za-z0-9_-]+',args.session_url):
             raise ValueError('submitted requires an observed ChatGPT conversation URL')
+        from material_handoff import check as check_materials
+        material_check=check_materials(job/'materials', target='image', session_url=args.session_url, task_id=data['spec']['asset_id'], prompt_file=job/'prompt.txt')
+        if not material_check['ready']: raise ValueError('Image materials: '+'; '.join(material_check['problems']))
         data['session_url']=args.session_url
         if args.engine and args.engine!='unverified':
             if not args.engine_evidence: raise ValueError('Engine needs visible UI evidence')
@@ -168,7 +185,7 @@ def placement(args):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
-    p=sub.add_parser('prepare'); p.add_argument('--spec',required=True); p.add_argument('--job',required=True); p.set_defaults(func=prepare)
+    p=sub.add_parser('prepare'); p.add_argument('--spec',required=True); p.add_argument('--job',required=True); p.add_argument('--materials'); p.add_argument('--project-root'); p.set_defaults(func=prepare)
     p=sub.add_parser('event'); p.add_argument('--job',required=True); p.add_argument('--status',required=True); p.add_argument('--note',required=True); p.add_argument('--session-url'); p.add_argument('--engine'); p.add_argument('--engine-evidence'); p.add_argument('--pptx'); p.set_defaults(func=event)
     p=sub.add_parser('receive'); p.add_argument('--job',required=True); p.add_argument('--file',required=True); p.set_defaults(func=receive)
     p=sub.add_parser('review'); p.add_argument('--job',required=True); p.add_argument('--verdict',choices=['accepted','rejected'],required=True); p.add_argument('--note',required=True); p.set_defaults(func=review)

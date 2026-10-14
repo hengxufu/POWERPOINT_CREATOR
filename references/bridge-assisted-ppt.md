@@ -16,7 +16,7 @@
 
 统一入口为scripts/start_ppt.ps1，新建与恢复均刷新任务连接。内嵌bridge通过ppt_bridge.ps1配置精确项目profile（Tunnel none），随后由当前Codex使用浏览器工具完成实际连接与模型观察；严格顺序见[bridge-startup-contract.md](bridge-startup-contract.md)。不使用上游Auto默认公网路线，不将本地MCP健康当作网页成功。连接记录保存在bridge-connect.json。
 
-`-SkipWebConnection` 只允许用于自动化测试，或用户明确要求离线执行的场景；真实的网页协作任务不得使用。
+维护/离线测试不调用制作启动入口。用户明确要求离线制作时记录其授权及缺项；start_ppt.ps1不提供绕过在线验收的跳过开关。
 
 ## 2. 职责边界
 
@@ -30,10 +30,10 @@
 
 ## 3. 规划到素材
 
-1. 将 `planning/gpt6_task_packet.md` 交给当前可见的 GPT-6 对话。
-2. 按 `planning/deck_plan.schema.json` 保存 `deck_plan.json`。
+1. 按[planning-material-handoff.md](planning-material-handoff.md)在规划阶段实际阅读并准备GPT/Image必要资料。用当前选定的内置浏览器或CLI上传附件，发送GPT资料包的完整message.txt并保存真实交接观察。
+2. 用receive_web_plan.py接收真实规划回复（携带--materials），保存deck_plan.json和来源记录，不手写网页回复。
 3. Codex 审核每个 `asset_requests`：只有确需生成且适合单主体图像的请求才进入后续任务。
-4. 每个通过的请求单独建立一个 `asset_job.py` 任务；不得把多个元素放进同一生成任务后裁切。
+4. 每个通过的请求单独建立一个带Image资料包的 `asset_job.py` 任务；在实际图像入口送达该任务的完整message.txt和必要附件，记录真实交接后再登记submitted；不得把多个元素放进同一生成任务后裁切。
 5. 在 GPT Image 2.5 中生成透明背景或易于独立排版的素材，执行视觉审查和哈希审查。
 6. 只有 `accepted` 或 `integrated` 的任务可以进入清单。
 

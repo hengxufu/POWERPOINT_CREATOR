@@ -46,6 +46,7 @@ def prepare(workspace, root):
             'project_root': str(root), 'allowed_roots': [str(root)], 'created_at': now(),
             'local_profile_configured': False, 'mcp_service_started': False,
             'browser_connected': False, 'planning_model': None, 'image_model': None,
+            'browser_route': None, 'route_reason': None,
             'image_tool_visible': False, 'evidence': [], 'ready': False,
             'permission': 'L1_READ_ONLY_ADVICE', 'public_tunnel': False,
             'shell_access': False, 'workspace_write_access': False,
@@ -72,6 +73,8 @@ def check(workspace, max_age_hours=4):
         for flag in ('local_profile_configured', 'browser_connected', 'image_tool_visible'):
             if data.get(flag) is not True:
                 errors.append('Not verified: ' + flag)
+        if data.get('browser_route') not in ('builtin_browser', 'playwright_cli') or not data.get('route_reason'):
+            errors.append('Record the actually observed browser route and selection reason')
         if data.get('status') == 'closed':
             errors.append('Connection session has ended')
         if data.get('public_tunnel') or data.get('shell_access') or data.get('workspace_write_access'):
@@ -108,6 +111,8 @@ def main():
     parser.add_argument('--evidence', type=Path)
     parser.add_argument('--session-url')
     parser.add_argument('--note')
+    parser.add_argument('--route', choices=['builtin_browser', 'playwright_cli'])
+    parser.add_argument('--route-reason')
     parser.add_argument('--allow-unverified-image-note')
     parser.add_argument('--allow-unverified-planning-note')
     args = parser.parse_args()
@@ -123,12 +128,13 @@ def main():
         if args.action == 'close':
             data.update(status='closed', ready=False, browser_connected=False)
         else:
-            if not args.evidence or not args.note or not args.planning_model or not args.image_model:
+            if not args.evidence or not args.note or not args.planning_model or not args.image_model or not args.route or not args.route_reason:
                 parser.error('observe requires actual evidence, note and observed model labels')
             if not str(args.session_url).startswith('https://chatgpt.com/'):
                 parser.error('Observed ChatGPT session URL required')
             relative = args.evidence.resolve().relative_to(args.workspace.resolve())
             data.update(browser_connected=True, image_tool_visible=True,
+                        browser_route=args.route, route_reason=args.route_reason,
                         planning_model=args.planning_model, image_model=args.image_model,
                         session_url=args.session_url, observation_note=args.note,
                         observed_connection_id=data['connection_id'], observed_at=now(), status='observed',

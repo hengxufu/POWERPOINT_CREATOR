@@ -1,0 +1,23 @@
+# 技能维护与离线验证
+
+用户要求调研、完善技能或修复脚本时读取本文件。此模式不执行制作启动、不发送网页生成任务、不伪造生产证据；只在当前项目根内修改。本地合成测试不是用户作品，不能据此报告已验证GPT或图像引擎。
+
+## 修改边界与验证
+
+先读完整SKILL.md、涉及的参考与脚本及调用方，保留已有用户要求。区分用户合同（如北航主题、40元素）、产品事实与实现建议。官方资料用于核实产品行为，不将偏好包装为普适设计标准。功能或型号易变时记录日期和实际能力；要求的型号不等于已观察到的型号。
+
+针对可复现缺陷增加最小合成回归，使用临时目录且不修改用户原稿。文档修改检查相对链接；脚本修改运行相关测试，涉及共享状态或交付合同再运行完整离线回归。不能只用语法检查证明流程正确，也不为微小措辞修改新增无意义测试。
+
+入口验证：`python <skill-creator>/scripts/quick_validate.py POWERPOINT_CREATOR`。
+
+完整离线回归：`python -m unittest discover -s POWERPOINT_CREATOR/scripts -p "test_*.py"`。部分历史测试使用main入口，需另行运行对应文件，不能把unittest未发现的测试计为通过。失败需区分既有环境缺项、历史失败与本次回归，并保留实际输出。
+
+维护交付说明具体文件、行为变化、真实执行的检查与限制。修改当前项目副本不等于已同步用户目录中的已安装技能；未经请求不跨根同步、注册服务或改权限。
+
+## 本轮调研依据（2026-10-14）
+
+- [Microsoft：阅读顺序窗格](https://support.microsoft.com/en-us/powerpoint/make-slides-easier-to-read-by-using-the-reading-order-pane)：有信息的视觉对象需要描述用途的替代文本；纯装饰可标装饰，复杂对象可按语义组合。调整顺序可能改变重叠显示，因此修改后需复查渲染。此依据不意味着所有对象都要逐个朗读，也不证明已经做过屏幕阅读器测试。
+- [python-pptx：原生图表](https://python-pptx.readthedocs.io/en/latest/user/charts.html)及[嵌入工作簿](https://python-pptx.readthedocs.io/en/latest/dev/analysis/cht-access-xlsx.html)：图表与嵌入数据是关联部件。验收应逐图追踪关系，不能用全包工作簿总数证明每个图表的数据可编辑；缓存、工作表值与实际Office更新另行检查。
+- [Playwright：下载对象](https://playwright.dev/docs/api/class-download)与[文件输入](https://playwright.dev/docs/input)：文件传输有明确接口。接口存在不证明当前浏览器工具暴露该能力；以当前工具文档和实际成功上传/下载为准，不绕过工具限制。
+
+本轮将上述依据用于阅读顺序和逐图数据检查；没有据此改变用户的40元素要求或网页版路线。

@@ -166,7 +166,7 @@ def main() -> int:
     write_json(out / "qa" / "delivery_review.json", {
         "schema": "research_ppt_delivery_review_v1",
         "pptx_sha256": None,
-        "web_planning": {"session_url": None, "response_file": None},
+        "web_planning": {"session_url": None, "response_file": None, "material_bundle": None},
         "slides": [],
         "unresolved_issues": ["Not yet produced, rendered or reviewed"],
         "no_generated_assets_reason": None,

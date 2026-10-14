@@ -20,6 +20,7 @@ def main():
         evidence.parent.mkdir()
         evidence.write_text('Synthetic selector/image entry fixture only', encoding='utf-8')
         data.update(local_profile_configured=True, browser_connected=True, image_tool_visible=True,
+                    browser_route='builtin_browser', route_reason='Synthetic route selection',
                     planning_model='GPT-6', image_model='Image-2.5', observed_connection_id=data['connection_id'],
                     evidence=[{'file': 'qa/observed.txt', 'sha256': hashlib.sha256(evidence.read_bytes()).hexdigest()}])
         record = workspace / 'bridge-connect.json'
@@ -37,6 +38,7 @@ def main():
             ('status', 'closed', 'closed session rejected'),
             ('public_tunnel', True, 'implicit public exposure rejected'),
             ('shell_access', True, 'shell permission rejected'),
+            ('browser_route', None, 'missing actual route rejected'),
         ]:
             save({**data, key: value})
             assert not check(workspace)['ready'], label

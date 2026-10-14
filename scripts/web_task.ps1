@@ -23,7 +23,15 @@ switch ($Action) {
     }
     # .NET read returns a plain string; PowerShell 5.1 Get-Content strings can
     # carry provider metadata which ConvertTo-Json serializes as an object.
-    $promptPlain = [IO.File]::ReadAllText((Join-Path $jobDir 'prompt.txt'),[Text.Encoding]::UTF8)
+    $bundled=Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+    $python=if(Test-Path -LiteralPath $bundled){$bundled}else{(Get-Command python -ErrorAction Stop).Source}
+    & $python (Join-Path $PSScriptRoot 'material_handoff.py') check --bundle (Join-Path $jobDir 'materials') --prepared-only --target image --task-id $data.spec.asset_id --prompt (Join-Path $jobDir 'prompt.txt')
+    if($LASTEXITCODE -ne 0){throw 'Prepare necessary Image materials before submitting.'}
+    $materialPacket=Get-Content -LiteralPath (Join-Path $jobDir 'materials\packet.json') -Raw -Encoding utf8 | ConvertFrom-Json
+    if(@($materialPacket.materials | Where-Object { $_.mode -eq 'attachment' }).Count -gt 0){
+      throw 'This helper sends inline text only. Upload required attachments through observed UI, then send materials/message.txt and record the transfer.'
+    }
+    $promptPlain = [IO.File]::ReadAllText((Join-Path $jobDir 'materials\message.txt'),[Text.Encoding]::UTF8)
     $literal = ConvertTo-Json -InputObject $promptPlain -Compress
     $urlLiteral = ConvertTo-Json -InputObject $SessionUrl -Compress
     $code = "async page => { if (page.url() !== $urlLiteral) throw new Error('Wrong task conversation'); const box = page.getByRole('textbox', {name: '\u8be2\u95ee ChatGPT', exact: true}); await box.fill($literal); await box.press('Enter'); return {url:page.url(), dispatched:true}; }"

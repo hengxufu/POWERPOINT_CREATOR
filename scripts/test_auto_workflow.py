@@ -110,6 +110,45 @@ class AutomationTests(unittest.TestCase):
         self.assertEqual(resumed['next_action'], 'recover_original_planning_conversation_do_not_resubmit')
         self.assertFalse(resumed['planning_dispatch']['actual_planning_response_received'])
 
+    def test_material_content_reaches_both_packets_and_controls_resume(self):
+        first = prepare(self.root)
+        self.assertFalse(first['materials_prepared'])
+        material = self.workspace/'sources/context.md'
+        material.write_text('SYNTHETIC project context and blue icon appearance', encoding='utf-8')
+        selection = Path(first['material_selection'])
+        write(selection, {'schema': 'web_material_selection_v1', 'coverage': {'gpt': 'Synthetic brief', 'image': 'Synthetic style'},
+                          'missing': [], 'materials': [{'id': 'context', 'path': str(material.relative_to(self.root)),
+                                                       'targets': ['gpt', 'image'], 'mode': 'inline', 'purpose': 'Fixture', 'locator': 'Whole fixture'}]})
+        prepared = prepare(self.root)
+        self.assertTrue(prepared['materials_prepared'])
+        from material_handoff import check as material_check, record, digest
+        for key in ('planning_material_bundle', 'image_material_bundle'):
+            bundle = Path(prepared[key])
+            self.assertIn('SYNTHETIC project context', (bundle/'message.txt').read_text(encoding='utf-8'))
+            self.assertTrue(material_check(bundle, require_transfer=False)['ready'])
+            self.assertFalse(material_check(bundle)['ready'])
+        from bridge_session import prepare as connection_prepare
+        connection = connection_prepare(self.workspace, self.root)
+        connection.update(local_profile_configured=True, browser_connected=True, image_tool_visible=True,
+                          planning_model='GPT-6', image_model='Image-2.5', browser_route='builtin_browser',
+                          route_reason='SYNTHETIC ONLY', observed_connection_id=connection['connection_id'],
+                          evidence=[{'file': 'sources/context.md', 'sha256': digest(material)}])
+        write(self.workspace/'bridge-connect.json', connection)
+        self.assertEqual(status(self.workspace)['next_action'], 'transfer_planning_materials')
+        observation = self.workspace/'qa/synthetic-transfer.json'
+        write(observation, {'route': 'builtin_browser', 'session_url': 'https://chatgpt.com/c/SYNTHETIC', 'message_visible': True,
+                            'note': 'SYNTHETIC ONLY', 'evidence_file': str(material.relative_to(self.root)),
+                            'materials': [{'id': 'context', 'mode': 'inline', 'visible_note': 'Synthetic visible source'}]})
+        record(Path(prepared['planning_material_bundle']), observation)
+        self.assertEqual(status(self.workspace)['next_action'], 'receive_actual_web_plan')
+        material.write_text('CHANGED SYNTHETIC MATERIAL', encoding='utf-8')
+        connection['evidence'][0]['sha256'] = digest(material)
+        write(self.workspace/'bridge-connect.json', connection)
+        self.assertEqual(status(self.workspace)['next_action'], 'prepare_planning_materials')
+        updated = prepare(self.root)
+        self.assertNotEqual(updated['planning_material_bundle'], prepared['planning_material_bundle'])
+        self.assertTrue((Path(prepared['planning_material_bundle'])/'transfer.json').exists())
+
 
 if __name__ == '__main__':
     unittest.main()

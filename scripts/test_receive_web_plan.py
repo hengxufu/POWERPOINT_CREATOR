@@ -38,7 +38,10 @@ class PlanTests(unittest.TestCase):
             root = Path(folder); reply = root/'reply.txt'; evidence = root/'evidence.txt'
             reply.write_text('```json\n'+json.dumps(self.plan)+'\n```', encoding='utf-8')
             evidence.write_text('SYNTHETIC TEST ONLY', encoding='utf-8')
-            args = (reply, evidence, 'https://chatgpt.com/c/test-fixture', 'GPT-6', root/'out')
+            from test_material_handoff import fixture_bundle
+            bundle, _ = fixture_bundle(root, root/'materials')
+            args = (reply, evidence, 'https://chatgpt.com/c/test-fixture', 'GPT-6', root/'out', bundle)
+            with self.assertRaisesRegex(ValueError, 'material packet required'): receive(*args[:5])
             receive(*args)
             self.assertTrue((root/'out/deck_plan.json').is_file())
             report = json.loads((root/'out/layout-plan-audit.json').read_text(encoding='utf-8'))

@@ -95,6 +95,15 @@ def check(workspace, pptx):
             path = resolve(workspace, response)
             require(path.is_file() and bool(path.read_text(encoding='utf-8').strip()), 'Web planning response missing or empty')
         require(str(planning.get('session_url', '')).startswith('https://chatgpt.com/c/'), 'Missing observed web planning conversation')
+        from material_handoff import check as check_materials
+        material_bundle = planning.get('material_bundle')
+        require(bool(material_bundle), 'Missing transferred planning material packet')
+        if material_bundle:
+            result = check_materials(resolve(workspace, material_bundle), target='gpt',
+                                     session_url=planning.get('session_url'), task_id='gpt-planning',
+                                     project_root=connection_record.get('project_root', workspace))
+            for problem in result['problems']:
+                require(False, 'Planning materials: ' + problem)
     reviewed_pages = review.get('slides', [])
     require([page.get('slide_number') for page in reviewed_pages] == numbers, 'Missing, duplicated or out-of-order page reviews')
     page_reviews = {page.get('slide_number'): page for page in reviewed_pages}
@@ -143,6 +152,13 @@ def check(workspace, pptx):
             try:
                 job_dir = resolve(workspace / 'assets', element['job_dir'])
                 job = load(job_dir / 'job.json')
+                from material_handoff import check as check_materials
+                result = check_materials(job_dir / 'materials', target='image',
+                                         session_url=job.get('session_url', ''), task_id=job.get('spec', {}).get('asset_id', ''),
+                                         prompt_file=job_dir / 'prompt.txt',
+                                         project_root=load(workspace/'bridge-connect.json')['project_root'] if (workspace/'bridge-connect.json').is_file() else workspace)
+                for problem in result['problems']:
+                    require(False, f'{key}: Image materials: ' + problem)
                 require(job.get('transport') == 'chatgpt_web', f'{key}: requested web route was substituted')
                 require(job.get('status') in ('accepted', 'integrated'), f'{key}: unfinished job')
                 require(any(event.get('status') == 'submitted' for event in job.get('history', [])), f'{key}: no recorded web submission')

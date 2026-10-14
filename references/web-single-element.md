@@ -8,6 +8,10 @@
 
 用户指定网页时保持网页路径；不可悄悄切换为内置 image_gen 或 API。网页执行失败就保留任务和阻塞原因；只有用户选定替代途径才使用替代。模型名在页面未显示时记为 `unverified`，聊天模型名称和模型自述不能作为图像引擎证据。
 
+## 规划资料先行
+
+两条浏览器路线都执行[planning-material-handoff.md](planning-material-handoff.md)。规划时同时准备GPT事实/证据与Image主体/风格参考，图像任务使用对应materials/message.txt及真实附件。别的聊天中的上下文、本地路径或文件名都不代表资料已送达本图像任务。
+
 ## 本地准备
 
 成套的答辩/竞赛规划先使用plan_workflow.py的packet，向网页版GPT-6实际发送；取得逐页JSON后使用jobs生成独立任务队列。asset_spec现在支持research_icon、product_concept、ribbon_accent、milestone_icon、brand_wordart、subject_cutout；用--element明确具体单主体，艺术字必须给--exact-text。这些入口负责准备，实际网页提交、下载和核对仍按下文执行。
@@ -21,7 +25,7 @@
 任务通过 review 后，把该任务目录作为独立条目登记到 `assets/asset_manifest.json`，最终使用 `scripts/compose_elements.py` 逐元素写入 PPTX。每个生成结果只能对应一个图片对象；不得生成一张多元素图再切割复用。
 
 ```powershell
-python scripts/asset_job.py prepare --spec element.json --job asset-jobs/atom-v1
+python scripts/asset_job.py prepare --spec element.json --job asset-jobs/atom-v1 --materials <material-selection.json> --project-root <项目根>
 ```
 
 输出 prompt.txt、job.json。若任务目录已经存在，拒绝覆盖，换一个版本目录。提示词自动限制单个主体、留安全边缘、无页面/正文/拼图/水印，保留用户明确的艺术字文字。审阅任务包，非敏感任务按已有授权直接发送；未发表科研材料或私人参考图的上传需遵守当前会话对指定资料和目的地的授权。
@@ -32,7 +36,7 @@ python scripts/asset_job.py prepare --spec element.json --job asset-jobs/atom-v1
 
 1. 获取浏览器和标签页清单，绑定已登录的 ChatGPT 页面。优先复用本任务专用会话，不在用户无关聊天里发送任务。页面观察失败最多一次重置/重试，仍失败就记 blocked_browser，停止重复提交。
 2. 根据新鲜的可访问树选择图像生成入口；页面不存在图像入口或指定型号时，记录具体阻塞。不能猜坐标或盲发。若 UI 只显示“创建图片”而无 image-2.5，记录 engine unverified，并报告无法满足精确型号保证；按用户是否允许一般网页图像生成决定继续。
-3. 发送 prompt.txt，一次只发一个任务。记录 session_url、提交时间、可见模型证据。若已有任务提交记录，先查看原会话是否已生成，禁止重试导致重复消耗。页面提交是否成功不明时记录 submission_unknown，不自动重新提交。
+3. 上传该任务必要参考附件，发送materials/message.txt，一次只发一个任务。核对实际消息和附件后用material_handoff.py record登记交接，再登记submitted。记录 session_url、提交时间、可见模型证据。若已有任务提交记录，先查看原会话是否已生成，禁止重试导致重复消耗。页面提交是否成功不明时记录 submission_unknown，不自动重新提交。
    官方CLI路径可使用 web_task.ps1 Submit，带已观察的SessionUrl。只有退出成功且网页出现消息后登记submitted；dispatch-intent标记阻止重发。不得无条件将后续event命令接在可能失败的提交命令后。
 4. 生成可能耗时数分钟；检查可见状态，间隔观察，并每分钟以内给出必要进度。没有完成图像时不点击“重新生成”。登录/验证码/额度限制按可见页面处理；不绕过验证或购买额度。
 5. 查看实际生成结果，确认单一主体、文字、风格、科研语义。按当前浏览器文档支持的下载控件取得原始文件。若工具不支持文件落地，记录 blocked_download，保留页面结果并报告缺少下载能力，不能以网页截图替代原始素材。

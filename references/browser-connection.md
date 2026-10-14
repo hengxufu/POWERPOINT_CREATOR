@@ -1,72 +1,55 @@
-# 网页连接与验证
+# 网页连接路线选择
 
-## 当前补充实测（2026-10-11）
+两条路线统一遵守[必要资料交接](planning-material-handoff.md)。本文件是当前路由规则；历史成功、控制器配置和CLI版本输出均不能代替本会话网页实测。
 
-Edge扩展识别成功但读取与新建标签报nodeRepl.fetch request failed；重置一次仍失败。允许的备用路径是cua.createBrowserTab('iab','https://chatgpt.com',{visible:true})。本次内置浏览器实际显示已登录，发送测试消息并收到回复；随后通过“添加文件等内容→创建图像”提交单枚烧杯图标，看到成图，打开“图片预览”，通过唯一“下载”按钮与download事件取得本地PNG。该路径不依赖Edge扩展，不能据此宣称Edge已修复。
+## 默认选择
 
-本次模型菜单只显示High思考强度，聊天与图像具体型号均未核实，不能标注已验证GPT-6/image-2.5。复用此路径时重新观察登录、入口与实际回复；先等临时local-chatgpt对话地址变为正式/c/编号再登记任务。下载使用当前浏览器文档支持的waitForEvent('download')、点击预览中下载、download.path()，不能猜图片接口或读取认证状态。当前工具规则优先于下列历史CLI路线。
+| 路线 | 优点与适用条件 | 切换条件 |
+|---|---|---|
+| A：Codex内置浏览器 | 默认优先；当前工具直接管理页面与可见控件，减少外部会话与环境依赖。可复用本任务已登录标签页 | 工具不可用，或一次有依据的重置/重试后仍失败；或当前工具缺少本任务必需的附件上传/原图下载能力 |
+| B：内嵌bridge协调的官方Playwright CLI | A受阻时使用；支持明确会话、上传与下载，在授权的现有浏览器或独立会话中操作网页 | CLI本身不可用、接入失败或尚需登录/浏览器授权时，记录具体阻塞；不能仅因CLI可运行就说模型已连通 |
 
-用户要求 GPT-6 规划和网页版 image2.5 时，分别验证聊天模型、图像入口、提交、回复和文件下载。程序安装成功或浏览器接入成功不代表生成成功。当前会话执行，禁止后台自动启动、计划任务和无限重试。
+优先选当前已实测能够完成“资料送达→规划/生成→原始结果取回”的路线。如果用户指定浏览器/路线，遵从指定；不能为使用默认路线覆盖用户选择。A是默认首选，不是永远最快/最稳定的保证。B在A实际受阻且自身具备所需能力时成为本次最佳路线。已有提交或结果不明时，先恢复原任务会话，不能用换路线规避防重发。
 
-## 已验证的环境与限制（2026-10-08）
+用户说的CIL按CLI（命令行接口）理解。这里“官方”指Microsoft维护的Playwright CLI（@playwright/cli），不是OpenAI官方bridge命令行产品。内嵌bridge负责本项目profile、观察合同与结束清理；浏览器CLI负责网页交互。DevSpace/MCP是另一个能力层，不是浏览器生成必需项。默认不启动MCP、不开放公网、不授予shell或本地写权限。
 
-- 原 cua_repl 重置后仍因 Windows sandbox setup 失败，尚未接入网页。
-- Node.js v24.19.0 和官方 @playwright/cli 0.1.22 可运行。
-- Chrome CDP 接入失败：DevToolsActivePort 未找到；需要用户在 chrome://inspect/#remote-debugging 启用浏览器允许远程调试。
-- Chrome 官方扩展接入失败：Playwright Extension 未安装。不能把这次失败写成授权成功。
-- 用户指定后改用 Edge：固定版本 CLI 已实际运行；CDP 同样缺少 DevToolsActivePort，官方扩展也未安装。当前首选 Edge，等待用户在 edge://inspect/#remote-debugging 允许连接；不能沿用 Chrome 作为当前目标。
-- 用户随后开启 Edge 调试。已确认 127.0.0.1:9222 监听进程为 msedge，CLI 能解析到 ws://localhost:9222/devtools/browser；通道自动发现与明确 127.0.0.1 WebSocket 地址均握手超时。/json/version 返回404，不能据此判定新版调试服务不存在。未完成网页接入，仍需区分浏览器连接确认与协议问题。检查端口只读取进程名和端口，不读取用户认证文件。
-- 用户允许后再次连接现有 Edge 仍超时。替代路径已实际成功：`open https://chatgpt.com --browser=msedge --headed` 创建独立会话 ppt-edge-isolated，页面导航与可访问树读取成功。页面显示未登录，并明确登录后可创建图片。需要用户在此窗口自行登录；尚未验证 GPT-6、提交回复、image2.5及下载。
-- 随后用户自行登录。模型选择菜单显示 GPT-6 为 checked，专用任务聊天已成功发送规划包并收到完整回复。用户允许在图像型号不可见时测试网页版图像，实际生成并通过可见下载按钮保存轨道 PNG（1254×1254）与“融合感知”艺术字 PNG（2172×724），均通过尺寸、真实alpha和本地视觉检查。两项素材实际插入18页PPT新副本封面，哈希和对象名校验通过，封面渲染已查看。image2.5精确型号仍为 unverified；此成功不能作为型号证据。
-- bridge 已将 ProjectRoot 与唯一 AllowedRoots 设置为 D:\CODEX\2026-10-08\dia，Tunnel none，保持 Off。上述记录是当次证据，下次重新检查。
+## A：Codex内置浏览器
 
-## 路径选择
+按本会话cua工具文档选择入口。初次调用只执行规定的一个入口；已知任务URL直接选该页，需要库存才getState。新页面可用`cua.createBrowserTab('iab', 'https://chatgpt.com', {visible:true})`。成功后先读工具返回的文档，再操作已观察控件；不要假设不同版本具有同样的上传/下载接口。
 
-1. 原网页工具可用时复用本任务标签页。失败最多重置一次。
-2. 首选现有已登录浏览器经用户允许的 CDP：运行 scripts/web_connection.ps1 -Action AttachCdp。若需要人为允许连接，等待用户完成；不能更改安全设置来绕过。
-3. 可改用官方 Playwright 扩展：用户安装并选择授权标签页后运行 -Action AttachExtension。扩展地址和安装步骤以官方文档为准。
-4. 可运行 `scripts/web_connection.ps1 -Action OpenIsolated -Browser msedge -Session ppt-edge-isolated` 启动独立浏览器。不要指定日常用户配置目录，不复制 cookies、令牌或登录状态；验证码、账户登录由用户完成。登录期间不读取认证界面的输入。此路线已验证能打开网页及读可访问树，认证后的生成能力另行验证。
-5. 远端只读 MCP 是另一个能力层，不能替代浏览器图像生成。ChatGPT 的 Secure MCP Tunnel 可研究作为私有服务接入路径；仅有说明文档不算已打通。依当前 bridge 政策配置精确项目根，核对服务实际工具表，默认禁止写文件与 run_shell。公开隧道、OAuth 或额外权限按用户政策办理，不能自动升级。
+绑定本任务专用聊天，观察登录、模型选择器与图像入口，确认附件/正文已送达。工具启动失败与未登录是不同问题，不能让用户反复登录来修复工具超时。失败最多一次有依据的重置或重试，记录结果后切B。不能用CLI探查Codex内部端点或认证状态来修理内置浏览器。
 
-## 接入后的闭环
+## B：官方CLI备用路线
 
-执行 Snapshot 读取新鲜页面。绑定本任务专用会话，检查模型选择器是否显示 GPT-6；模型自述不能作为证据。向网页发送窄 Task Packet：目标、已知材料、对象清单、约束、所需建议。网页负责规划/评审，Codex负责源修改与验证。
-
-图像生成沿用 web-single-element.md 和 asset_job.py。一次一个元素，发送前查任务状态；submitted 或 submission_unknown 必须回原会话查结果，不能重复发送。图像型号不可见时 engine=unverified，不能从聊天模型推断 image2.5。
-
-先观察 UI，再使用官方 CLI 可见控件的 click/fill/press。下载使用页面下载按钮；CLI run-code 可等待 Playwright download 事件后 saveAs 到任务目录。不要抓取 ChatGPT 隐藏接口或认证请求。保存原始文件，检查尺寸、透明通道、真实文字、科学语义与哈希，随后登记 PPT 的 slide_id/object_id。截图只作界面证据，不能当下载素材。
-
-所有成功均保存非敏感证据：时间、工具版本、页面可见模型、任务URL、任务状态、素材路径/哈希和检查结果。截图可能包含私人聊天，应仅截本任务区域，不写入可复用技能。技能保存通用流程及脱敏结论。
-
-结束用 Detach 离开通过attach接入的用户浏览器，不能 close 用户已有浏览器。自己通过open启动的专用会话不支持detach，使用CLI close停止该专用窗口；本轮已实测这一区别。临时专用会话的下次登录需重新确认，不导出登录状态。若本次启动 bridge，结束通过 controller Off 停止；不新增自动启动。
-
-## PPT视觉策略
-
-继续执行 visual-system-and-math.md：中文微软雅黑，西文 Times New Roman；公式保留真实 LaTeX 源，优先原生 OMML，兼容显示副本明确说明公式位图限制；多样化原生几何与局部生成素材形成统一蓝色视觉语言。艺术字必须实际生成并入稿，保留原生语义标题。第15/17页的文字、节点与连线保持可编辑。不能将整页生成图当作PPT页面，不用虚构数据提升视觉。
-
-## 官方来源
-
-- https://playwright.dev/agent-cli/commands/attach
-- https://playwright.dev/docs/api/class-browsertype
-- https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt
-- https://help.openai.com/en/articles/11084440-images-in-chatgpt
-
-API 图像调用是单独计费及授权路径，不能冒充网页版会员生成，也不能静默作为 fallback。
-
-## 已实测的任务辅助程序
-
-`scripts/web_task.ps1` 使用固定版本 CLI，仅读取本任务可见 main 内容，或操作已观察的输入框、图像预览下载按钮。不提供 cookie、认证文件、隐藏接口或远程 shell 能力。参数 Job 是已准备的单元素任务目录。
+先读当前可用的playwright技能；当前工具规则优先。项目固定`@playwright/cli@0.1.22`，版本与能力重新查验，不自动追随latest。使用唯一任务Session，避免默认会话撞入其他任务。
 
 ```powershell
-# 先用 Snapshot 观察本任务；模型菜单与入口需要实际核实。
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_task.ps1 -Action ReadTask -Job <任务目录>
-# SessionUrl必须是刚观察到的任务会话，禁止其他聊天。
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_task.ps1 -Action Submit -Job <任务目录> -SessionUrl https://chatgpt.com/c/<实际会话ID>
-# 查看提交结果及网页状态，成功后用asset_job.py event登记submitted。
-# 生成完成后打开对应图片预览，再下载原图。
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_task.ps1 -Action Download -Job <任务目录> -OutputFile <该任务目录内的绝对PNG路径>
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_connection.ps1 -Action Version
+# 仅在用户已允许现有浏览器调试时：
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_connection.ps1 -Action AttachCdp -Browser msedge -Session <任务会话>
+# 或用户已安装并授权的官方扩展：
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_connection.ps1 -Action AttachExtension -Browser msedge -Session <任务会话>
+# 若需独立任务窗口，既有授权范围内可自动打开；用户自行登录：
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_connection.ps1 -Action OpenIsolated -Browser msedge -Session <任务会话>
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/web_connection.ps1 -Action Snapshot -Session <任务会话>
 ```
 
-Submit 会在发送前保存 dispatch-intent.json；已有标记或 submitted/submission_unknown 时拒绝重发。脚本失败不得继续登记成功。若错误明确发生在fill之前，复核任务页面确实没有消息，保留失败证据后建立新版本任务。结果不明时只回原会话查看。ReadTask、Submit和Download已实测；辅助程序并不替代观察模型、判断生成完成、视觉评审和PPT渲染。
+不要遍历无关聊天。先读取本任务新鲜snapshot，再click/fill/press控件；UI变化后刷新引用。上传先打开已观察的文件选择控件，再用CLI `upload <必要文件>`；观察上传完成及发送后的附件状态。下载用可见原图下载按钮与官方download事件/saveAs，不猜隐藏图片接口。内置浏览器与CLI不共用控件引用编号。
 
-本轮修复两个Windows兼容问题：PowerShell 5.1脚本中的中文控件名用Unicode表达避免UTF-8无BOM误读；提示词用.NET ReadAllText读取纯字符串，避免Get-Content提供者元数据被ConvertTo-Json展开为对象。下载限定唯一图片预览dialog和唯一下载按钮，路径必须位于Job目录，拒绝覆盖既有文件。若“滚动到底部”悬浮按钮遮挡图片，先正常点击滚动按钮，再打开图片；不能用force或盲点绕过。
+`web_task.ps1 ReadTask/Submit/Download`是项目辅助器：Submit保存dispatch-intent，拒绝已提交/结果不明的重发；检查Image资料包并发送完整message.txt。有附件时该辅助器明确阻止自动发送，改走上述UI上传流程，保留同样的派发记录。Download要求唯一可见图片预览和下载按钮，文件落到本任务目录且不得覆盖旧文件。运行成功仍需实际查看网页、登记资料交接、接收和视觉检查。
+
+不使用cookies导入导出、不复制日常用户配置、不读取认证文件、不抓取隐藏接口。真实登录/CAPTCHA/新权限由用户处理，失败不无限重试。API或内置image_gen是不同路线，不能静默替换用户要求的网页版生成。
+
+## 两条路线共有的证据与结束
+
+分别记录浏览器可操作、资料送达、实际模型标签、提交成功、真实回复/图片、原图下载。模型自述不作型号证据；界面隐藏型号时按启动合同处理未核实型号许可。保留本任务观察、时间、URL、输入/输出哈希；不能将截图当原始生成素材或将准备包称为真实回复。
+
+`bridge_session.py observe`必须填写`--route builtin_browser|playwright_cli --route-reason <本次选择依据>`。Check通过后才推进规划；资料交接仍是独立检查。当前连接失效时重新观察，不从旧项目记录推断。
+
+通过attach接入的用户浏览器结束用Detach；仅本次open的专用会话用Close。绝不close-all/kill-all。内置浏览器只关本次明确创建的标签页，未知创建结果不猜标签ID、不关闭用户窗口。若本次准备了PPT bridge合同，最后执行ppt_bridge Off；维护任务未启动bridge就如实记未启动。
+
+## 维护验证的边界
+
+2026-10-13技能维护：内置工具库存调用和一次定向iab打开均超时，未取得UI状态；固定CLI版本0.1.22和命令帮助可运行。未发送规划或生成请求，未验证当前登录、GPT具体型号、Image型号或原图下载。这个结果支持本次转向CLI诊断，不构成永久路线排名或生成成功证据。后续制作必须重新实际验证。
+
+官方参考：[Playwright CLI仓库](https://github.com/microsoft/playwright-cli)、[Attach/Detach](https://playwright.dev/agent-cli/commands/attach)。固定版本帮助是执行命令的直接依据；官方文档说明attach前提和detach保留外部浏览器的语义。
