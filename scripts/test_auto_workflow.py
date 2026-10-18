@@ -110,6 +110,17 @@ class AutomationTests(unittest.TestCase):
         self.assertEqual(resumed['next_action'], 'recover_original_planning_conversation_do_not_resubmit')
         self.assertFalse(resumed['planning_dispatch']['actual_planning_response_received'])
 
+    def test_received_plan_requires_adoption_before_new_web_request(self):
+        prepare(self.root)
+        received = self.workspace/'planning/received-v1'
+        write(received/'provenance.json', {'status': 'received_requires_content_and_visual_review'})
+        current = status(self.workspace)
+        self.assertEqual(current['next_action'], 'adopt_received_plan')
+        self.assertEqual(current['received_plan_candidates'], [str(received)])
+        second = self.workspace/'planning/received-v2'
+        write(second/'provenance.json', {'status': 'received_requires_content_and_visual_review'})
+        self.assertEqual(status(self.workspace)['next_action'], 'select_received_plan_for_adoption')
+
     def test_material_content_reaches_both_packets_and_controls_resume(self):
         first = prepare(self.root)
         self.assertFalse(first['materials_prepared'])

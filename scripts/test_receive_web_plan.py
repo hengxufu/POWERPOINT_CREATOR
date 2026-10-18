@@ -4,7 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from receive_web_plan import receive, validate
+from receive_web_plan import receive, validate, adopt_received_plan
 
 
 class PlanTests(unittest.TestCase):
@@ -52,6 +52,30 @@ class PlanTests(unittest.TestCase):
             with self.assertRaises(FileExistsError): receive(*args)
             with self.assertRaises(ValueError): receive(reply,evidence,'https://example.com','GPT-6',root/'bad')
             with self.assertRaises(ValueError): receive(reply,evidence,args[2],'unverified',root/'bad')
+
+    def test_adopt_valid_observed_plan_and_reject_stale_evidence(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            workspace = root/'workspace'
+            received = workspace/'planning/received-v1'
+            plan = copy.deepcopy(self.plan)
+            slide = plan['slides'][0]
+            slide['content_blocks'][0].update(object_id='claim', role='primary', font_pt=22)
+            slide['reading_order'] = ['claim']
+            slide['asset_requests'][0].update(role='ornament', box_inches=[8, 2, 1, 1])
+            reply, evidence = root/'reply.txt', root/'observation.txt'
+            reply.write_text(json.dumps(plan, ensure_ascii=False), encoding='utf-8')
+            evidence.write_text('SYNTHETIC VISIBLE OBSERVATION', encoding='utf-8')
+            from test_material_handoff import fixture_bundle
+            bundle, _ = fixture_bundle(root, root/'materials')
+            receive(reply, evidence, 'https://chatgpt.com/c/test-fixture', 'GPT-6', received, bundle)
+            adopted = adopt_received_plan(workspace, received)
+            self.assertEqual(adopted['status'], 'adopted_requires_content_and_visual_review')
+            self.assertEqual(json.loads((workspace/'planning/deck_plan.json').read_text(encoding='utf-8')), plan)
+            self.assertEqual(adopt_received_plan(workspace, received), adopted)
+            (received/'browser-observation.bin').write_text('TAMPERED', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'observation hash mismatch'):
+                adopt_received_plan(workspace, received)
 
 
 if __name__ == '__main__': unittest.main()

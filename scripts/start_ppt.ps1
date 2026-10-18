@@ -13,6 +13,12 @@ param(
 $ErrorActionPreference='Stop'
 $bundled=Join-Path $env:USERPROFILE '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 $python=if(Test-Path -LiteralPath $bundled){$bundled}else{(Get-Command python -ErrorAction Stop).Source}
+$runtimeJson=& $python (Join-Path $PSScriptRoot 'ensure_runtime.py') --project-root $ProjectRoot --python-executable $python
+if($LASTEXITCODE -ne 0){throw 'Project-local PPT Python runtime preparation failed'}
+$runtime=$runtimeJson | ConvertFrom-Json
+if($runtime.python_path){
+ $env:PYTHONPATH=$runtime.python_path + $(if($env:PYTHONPATH){[IO.Path]::PathSeparator + $env:PYTHONPATH}else{''})
+}
 $arguments=@((Join-Path $PSScriptRoot 'auto_workflow.py'),'prepare','--project-root',$ProjectRoot)
 foreach($pair in @(@('--workspace',$Workspace),@('--title',$Title),@('--profile',$Profile),@('--request',$Request),@('--audience',$Audience),@('--theme-profile',$ThemeProfile),@('--theme-reason',$ThemeReason))){
  if($pair[1]){$arguments+=@($pair[0],$pair[1])}

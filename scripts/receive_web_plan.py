@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import re
+import shutil
 from pathlib import Path
 
 
@@ -70,6 +71,8 @@ def receive(reply, evidence, session_url, model, out, materials=None):
     plan = validate(json.loads(match.group(1) if match else raw))
     from design_layout import audit
     layout_report = audit(plan)
+    from audit_plan_content import audit as audit_content
+    content_report = audit_content(plan)
     proof = evidence.read_bytes()
     if not proof:
         raise ValueError('Nonempty actual browser observation required')
@@ -81,17 +84,54 @@ def receive(reply, evidence, session_url, model, out, materials=None):
     (out/'deck_plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
     layout_report['plan_sha256'] = hashlib.sha256((out/'deck_plan.json').read_bytes()).hexdigest()
     (out/'layout-plan-audit.json').write_text(json.dumps(layout_report, ensure_ascii=False, indent=2), encoding='utf-8')
+    content_report['plan_sha256'] = layout_report['plan_sha256']
+    (out/'content-plan-audit.json').write_text(json.dumps(content_report, ensure_ascii=False, indent=2), encoding='utf-8')
     provenance = {'schema': 'observed_web_plan_v1', 'session_url': session_url, 'observed_model': model,
                   'material_bundle': str(Path(materials).resolve()),
                   'material_packet_sha256': hashlib.sha256((Path(materials)/'packet.json').read_bytes()).hexdigest(),
-                  'response_file': 'assistant-reply.txt', 'response_sha256': hashlib.sha256(raw.encode()).hexdigest(),
+                  'response_file': 'assistant-reply.txt', 'response_sha256': hashlib.sha256((out/'assistant-reply.txt').read_bytes()).hexdigest(),
                   'evidence_file': 'browser-observation.bin', 'evidence_sha256': hashlib.sha256(proof).hexdigest(),
                   'verification_limit': 'Operator-supplied visible observation; does not authenticate backend model or factual claims',
                   'status': 'received_requires_content_and_visual_review'}
     provenance['layout_geometry_errors'] = layout_report['geometry_errors']
     provenance['layout_warnings'] = layout_report['warnings']
+    provenance['content_review_signal_pages'] = sum(bool(page['review_signals']) for page in content_report['slides'])
     (out/'provenance.json').write_text(json.dumps(provenance, ensure_ascii=False, indent=2), encoding='utf-8')
     return provenance
+
+
+def adopt_received_plan(workspace, received):
+    """Promote one observed, geometry-valid plan to the workspace's canonical path."""
+    workspace, received = Path(workspace).resolve(), Path(received).resolve()
+    if workspace not in received.parents or received.parent != workspace / 'planning':
+        raise ValueError('Received plan must be a version directory directly under workspace/planning')
+    plan_path, proof_path = received / 'deck_plan.json', received / 'provenance.json'
+    audit_path = received / 'layout-plan-audit.json'
+    if not all(path.is_file() for path in (plan_path, proof_path, audit_path, received / 'assistant-reply.txt', received / 'browser-observation.bin')):
+        raise ValueError('Incomplete received plan; preserve source files and browser observation')
+    proof = json.loads(proof_path.read_text(encoding='utf-8-sig'))
+    geometry = json.loads(audit_path.read_text(encoding='utf-8-sig'))
+    if proof.get('status') != 'received_requires_content_and_visual_review':
+        raise ValueError('Unexpected received-plan status')
+    if proof.get('response_sha256') != hashlib.sha256((received / 'assistant-reply.txt').read_bytes()).hexdigest():
+        raise ValueError('Assistant reply hash mismatch')
+    if proof.get('evidence_sha256') != hashlib.sha256((received / 'browser-observation.bin').read_bytes()).hexdigest():
+        raise ValueError('Browser observation hash mismatch')
+    plan_bytes = plan_path.read_bytes()
+    if geometry.get('plan_sha256') != hashlib.sha256(plan_bytes).hexdigest():
+        raise ValueError('Received plan hash mismatch')
+    if geometry.get('geometry_errors') or proof.get('layout_geometry_errors'):
+        raise ValueError('Repair received plan geometry before adoption')
+    validate(json.loads(plan_bytes.decode('utf-8-sig')))
+    canonical = workspace / 'planning' / 'deck_plan.json'
+    if canonical.exists():
+        if canonical.read_bytes() != plan_bytes:
+            raise FileExistsError('Canonical plan differs; preserve it and choose a new revision deliberately')
+    else:
+        shutil.copyfile(plan_path, canonical)
+    return {'deck_plan': str(canonical), 'received': str(received),
+            'plan_sha256': hashlib.sha256(plan_bytes).hexdigest(),
+            'status': 'adopted_requires_content_and_visual_review'}
 
 
 if __name__ == '__main__':
@@ -101,5 +141,9 @@ if __name__ == '__main__':
     parser.add_argument('--session-url', required=True)
     parser.add_argument('--model', required=True)
     parser.add_argument('--materials', required=True, type=Path)
+    parser.add_argument('--workspace', type=Path, help='Adopt the validated received plan into this workspace when geometry has no errors')
     args = parser.parse_args()
-    print(json.dumps(receive(args.reply, args.evidence, args.session_url, args.model, args.out, args.materials), ensure_ascii=False))
+    result = receive(args.reply, args.evidence, args.session_url, args.model, args.out, args.materials)
+    if args.workspace:
+        result['adoption'] = adopt_received_plan(args.workspace, args.out)
+    print(json.dumps(result, ensure_ascii=False))

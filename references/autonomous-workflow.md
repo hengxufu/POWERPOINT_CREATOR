@@ -10,7 +10,7 @@
 & scripts/start_ppt.ps1 -Request '把现有材料做成15分钟科研汇报，详细解释公式'
 ```
 
-入口先调用 `auto_workflow.py prepare`，再刷新本任务Bridge profile。Codex随后立即按启动合同操作实际浏览器，验证登录、选择器及图像入口。读取 `planning/automation-input.json` 中的 `planning_packet` 路径，使用自动生成的完整规划包。先读[必要资料交接](planning-material-handoff.md)，填好自动创建的material-selection.json再运行prepare生成GPT/Image资料包；planning_packet本身仅为提示词，实际发送planning_material_bundle里的message.txt及必要附件。不能把准备完成或状态输出当作任务结束。
+入口先验证Python依赖；缺少核心包时只在当前项目的`.ppt-runtime/deps`安装requirements.txt，不修改系统Python或其他项目。随后调用 `auto_workflow.py prepare`，再刷新本任务Bridge profile。Codex继续调用Python脚本时沿用本项目`.ppt-runtime/deps`作为PYTHONPATH；部署失败保留错误并报告，不以控制器启动成功掩盖依赖缺失。Codex随后立即按启动合同操作实际浏览器，验证登录、选择器及图像入口。读取 `planning/automation-input.json` 中的 `planning_packet` 路径，使用自动生成的完整规划包。先读[必要资料交接](planning-material-handoff.md)，填好自动创建的material-selection.json再运行prepare生成GPT/Image资料包；planning_packet本身仅为提示词，实际发送planning_material_bundle里的message.txt及必要附件。不能把准备完成或状态输出当作任务结束。
 
 ## 自动补齐需求
 
@@ -41,6 +41,8 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | prepare_planning_materials | 实际读资料，填写material-selection.json中GPT与Image两份范围；运行auto_workflow prepare生成版本化资料包 |
 | transfer_planning_materials | 上传必要附件并发送完整message.txt，保存真实观察并登记material_handoff record |
 | receive_actual_web_plan | 核对已交接资料，通过receive_web_plan接收真实回复，不能重复发送 |
+| adopt_received_plan | 真实网页回复已接收但尚未进入工作空间主规划；验证来源哈希与几何后执行`auto_workflow.py adopt-plan --workspace <workspace> --received <workspace>/planning/received-vN` |
+| select_received_plan_for_adoption | 存在多个已接收版本；按本次对话与版本证据选择，不能凭文件时间猜测 |
 | recover_original_planning_conversation_do_not_resubmit | 规划发送超时且结果不明；恢复原任务页确认消息与回复，禁止在新对话重发；设计派发记录位于planning/web-design-dispatch.json |
 | repair_received_plan | 根据具体错误修订规划，不重做已通过的素材 |
 | continue_asset_jobs | 按asset_actions逐个推进，实际查看图片后才能review |
@@ -51,5 +53,7 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | close_task_bridge_and_deliver | 关闭本次控制会话，交付已核验版本与来源 |
 
 队列缺失时先生成任务；prepared仅代表待提交；submitted和submission_unknown先检查原会话，绝不自动重发；received必须实际视觉审查；accepted再placement与compose。未知或阻塞状态调查原因，不无界重试。重复request_id队列需确定保留版本，不能自动选择最新版本覆盖派发记录。
+
+接收网页规划时可给`receive_web_plan.py --workspace <workspace>`，在来源哈希与几何检查通过后自动写入`planning/deck_plan.json`；接收目录和原始回复保留。已有不同主规划不会被覆盖。接收器同时输出`content-plan-audit.json`，状态器把内容浅薄、缺来源定位与缺讲稿列为`content_plan_review`信号；Codex实际读材料补足，不能用套话消除信号，也不将启发式报告当作事实核验。
 
 状态器本身不操作浏览器、不调用模型、不授予权限，也不编写通过审查记录。它报告待执行动作。只有实际delivery_gate通过才产生review_evidence_complete，终稿审美与事实仍需真实检查。正式在线任务遵守原Bridge授权范围，不因自动化增加公网、shell、写权限或后台启动。

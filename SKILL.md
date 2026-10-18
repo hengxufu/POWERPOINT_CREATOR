@@ -51,6 +51,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 网页规划取得后，必须按 [references/web-plan-handoff.md](references/web-plan-handoff.md) 使用`receive_web_plan.py`接收真实助手回复并保留观察证据，再拆分独立素材任务。解析或布局检查失败则修订规划，不直接进入全稿组装；素材任务按实际状态恢复，提交不明时禁止自动重发。
 
+简短请求也要把真实接收的规划接入工作空间主规划，优先使用接收器的`--workspace`；已有接收版本按状态器的adopt-plan步骤恢复，不重复向网页发送。查看`content-plan-audit.json`的逐页信号，结合实际材料补足主张、来源、解释链和讲稿；启发式检查不能代替事实核对。
+
 国奖答辩、科研汇报、挑战杯和创新创业路演，先读 [references/chinese-defense-and-competition.md](references/chinese-defense-and-competition.md) 选择叙事与构图方案，并查用户当届规则。使用 `plan_workflow.py packet`准备网页版GPT-6规划任务；实际取得回复后，使用`jobs`拆成逐个元素任务。新增图标、产品概念、飘带和字标预设见asset_spec；不能把队列准备称为网页生成。Python原生图表和表格按 [references/python-native-data.md](references/python-native-data.md) 使用native_data.py，保留输入数据和嵌入工作簿。
 
 1. 确认场景、受众、时长、材料和学校/项目要求；已有信息不再询问。资料不足时只问会改变论证的关键问题。阅读 [references/research-and-design.md](references/research-and-design.md) 选择场景主线。
