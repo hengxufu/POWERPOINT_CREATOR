@@ -27,7 +27,7 @@ def main():
             text = slide.shapes.add_textbox(Inches((index % 10) * .8), Inches(2 + (index // 10) * .5), Inches(.7), Inches(.4))
             text.text = f'Test {index}'
         prs.save(deck)
-        plan = {'slides': [{'slide_number': 1, 'title': 'Synthetic fixture', 'takeaway': 'Test evidence reconciliation',
+        plan = {'slides': [{'slide_number': 1, 'slide_id':'s1', 'title': 'Synthetic fixture', 'takeaway': 'Test evidence reconciliation',
                             'layout_family': 'figure-analysis', 'visual_rationale': 'Synthetic test only',
                             'content_blocks': [{'text': 'A specific fixture explanation'}],
                             'asset_requests': [{'request_id': 'r1', 'decision': 'generate_web'}]}]}
@@ -96,6 +96,20 @@ def main():
         write('planning/deck_plan.json', bad)
         assert not check(root, deck)['ready']
         passed.append('heading-only content fails')
+        reset()
+        write('session.json',{'visual_review_contract':'ppt_visual_review_v1'})
+        result=check(root,deck)
+        assert not result['ready'] and any('Visual representative:' in p for p in result['problems'])
+        from visual_review import prepare as prepare_visual
+        from test_visual_review import synthetic_pass
+        write('renders/synthetic-index.json',{'pptx_sha256':digest(deck),'slides':[{'slide_number':1,'render_file':'renders/slide-01.png','render_sha256':digest(render)}]})
+        for phase in ('representative','full'):
+            board=prepare_visual(root,deck,root/'renders/synthetic-index.json',phase)
+            assert not check(root,deck)['ready']
+            synthetic_pass(board['review_file'])
+        assert check(root,deck)['ready']
+        passed.append('staged visual contract rejects missing and pending reviews; reconciles separate synthetic phases')
+        (root/'session.json').unlink()
         reset()
         # Theme-enabled synthetic workspace must reconcile actual source images, not names alone.
         from beihang_theme import apply as apply_theme, PREFIX

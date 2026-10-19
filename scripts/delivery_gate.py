@@ -39,6 +39,15 @@ def check(workspace, pptx):
     except (OSError, ValueError, KeyError) as error:
         return {'ready': False, 'status': 'draft', 'problems': [str(error)], 'warnings': []}
     deck_hash = digest(pptx)
+    session = load(workspace/'session.json') if (workspace/'session.json').is_file() else {}
+    visual_reviews = None
+    if session.get('visual_review_contract'):
+        from visual_review import check as check_visual
+        visual_reviews = {'representative':check_visual(workspace,plan,'representative'),
+                          'full':check_visual(workspace,plan,'full',pptx=pptx)}
+        for phase, result in visual_reviews.items():
+            for problem in result['problems']:
+                require(False, 'Visual '+phase+': '+problem)
     theme_declarations = []
     for relative in ('session.json', 'composition_contract.json', 'planning/theme-contract.json', 'planning/auto-brief.json'):
         path = workspace / relative
@@ -178,6 +187,7 @@ def check(workspace, pptx):
             'pptx_sha256': deck_hash, 'problems': problems, 'warnings': warnings,
             'element_density': density,
             'beihang_theme': theme_audit,
+            'visual_reviews': visual_reviews,
             'limits': ['Review notes are human/agent attestations, not automatic proof of aesthetics or factual accuracy.',
                        'Run editability, typography and source audits separately.']}
 

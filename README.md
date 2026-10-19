@@ -4,6 +4,8 @@
 
 - 默认优先Codex内置浏览器，受阻或缺必要传输能力时切官方Playwright CLI；以本次实际观察选择路线，见[连接路线](references/browser-connection.md)。
 - 规划阶段为GPT和Image准备必要内容/附件并实际送达；新增material_handoff版本、对话与资料哈希检查，接入规划接收、图片提交和交付验收。详见[资料交接](references/planning-material-handoff.md)。
+- `auto_workflow advance`自动接入单一有效规划、输出内容/几何/美术审计、准备缺失素材；恢复两类队列路径和中断发送记录，重复执行不覆盖已有任务。
+- 三类可调整美术方向统一全篇色彩、字号与单元素材质/光照/视角；先完成代表页实际审查，再扩展全篇。审查板使用实际渲染与版本快照，默认待审查，见[美术方向与分阶段审查](references/art-direction-and-staged-review.md)。
 
 - 简短请求自动初始化需求与恢复状态；保留需求来源，不把本地准备冒充网页调用。
 - 每页至少40个真实可见的独立对象，缺口按页面内容规划单元素网页素材；隐藏对象、段落和表格单元格不重复计数。
@@ -21,8 +23,10 @@
 ```powershell
 # 准备待发送的GPT-6任务包与10种构图坐标；此步不调用网页
 python scripts/plan_workflow.py packet --brief brief.md --profile challenge --project-root <项目根> --materials <material-selection.json> --out planning-request
-# 实际取得网页版规划后，将素材需求拆为单个任务；此步尚未提交
-python scripts/plan_workflow.py jobs --plan planning/deck_plan.json --profile challenge --project-root <项目根> --materials <material-selection.json> --out asset-jobs-v1
+# 实际取得并接入网页版规划后，准备代表页的缺失任务；此步尚未提交
+python scripts/auto_workflow.py advance --workspace <workspace>
+# 实际组装、渲染代表页后建立待审查板；完成真实审查再advance准备其余素材
+python scripts/auto_workflow.py advance --workspace <workspace> --pptx <实际PPTX> --renders <实际渲染索引>
 # 按web-single-element实际提交、下载、审查与入稿，再运行delivery_gate
 # Python生成原生图表和表格，保留内嵌工作簿与原始JSON
 python scripts/native_data.py --spec examples/native-data.json --out build/data-demo.pptx

@@ -8,6 +8,8 @@
 
 建立三张代表页：封面、最关键的技术/机制页、证据最密集的结果页。先渲染并查看，再将设计延伸到全篇。避免只先做好最容易的封面。
 
+按[美术方向与分阶段审查](art-direction-and-staged-review.md)选择并调整全篇颜色、字号、留白、材质与光照。主规划接入后运行`auto_workflow.py advance`；只自动准备代表页所需的缺失素材，实际代表页审查通过后再准备其余页面。短稿允许一页承担多个代表角色。准备任务、通过几何审计均不代表视觉通过。
+
 不同内容应有相应表达：方法用原生结构与局部实物/概念元素，结果用真实证据和可编辑解读，对比用共用尺度，结论用明确的发现与边界。允许必要的复杂度，但不按对象数、图片数或字数机械判定质量。不要将每页都做成同一种三卡片布局。
 
 ## 内容不能只剩目录与口号
@@ -31,6 +33,8 @@ assets/asset_manifest.json每项补充request_id，对应唯一请求。不要�
 每页必须至少40个独立元素，封面、章节页和结尾也检查。组装后先运行audit_element_density.py检查实际对象数量；报告按页给element_count、deficit与suggested_web_asset_requests。Codex将提案按本页内容具体化，加入实际deck_plan的asset_requests，再用网页版逐个生成和现有任务流水线审核、插入。重新渲染后再审查，不能使用空文本、隐藏或画布外对象补数。delivery_gate将不足40的页面判为草稿；数量通过也不能替代可读性、内容和证据审查。
 
 初始化产生qa/delivery_review.json空记录，默认未验收。完成最终组装后按实际页面顺序补充：
+
+新建工作空间以及执行过advance的旧空间同时启用`visual_review_contract`。先后用实际渲染创建representative和full审查板，查看并完成六项视觉记录；`qa/visual-review-index.json`指向这两份带PPT、规划和图片快照的记录。delivery_gate会核对当前规划及最终PPT哈希，缺失、待审查或版本不对应均不能通过。以下内容/证据记录仍需填写，不能用审查板替代。
 
 - 顶层pptx_sha256；web_planning的session_url、实际response_file和material_bundle（来自真实接收器provenance）；GPT及每个Image任务均核对必要资料交接。离线例外使用offline_user_authorization.instruction与reason。
 - 每页slide_number、render_file、render_sha256、rendered_from_sha256。先渲染、实际查看后填记录；修改PPT后旧审查失效，需要重渲染并更新。

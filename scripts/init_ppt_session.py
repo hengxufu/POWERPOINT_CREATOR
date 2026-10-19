@@ -75,6 +75,7 @@ def main() -> int:
         "observed_planning_model": None,
         "observed_image_model": None,
         "bridge_contract_required": True,
+        "visual_review_contract": "ppt_visual_review_v1",
         "theme_profile": args.theme_profile,
         "theme_reason": args.theme_reason,
     }

@@ -1,4 +1,4 @@
 interface:
   display_name: "中国科研汇报 PPT"
   short_description: "GPT-6规划、Image 2.5单元素、本地脚本组装"
-  default_prompt: "使用 $chinese-research-ppt。先读内嵌bridge/SKILL.md和bridge-startup-contract，运行start_ppt绑定当前项目并立即用浏览器工具验证登录、GPT-6选择器和图像入口，按browser-connection优先内置浏览器、受阻切官方Playwright CLI，完成bridge_session路线观察与Check。按planning-material-handoff为GPT与Image准备必要内容/附件并实际送达，不能只给本地路径；不能跳到生成器。按production-and-delivery制作具体内容、代表页与逐个网页素材，原生构建数据对象、保留LaTeX源和混排字体。最终逐页查看渲染并运行delivery_gate；缺连接、素材或审查保持草稿，不虚报成功。结束执行ppt_bridge Off。"
+  default_prompt: "使用 $chinese-research-ppt。先读内嵌bridge/SKILL.md和bridge-startup-contract，运行start_ppt绑定当前项目并立即用浏览器工具验证登录、GPT-6选择器和图像入口，按browser-connection优先内置浏览器、受阻切官方Playwright CLI，完成bridge_session路线观察与Check。按planning-material-handoff为GPT与Image准备必要内容/附件并实际送达，不能只给本地路径。主规划接入后运行auto_workflow advance，统一全篇色彩、字号和素材材质/光照；先实际制作、渲染和审查代表页，再扩展全篇。按production-and-delivery逐个执行网页素材，原生构建数据对象、保留LaTeX源和混排字体。最终逐页查看实际渲染，完成full审查并运行delivery_gate；缺连接、素材或审查保持草稿，不虚报成功。结束执行ppt_bridge Off。"

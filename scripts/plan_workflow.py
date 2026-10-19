@@ -11,6 +11,7 @@ from asset_job import prepare
 from layout_catalog import LAYOUTS
 from design_layout import DESIGN_BRIEF
 from experimental_figures import FIGURE_BRIEF
+from art_direction import ART_BRIEF, direction, asset_context
 from beihang_theme import contract as theme_contract, PROFILES as THEME_PROFILES
 
 PROFILES = {
@@ -55,6 +56,8 @@ def packet(args):
     payload = {'requested_profile': args.profile, **profile, 'brief': brief,
                'theme_contract': theme, 'effective_palette': palette,
                'web_response_received': False, 'observed_model': None}
+    visual_direction = direction({'theme_profile': theme_profile}, args.profile)
+    payload['suggested_art_direction'] = visual_direction
     (args.out / 'planning-input.json').write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
     prompt = f'''请实际规划一份中国高校{profile['name']}可编辑PPT。先分析材料，再逐页规划，再审查。
 材料：\n{brief}\n
@@ -85,6 +88,7 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
     (args.out / 'layout-recipes.json').write_text(json.dumps(LAYOUTS, ensure_ascii=False, indent=2), encoding='utf-8')
     with (args.out / 'gpt6-task-packet.md').open('a', encoding='utf-8') as handle:
         handle.write('\n元素设计与排版合同：\n' + DESIGN_BRIEF)
+        handle.write('\n视觉美术方向（可按用户参考调整）：\n' + json.dumps(visual_direction, ensure_ascii=False) + '\n' + ART_BRIEF)
         handle.write('\n实验数据图合同：\n' + FIGURE_BRIEF)
         handle.write('\n以下是可调整的原生构图起点，按真实内容选取并修订，不能照搬占位框：\n' + json.dumps(LAYOUTS, ensure_ascii=False))
         handle.write('\n资料合同：先确认正文资料与附件可读取。每页evidence引用资料ID和页码/图号；每个asset_request给material_ids，选取Image必需的主体/风格参考。文件路径不是文件内容；缺资料先报告，不推断。\n')
@@ -95,7 +99,7 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
         prepare_materials(args.project_root, args.materials, 'gpt', args.out / 'gpt6-task-packet.md',
                           args.out / 'gpt-materials', 'gpt-planning')
         image_brief = args.out / 'image-planning-context.md'
-        image_brief.write_text('本项目Image共用资料。逐元素任务另补主体、用途、准确文字、尺寸、背景、构图与科学边界。只生成单个局部元素，不生成整页、图表或实验结果。', encoding='utf-8')
+        image_brief.write_text('本项目Image共用资料。逐元素任务另补主体、用途、准确文字、尺寸、背景、构图与科学边界。只生成单个局部元素，不生成整页、图表或实验结果。\n建议视觉方向：\n' + json.dumps(visual_direction, ensure_ascii=False), encoding='utf-8')
         prepare_materials(args.project_root, args.materials, 'image', image_brief,
                           args.out / 'image-materials', 'image-planning-context')
     print(args.out)
@@ -104,10 +108,13 @@ kind只能ornament/concept/art_text/icon/cutout；艺术字给exact_text。每�
 def jobs(args):
     plan = json.loads(args.plan.read_text(encoding='utf-8-sig'))
     profile = PROFILES[args.profile]
-    theme_profile = plan.get('design_system', {}).get('theme_profile')
-    palette = ('主色 #' + THEME_PROFILES[theme_profile] + '、白色、深灰；仅次级概念与装饰') if theme_profile in THEME_PROFILES else profile['palette']
+    resolved_direction = direction(plan.get('design_system', {}), args.profile)
+    palette = '全篇颜色角色：' + json.dumps(resolved_direction['color_roles'], ensure_ascii=False) + '；概念与配饰沿用主辅色，保留真实证据颜色语义'
     requests = []
     used = set()
+    selected = getattr(args, 'request_ids', None)
+    if selected is not None and (not isinstance(selected, list) or not selected or len(set(selected)) != len(selected)):
+        raise ValueError('request_ids must be a nonempty list of unique IDs')
     for slide in plan['slides']:
         for request in slide.get('asset_requests', []):
             if request.get('decision', 'generate_web') == 'native_or_source':
@@ -116,13 +123,16 @@ def jobs(args):
             if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', identifier) or identifier in used:
                 raise ValueError('Unique filename-safe request_id required')
             used.add(identifier)
+            if selected is not None and identifier not in selected:
+                continue
             spec = {'asset_id': request.get('asset_id', identifier), 'kind': request['kind'],
                     'element': request['single_subject_prompt'], 'slide_id': slide['slide_id'],
                     'object_id': request['object_id'], 'palette': request.get('palette', palette),
                     'transparent': True, 'min_width': 1024, 'min_height': 1024,
                     'aspect': request.get('aspect', '3:1' if request['kind'] == 'art_text' else '1:1'),
                     'style': request.get('style', profile['name'] + '；清晰、精致、统一材质与光照'),
-                    'visual_context': request.get('visual_context', {})}
+                    'visual_context': asset_context(plan, slide, request, args.profile)}
+            spec['request_id'] = identifier
             if 'material_ids' in request:
                 spec['material_ids'] = request['material_ids']
             if request['kind'] == 'art_text':
@@ -132,6 +142,8 @@ def jobs(args):
             from asset_job import prompt
             prompt(spec)
             requests.append((identifier, slide['slide_number'], spec))
+    if selected is not None and set(selected) != {identifier for identifier, _, _ in requests}:
+        raise ValueError('Selected request IDs must be actual generate_web requests')
     if getattr(args, 'materials', None):
         from material_handoff import select, load, inside
         from bridge_session import safe_root
@@ -167,6 +179,7 @@ if __name__ == '__main__':
     command.set_defaults(func=packet)
     command = commands.add_parser('jobs')
     command.add_argument('--plan', type=Path, required=True)
+    command.add_argument('--request-ids', nargs='+', help='Prepare only these missing requests; never resubmit existing jobs')
     command.set_defaults(func=jobs)
     for command in commands.choices.values():
         command.add_argument('--profile', choices=PROFILES, required=True)

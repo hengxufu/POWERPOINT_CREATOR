@@ -29,6 +29,8 @@
 
 ## 根据状态继续执行
 
+已有主规划后，优先运行`auto_workflow.py advance --workspace <workspace>`完成可恢复的本地步骤，再按next_action继续真实操作。它会准备当前阶段缺失任务、输出内容/几何/美术报告；不会自动发送或填写通过。代表页与全篇分阶段执行见[art-direction-and-staged-review.md](art-direction-and-staged-review.md)。
+
 ```powershell
 python scripts/auto_workflow.py status --workspace <workspace> --write
 ```
@@ -45,6 +47,13 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | select_received_plan_for_adoption | 存在多个已接收版本；按本次对话与版本证据选择，不能凭文件时间猜测 |
 | recover_original_planning_conversation_do_not_resubmit | 规划发送超时且结果不明；恢复原任务页确认消息与回复，禁止在新对话重发；设计派发记录位于planning/web-design-dispatch.json |
 | repair_received_plan | 根据具体错误修订规划，不重做已通过的素材 |
+| repair_plan_geometry / repair_visual_plan | 修正具体几何或美术字段错误，再advance，不用自动移动对象掩盖问题 |
+| prepare_asset_materials | 实际检查并补足当前素材所需资料，再advance |
+| continue_representative_assets | 只推进代表页素材的真实网页生成、下载、审查与摆放 |
+| render_and_review_representative_pages | 原生组装并渲染代表页，提供实际渲染索引创建审查板，实际查看后记录 |
+| render_and_review_full_deck | 对最终版本渲染全篇并逐页审查，更新full审查记录 |
+| inspect_orphaned_dispatch / inspect_interrupted_asset_preparation | 恢复已有发送意图或半完成目录；不覆写、不重发 |
+| repair_asset_inventory / resolve_duplicate_asset_queues | 修复索引或实际比较候选，用select-job保存具体选择及理由；旧发送结果不明时先恢复，不能按时间猜测 |
 | continue_asset_jobs | 按asset_actions逐个推进，实际查看图片后才能review |
 | assemble_native_deck_then_render_and_run_delivery_gate | 原生组装、代表页与全篇渲染检查、运行交付检查 |
 | repair_delivery_gaps | 修复实际delivery_check指出的缺项 |

@@ -73,6 +73,8 @@ def receive(reply, evidence, session_url, model, out, materials=None):
     layout_report = audit(plan)
     from audit_plan_content import audit as audit_content
     content_report = audit_content(plan)
+    from art_direction import audit as audit_art
+    art_report = audit_art(plan)
     proof = evidence.read_bytes()
     if not proof:
         raise ValueError('Nonempty actual browser observation required')
@@ -86,6 +88,8 @@ def receive(reply, evidence, session_url, model, out, materials=None):
     (out/'layout-plan-audit.json').write_text(json.dumps(layout_report, ensure_ascii=False, indent=2), encoding='utf-8')
     content_report['plan_sha256'] = layout_report['plan_sha256']
     (out/'content-plan-audit.json').write_text(json.dumps(content_report, ensure_ascii=False, indent=2), encoding='utf-8')
+    art_report['plan_sha256'] = layout_report['plan_sha256']
+    (out/'art-direction-audit.json').write_text(json.dumps(art_report, ensure_ascii=False, indent=2), encoding='utf-8')
     provenance = {'schema': 'observed_web_plan_v1', 'session_url': session_url, 'observed_model': model,
                   'material_bundle': str(Path(materials).resolve()),
                   'material_packet_sha256': hashlib.sha256((Path(materials)/'packet.json').read_bytes()).hexdigest(),
@@ -129,6 +133,15 @@ def adopt_received_plan(workspace, received):
             raise FileExistsError('Canonical plan differs; preserve it and choose a new revision deliberately')
     else:
         shutil.copyfile(plan_path, canonical)
+    active = {'received':str(received), 'plan_sha256':hashlib.sha256(plan_bytes).hexdigest(),
+              'material_bundle':proof['material_bundle'], 'session_url':proof['session_url']}
+    (workspace/'planning/active-plan.json').write_text(json.dumps(active,ensure_ascii=False,indent=2),encoding='utf-8')
+    review_path = workspace/'qa/delivery_review.json'
+    review = json.loads(review_path.read_text(encoding='utf-8-sig')) if review_path.is_file() else {}
+    review['web_planning'] = {'session_url':proof['session_url'], 'response_file':str((received/'assistant-reply.txt').relative_to(workspace)),
+                             'material_bundle':proof['material_bundle']}
+    review_path.parent.mkdir(parents=True,exist_ok=True)
+    review_path.write_text(json.dumps(review,ensure_ascii=False,indent=2),encoding='utf-8')
     return {'deck_plan': str(canonical), 'received': str(received),
             'plan_sha256': hashlib.sha256(plan_bytes).hexdigest(),
             'status': 'adopted_requires_content_and_visual_review'}

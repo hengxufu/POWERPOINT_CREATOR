@@ -1,5 +1,7 @@
 # 内容驱动的视觉丰富度
 
+可执行美术预设、全篇到单素材的视觉继承与代表页/全篇审查板见[art-direction-and-staged-review.md](art-direction-and-staged-review.md)。新建和advance恢复的工作空间由delivery_gate检查两阶段真实审查记录。
+
 需要加强元素精致度与排版执行时，结合[element-design-and-layout.md](element-design-and-layout.md)；新版规划包已自动附带角色、阅读顺序、对齐组与单元素光学规范。
 
 完整制作或视觉重设计时使用；局部改字无需重新规划全篇。
