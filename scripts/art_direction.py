@@ -29,6 +29,8 @@ design_system用color_roles（background/surface/text/muted/primary/accent）、
 每页可用background_color和visual_context，单素材可覆盖，但系列中改变光照/材质/视角需style_override_reason。文本在纯色背景声明text_color/background_color便于对比检查；照片/渐变/透明叠层须渲染后判断。
 representative_slides用{cover:slide_id,technical:slide_id,dense:slide_id}选择封面、关键方法/解释、密集证据页。先实际渲染和查看，再推广全篇。
 封面以主体和题目形成大小对比；解释页用主证据+原生解读；密集结果页保留坐标、图例、误差和来源空间。配饰、阴影与艺术字不得抢主证据。
+内容排版用一句论点引导阅读；标题、证据、解释、条件/来源分层，不把整段讲稿塞进正文。比较页对齐基线与尺度，密集页优先拆成概览和关键证据两层，保留条件与不确定性。
+美术精修先统一线宽、圆角、边缘和阴影强度；同系列素材按主体可见轮廓而非PNG外框比较光学大小。在实际背景上检查白边、暗边、阴影截断与接触位置，不给每个文本框加阴影，不给证据图添加虚构景深、透视或颜色修饰。
 审查逐项记录焦点、层级、对齐留白、色彩与可读性、素材融合、证据可读性；给具体对象与修订，禁止只写高级/美观/通过。'''
 
 

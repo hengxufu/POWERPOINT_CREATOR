@@ -45,6 +45,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 制作与交互
 
+内容拥挤、图文脱节或美术融合不足时，读[内容排版与精修](references/content-layout-and-finish.md)。用论点—证据—解释组织正文，保留条件、单位和不确定性；按文字容量预警、间距组与图注关联修订，再查看实际换行、证据可读性和透明素材边缘。不能将容量估算当作真实排版测量。
+
 优化自动化与视觉美术时，读 [references/art-direction-and-staged-review.md](references/art-direction-and-staged-review.md)。主规划接入后运行`auto_workflow.py advance`，自动完成本地审计并只准备当前阶段缺失素材；Codex继续执行返回的真实网页/组装/渲染动作。全篇美术令牌传给每个素材，先完成并实际查看代表页审查板，再推广全篇。审查默认pending，不以脚本输出代替看图；最终delivery_gate核对代表页和全篇审查版本。
 
 优化单元素设计、视觉美化与布局排版时，读 [references/element-design-and-layout.md](references/element-design-and-layout.md)。先确定内容关系，再选择布局，声明视觉角色、阅读顺序、设计令牌与对齐组；单元素合同补齐视角、轮廓、边缘、缩小后细节与光学留白。组装前用 `scripts/design_layout.py` 对规划做几何预检，再依据真实渲染精修；不能用几何通过代替视觉验收或40对象检查。

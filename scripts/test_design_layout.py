@@ -1,7 +1,7 @@
 """Offline geometry/semantic tests, not fabricated visual reviews."""
 import copy
 import unittest
-from design_layout import audit
+from design_layout import audit, text_pressure
 from asset_job import prompt
 
 
@@ -15,6 +15,41 @@ def plan():
 
 
 class DesignTests(unittest.TestCase):
+    def test_text_pressure_is_advisory_and_does_not_shrink_content(self):
+        value=plan()
+        item=value['slides'][0]['content_blocks'][1]
+        item['text']='在相同实验条件下，需要保留样本量与测量不确定性。'*25
+        original=copy.deepcopy(value)
+        self.assertIn('text_pressure',self.codes(value))
+        self.assertEqual(audit(value)['geometry_errors'],0)
+        self.assertEqual(value,original)
+        item['box_inches']=[1,1,10,5]
+        item['text']='证据支持有条件的结论。'
+        self.assertFalse(text_pressure(item)['pressure'])
+
+    def test_text_spacing_breaks_and_invalid_values(self):
+        item={'text':'A\nB\nC','font_pt':20,'box_inches':[1,1,4,.6]}
+        self.assertEqual(text_pressure(item)['estimated_lines'],3)
+        self.assertTrue(text_pressure(item)['pressure'])
+        narrow={'text':'测','font_pt':20,'box_inches':[1,1,.3,2]}
+        self.assertTrue(text_pressure(narrow)['pressure'])
+        item['text_layout']={'line_spacing':float('nan')}
+        with self.assertRaises(ValueError):text_pressure(item)
+        item['type']='formula'
+        self.assertIsNone(text_pressure(item))
+
+    def test_spacing_and_caption_links(self):
+        value=plan();slide=value['slides'][0]
+        slide['spacing_groups']=[{'axis':'horizontal','members':['figure','explanation'],'min_gap_inches':.5}]
+        self.assertIn('tight_spacing',self.codes(value))
+        slide['content_blocks'][1]['caption_for']='figure'
+        slide['content_blocks'][1]['box_inches']=[9,1.8,3,4.7]
+        self.assertIn('detached_caption',self.codes(value))
+        slide['content_blocks'][1]['caption_for']='missing'
+        self.assertIn('caption_target',self.codes(value))
+        slide['spacing_groups'][0]['members']=['figure','missing']
+        self.assertIn('spacing_group',self.codes(value))
+
     def codes(self, value):
         return {f['code'] for f in audit(value)['findings']}
 

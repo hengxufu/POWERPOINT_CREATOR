@@ -34,6 +34,8 @@ design_system记录背景、文字/强调/边界颜色、字号角色、间距�
 
 ## 可执行预检
 
+长段落、密集结果页与素材融合问题按[内容排版与美术精修](content-layout-and-finish.md)处理。新增text_layout容量估算、spacing_groups间距声明和caption_for证据关联；容量、间距和图注距离均为复核提示，不自动改动内容或给视觉通过。
+
 每个content_block与实际摆放asset_request声明object_id、role、box_inches；文本声明font_pt。role为primary/secondary/annotation/ornament/container/background/theme。parent_id仅指向真正包住它的container；有意叠放逐对写allowed_overlaps=[{object_id,reason}]。alignment_groups=[{axis,members}]核对声明的对齐；reading_order列原生解释与证据的阅读顺序，不含配饰。
 
 ```powershell
