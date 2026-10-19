@@ -36,6 +36,9 @@ class AdvanceTests(unittest.TestCase):
         inventory=job_inventory(self.workspace)
         self.assertEqual(set(inventory),{'icon1','icon2','icon3'})
         self.assertEqual(first['actual_web_submissions'],0)
+        tasks=load(first['revision_tasks']['json'])
+        self.assertEqual(tasks['plan_sha256'],first['revision_tasks']['plan_sha256'])
+        self.assertTrue(Path(first['revision_tasks']['markdown']).is_file())
         self.assertEqual(next(a for a in first['asset_actions'] if a['request_id']=='icon4')['action'],'wait_for_representative_review')
         before={p:p.read_bytes() for p in (self.workspace/'asset-jobs').glob('*/*/job.json')}
         advance(self.workspace)
@@ -52,6 +55,20 @@ class AdvanceTests(unittest.TestCase):
         advanced=advance(self.workspace)
         self.assertEqual(set(job_inventory(self.workspace)),{'icon1','icon2','icon3','icon4'})
         self.assertIn('prepare_missing_full_asset_jobs',advanced['completed_local_actions'])
+
+    def test_single_job_plan_changes_require_inspection_before_reuse(self):
+        advance(self.workspace)
+        directory=next(iter(job_inventory(self.workspace)['icon1']))
+        old=(directory/'job.json').read_bytes()
+        self.plan['slides'][0]['asset_requests'][0]['single_subject_prompt']='Changed synthetic request'
+        write(self.workspace/'planning/deck_plan.json',self.plan)
+        result=advance(self.workspace)
+        self.assertEqual(next(a for a in result['asset_actions'] if a['request_id']=='icon1')['state'],'plan_changed')
+        self.assertEqual((directory/'job.json').read_bytes(),old)
+        select_job(self.workspace,'icon1',directory,'SYNTHETIC explicit reinspection: existing spec still appropriate')
+        result=status(self.workspace)
+        self.assertEqual(next(a for a in result['asset_actions'] if a['request_id']=='icon1')['state'],'prepared')
+        self.assertEqual((directory/'job.json').read_bytes(),old)
 
     def test_assets_queue_and_dispatch_intent_are_recovered_without_resubmit(self):
         directory=self.workspace/'assets/web-queue-v1/icon1'

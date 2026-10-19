@@ -2,6 +2,8 @@
 
 ## 最新能力
 
+- advance自动生成按页/对象定位的修订任务单，按证据、几何、可读性与美术安排处理顺序；新素材绑定图像相关规划，规划变化后须实际复查再复用或修订，单一旧任务也不会静默继续。
+
 - 默认优先Codex内置浏览器，受阻或缺必要传输能力时切官方Playwright CLI；以本次实际观察选择路线，见[连接路线](references/browser-connection.md)。
 - 规划阶段为GPT和Image准备必要内容/附件并实际送达；新增material_handoff版本、对话与资料哈希检查，接入规划接收、图片提交和交付验收。详见[资料交接](references/planning-material-handoff.md)。
 - `auto_workflow advance`自动接入单一有效规划、输出内容/几何/美术审计、准备缺失素材；恢复两类队列路径和中断发送记录，重复执行不覆盖已有任务。

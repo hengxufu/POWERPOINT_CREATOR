@@ -14,6 +14,7 @@ from types import SimpleNamespace
 
 from bridge_session import check as check_connection, safe_root
 from plan_workflow import PROFILES, packet
+from revision_tasks import request_signature, reviewed_choice
 
 HERE = Path(__file__).resolve().parent
 MATERIAL_EXTENSIONS = {'.pdf', '.pptx', '.docx', '.xlsx', '.csv', '.txt', '.md', '.png', '.jpg', '.jpeg', '.svg'}
@@ -71,13 +72,6 @@ def job_state(directory):
             any(event.get('status') in ('submitted','submission_unknown') for event in job.get('history',[]))):
         state = 'submission_unknown'
     return state
-
-
-def request_signature(plan, slide, request):
-    value = {'design_system':plan.get('design_system',{}), 'slide_id':slide['slide_id'],
-             'background_color':slide.get('background_color'), 'visual_context':slide.get('visual_context',{}),
-             'request':request}
-    return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True).encode('utf-8')).hexdigest()
 
 
 def select_job(workspace, request_id, directory, reason):
@@ -385,11 +379,18 @@ def status(workspace):
                     return result
             directory = next(iter(candidates),None)
             state = job_state(directory) if directory else 'missing'
+            if directory and (directory/'job.json').is_file():
+                spec = load(directory/'job.json').get('spec',{})
+                binding = spec.get('plan_request_signature')
+                reused = reviewed_choice(selections.get(key,{}),workspace,directory,plan,slide,request,spec)
+                if binding and binding != request_signature(plan,slide,request) and not reused and state not in ('submitted','submission_unknown','blocked_download'):
+                    state = 'plan_changed'
             action = {'missing': 'prepare_job', 'prepared': 'submit_once_after_browser_verification',
                       'submitted': 'inspect_original_conversation', 'submission_unknown': 'inspect_original_conversation_do_not_resubmit',
                       'generated': 'download_original_result', 'received': 'view_and_review_asset',
                       'technical_failed': 'repair_asset_in_new_version', 'rejected': 'revise_asset_in_new_version',
-                      'accepted': 'compute_placement_and_compose', 'integrated': 'verify_final_object_hash'}.get(state, 'resolve_blocked_job')
+                      'accepted': 'compute_placement_and_compose', 'integrated': 'verify_final_object_hash',
+                      'plan_changed':'inspect_asset_against_current_plan_do_not_resubmit'}.get(state, 'resolve_blocked_job')
             phase = 'representative' if slide['slide_id'] in representative_ids else 'full'
             if session.get('visual_review_contract') and phase == 'full' and not representative['ready'] and state == 'missing':
                 action = 'wait_for_representative_review'
@@ -479,6 +480,14 @@ def advance(workspace, pptx=None, render_index=None):
     for key, filename in (('content_plan_review','content.json'),('layout_plan_review','layout.json'),('art_direction_review','art-direction.json')):
         value = {**result[key], 'plan_sha256':plan_hash}
         write(report_dir/filename,value)
+    from revision_tasks import build as build_revisions, markdown as revision_markdown
+    revisions = build_revisions(plan,result['content_plan_review'],result['layout_plan_review'],result['art_direction_review'])
+    revisions['plan_sha256'] = plan_hash
+    write(report_dir/'revision-tasks.json',revisions)
+    (report_dir/'revision-tasks.md').write_text(revision_markdown(revisions),encoding='utf-8')
+    revision_summary = {'count':revisions['count'],'json':str(report_dir/'revision-tasks.json'),
+                        'markdown':str(report_dir/'revision-tasks.md'),'plan_sha256':plan_hash}
+    result['revision_tasks'] = revision_summary
     completed.append('audit_content_geometry_and_art_direction')
     if result['layout_plan_review']['geometry_errors']:
         return {**result,'next_action':'repair_plan_geometry','completed_local_actions':completed,'actual_web_submissions':0}
@@ -517,6 +526,7 @@ def advance(workspace, pptx=None, render_index=None):
                                          materials=selection_path,project_root=root,request_ids=missing))
         completed.append('prepare_missing_' + ('full' if rep_ready else 'representative') + '_asset_jobs')
     final = status(workspace)
+    final['revision_tasks'] = revision_summary
     if 'visual_board' in result:
         final['visual_board'] = result['visual_board']
     final.update(completed_local_actions=completed,actual_web_submissions=0)

@@ -31,6 +31,8 @@
 
 已有主规划后，优先运行`auto_workflow.py advance --workspace <workspace>`完成可恢复的本地步骤，再按next_action继续真实操作。它会准备当前阶段缺失任务、输出内容/几何/美术报告；不会自动发送或填写通过。代表页与全篇分阶段执行见[art-direction-and-staged-review.md](art-direction-and-staged-review.md)。
 
+advance同时输出按页定位的`revision-tasks.json`和可读的`revision-tasks.md`，路径见返回的revision_tasks。先核对证据缺口，再处理几何错误、内容/可读性、美术一致性和必要叠层复查；优先级只是修订顺序，不是已确认的错误等级。报告包含对象ID、具体观察与下一步动作。重新运行依据当前规划重算，不自动将消失的信号标成视觉通过；实际修订与查看记录保存在对应审查版本，不直接修改生成的任务单来通过检查。
+
 ```powershell
 python scripts/auto_workflow.py status --workspace <workspace> --write
 ```
@@ -62,6 +64,8 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 | close_task_bridge_and_deliver | 关闭本次控制会话，交付已核验版本与来源 |
 
 队列缺失时先生成任务；prepared仅代表待提交；submitted和submission_unknown先检查原会话，绝不自动重发；received必须实际视觉审查；accepted再placement与compose。未知或阻塞状态调查原因，不无界重试。重复request_id队列需确定保留版本，不能自动选择最新版本覆盖派发记录。
+
+新准备素材带`plan_request_signature`，绑定主体请求与图像相关的主题、颜色、材质/光照和背景；仅修改原生正文的字号不会令图片任务失效。即使只有一个任务，出现plan_changed也必须实际对照新规划复查。素材仍适用时用select-job选择原目录并具体说明复查后的复用理由；不适用时明确建立新版本。不得修改原spec或伪造新生成记录。delivery_gate检查原始绑定或当前复用记录的目录、规划签名及原规格哈希，实际图片对象和视觉审查仍须分别通过。历史无绑定任务保留原有检查，不自动补写历史证据。
 
 接收网页规划时可给`receive_web_plan.py --workspace <workspace>`，在来源哈希与几何检查通过后自动写入`planning/deck_plan.json`；接收目录和原始回复保留。已有不同主规划不会被覆盖。接收器同时输出`content-plan-audit.json`，状态器把内容浅薄、缺来源定位与缺讲稿列为`content_plan_review`信号；Codex实际读材料补足，不能用套话消除信号，也不将启发式报告当作事实核验。
 

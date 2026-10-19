@@ -12,6 +12,7 @@ from layout_catalog import LAYOUTS
 from design_layout import DESIGN_BRIEF
 from experimental_figures import FIGURE_BRIEF
 from art_direction import ART_BRIEF, direction, asset_context
+from revision_tasks import request_signature
 from beihang_theme import contract as theme_contract, PROFILES as THEME_PROFILES
 
 PROFILES = {
@@ -133,6 +134,7 @@ def jobs(args):
                     'style': request.get('style', profile['name'] + '；清晰、精致、统一材质与光照'),
                     'visual_context': asset_context(plan, slide, request, args.profile)}
             spec['request_id'] = identifier
+            spec['plan_request_signature'] = request_signature(plan,slide,request)
             if 'material_ids' in request:
                 spec['material_ids'] = request['material_ids']
             if request['kind'] == 'art_text':

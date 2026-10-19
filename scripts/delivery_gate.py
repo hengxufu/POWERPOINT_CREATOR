@@ -161,6 +161,13 @@ def check(workspace, pptx):
             try:
                 job_dir = resolve(workspace / 'assets', element['job_dir'])
                 job = load(job_dir / 'job.json')
+                from revision_tasks import request_signature, reviewed_choice
+                binding = job.get('spec',{}).get('plan_request_signature')
+                if binding:
+                    choice_file = workspace/'planning/asset-job-selection.json'
+                    choices = load(choice_file) if choice_file.is_file() else {}
+                    reused = reviewed_choice(choices.get(key,{}),workspace,job_dir,plan,slide,request,job['spec'])
+                    require(binding == request_signature(plan,slide,request) or reused, f'{key}: asset request or visual settings changed after preparation; inspect before reuse or revision')
                 from material_handoff import check as check_materials
                 result = check_materials(job_dir / 'materials', target='image',
                                          session_url=job.get('session_url', ''), task_id=job.get('spec', {}).get('asset_id', ''),

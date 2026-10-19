@@ -67,6 +67,27 @@ def main():
         assert check(root, deck)['ready']
         assert check(root, deck)['warnings']
         passed.append('complete synthetic records reconcile; unverified engine remains disclosed')
+        from revision_tasks import request_signature
+        import hashlib
+        bound=copy.deepcopy(job)
+        bound['spec']['plan_request_signature']=request_signature(plan,plan['slides'][0],plan['slides'][0]['asset_requests'][0])
+        write('assets/job/job.json',bound)
+        assert check(root,deck)['ready']
+        revised=copy.deepcopy(plan)
+        revised['slides'][0]['asset_requests'][0]['purpose']='SYNTHETIC changed purpose'
+        write('planning/deck_plan.json',revised)
+        assert not check(root,deck)['ready']
+        choice={'job_dir':'assets/job','reason':'SYNTHETIC explicit reinspection supports reuse',
+                'request_signature':request_signature(revised,revised['slides'][0],revised['slides'][0]['asset_requests'][0]),
+                'spec_sha256':hashlib.sha256(json.dumps(bound['spec'],sort_keys=True).encode()).hexdigest()}
+        write('planning/asset-job-selection.json',{'r1':choice})
+        assert check(root,deck)['ready']
+        changed_job=copy.deepcopy(bound);changed_job['spec']['element']='SYNTHETIC modified specification'
+        write('assets/job/job.json',changed_job)
+        assert not check(root,deck)['ready']
+        (root/'planning/asset-job-selection.json').unlink()
+        reset()
+        passed.append('changed plan binding requires explicit current reuse review; changed selected spec invalidates review')
         mutations = [
             ('assets/asset_manifest.json', {'elements': []}, 'empty manifest cannot skip planned image'),
             ('assets/job/job.json', {**job, 'status': 'prepared'}, 'prepared prompt is not completed generation'),
