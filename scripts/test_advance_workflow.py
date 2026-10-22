@@ -89,6 +89,7 @@ class AdvanceTests(unittest.TestCase):
             write(self.workspace/f'asset-jobs/{queue}/icon1/job.json',{'status':'prepared','spec':{'request_id':'icon1'}})
         result=advance(self.workspace)
         self.assertEqual(result['next_action'],'resolve_duplicate_asset_queues')
+        self.assertEqual(load(self.workspace/'qa/workflow-status.json'), result)
         self.assertEqual(result['actual_web_submissions'],0)
         self.assertEqual(set(job_inventory(self.workspace)),{'icon1'})
 
@@ -122,12 +123,14 @@ class AdvanceTests(unittest.TestCase):
         data=load(selection);data['missing']=['SYNTHETIC missing reference'];write(selection,data)
         result=advance(self.workspace)
         self.assertEqual(result['next_action'],'prepare_asset_materials')
+        self.assertEqual(load(self.workspace/'qa/workflow-status.json'), result)
         self.assertFalse(list((self.workspace/'asset-jobs').glob('*/queue.json')))
         self.plan['design_system']={'theme_profile':'beihang-blue'}
         self.plan['slides'][0]['content_blocks'][0]['box_inches']=[10.6,.2,2,.4]
         write(self.workspace/'planning/deck_plan.json',self.plan)
         result=advance(self.workspace)
         self.assertEqual(result['next_action'],'repair_plan_geometry')
+        self.assertEqual(load(self.workspace/'qa/workflow-status.json'), result)
         self.assertFalse(list((self.workspace/'asset-jobs').glob('*/queue.json')))
 
     def test_advance_with_renders_creates_pending_board_only(self):

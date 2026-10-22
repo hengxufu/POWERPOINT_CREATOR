@@ -68,6 +68,7 @@ def packet(args):
 局部素材候选：{profile['assets']}。
 请输出一个JSON对象：deck_thesis、audience、evidence_gaps、review_checklist、slides。
 每页含slide_number、slide_id、title、takeaway、layout_family、visual_rationale、content_blocks、speaker_notes、evidence、asset_requests。
+每页用depends_on数组列出理解本页所必需的前置页面ID，无依赖则空数组；先结论后推导等有意倒叙用nonlinear_reason说明。相同takeaway必须说明新增证据与边界，有意回顾则写content_repeat_reason；不能为消除重复提示机械换词。
 依据实际资料与默认时长决定正文页数和逐页讲述时间；确保每个正文页能回答一个具体问题，包含主张、支撑证据、解释链与边界。不要按固定目录凑页。材料不足时列明证据缺口，用“待验证问题/假设”表达，不能把占位当成果。speaker_notes写清该页如何从证据走到结论，以及到下一页的过渡；结果页交代条件、单位、样本量和不确定性（若资料提供）。引用需给可回查的材料ID及页码/图号/数据表位置。
 先围绕已读材料挑出可支撑的内容，再决定图表、来源图片和单元素装饰；优先将方法步骤、对照关系、参数定义、证据标注和解读做成有意义的原生对象。40个对象预算不是要求生成大量重复装饰，素材请求只服务于可辨识的视觉角色。
 content_blocks每块给出具体text或data_ref/source_ref，并标明原生text/chart/table/process及建议box_inches。

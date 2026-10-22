@@ -5,6 +5,18 @@ from art_direction import direction, asset_context, contrast, audit, representat
 
 
 class ArtTests(unittest.TestCase):
+    def test_aspect_fit_and_source_objects(self):
+        request = {'object_id':'icon', 'box_inches':[1,2,5,1], 'aspect':'1:1'}
+        plan = {'slides':[{'slide_id':'s1','asset_requests':[request]}]}
+        self.assertEqual(audit(plan)['findings'][0]['code'], 'asset_aspect_fit')
+        request['aspect'] = '5:1'
+        self.assertEqual(audit(plan)['findings'], [])
+        request['aspect'] = 'nan:1'
+        self.assertEqual(audit(plan)['findings'][0]['code'], 'invalid_asset_aspect')
+        request['decision'] = 'native_or_source'
+        request['visual_context'] = {'lighting':'Different source light'}
+        self.assertEqual(audit(plan)['findings'], [])
+
     def test_profile_defaults_and_theme_color(self):
         self.assertEqual(direction(profile='scholarship')['art_direction'],'achievement-story')
         self.assertEqual(direction(profile='challenge')['art_direction'],'technical-product')

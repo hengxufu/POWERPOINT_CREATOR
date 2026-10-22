@@ -24,6 +24,10 @@ def reviewed_choice(choice, workspace, directory, plan, slide, request, spec):
 
 
 CONTENT_ACTIONS = {
+    'invalid_dependency':'把 depends_on 改为已有页面ID数组；不要自动猜测科学推理关系。',
+    'unknown_dependency':'核对缺失的前置解释，修正页面ID或补足对应内容。',
+    'forward_dependency':'把必要概念或方法移到结果之前；有意先结论后解释时写明 nonlinear_reason。',
+    'repeated_takeaway':'合并重复论点，或明确新增证据、边界与递进关系；有意回顾时写 content_repeat_reason。',
     'thin_explanation':'对照资料补足证据如何支持本页论点；无需为消除字数信号填充套话。',
     'no_evidence_locator':'定位具体材料ID与页码/图号；无法支撑时改为假设或记录真实缺口。',
     'no_speaker_notes':'补充从证据到结论的解释及下一页过渡，不新增无来源事实。',

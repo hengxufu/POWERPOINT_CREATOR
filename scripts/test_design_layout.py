@@ -15,6 +15,15 @@ def plan():
 
 
 class DesignTests(unittest.TestCase):
+    def test_declared_indent_reduces_capacity_and_rejects_invalid_values(self):
+        item = {'text':'中文说明内容'*5, 'font_pt':20, 'box_inches':[1,2,3,2]}
+        baseline = text_pressure(item)
+        item['text_layout'] = {'indent_pt':90}
+        self.assertGreater(text_pressure(item)['estimated_lines'], baseline['estimated_lines'])
+        for invalid in (-1, float('nan'), True):
+            item['text_layout']['indent_pt'] = invalid
+            with self.assertRaises(ValueError): text_pressure(item)
+
     def test_text_pressure_is_advisory_and_does_not_shrink_content(self):
         value=plan()
         item=value['slides'][0]['content_blocks'][1]

@@ -455,7 +455,7 @@ def status(workspace):
     return result
 
 
-def advance(workspace, pptx=None, render_index=None):
+def _advance(workspace, pptx=None, render_index=None):
     """Perform bounded local preparation only, stopping at observation/source work."""
     workspace = Path(workspace).resolve()
     result = status(workspace)
@@ -530,8 +530,14 @@ def advance(workspace, pptx=None, render_index=None):
     if 'visual_board' in result:
         final['visual_board'] = result['visual_board']
     final.update(completed_local_actions=completed,actual_web_submissions=0)
-    write(workspace/'qa/workflow-status.json',final)
     return final
+
+
+def advance(workspace, pptx=None, render_index=None):
+    """Persist every normal outcome, including bounded preparation stops."""
+    result = _advance(workspace, pptx, render_index)
+    write(Path(workspace).resolve()/'qa/workflow-status.json', result)
+    return result
 
 
 def main():

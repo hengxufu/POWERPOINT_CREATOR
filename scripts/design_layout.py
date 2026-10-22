@@ -15,6 +15,7 @@ design_system给spacing_inches（建议.08/.16/.24/.40）、font_roles_pt、colo
 普通正文以18–24pt为起点；复杂公式先拆推导步骤/符号区/物理解释区，不缩字堆满。不把建议字号当成投影可读的保证。
 正文用结论句+支持证据+解释/边界组织，标题表述该页问题或可证实结论，避免目录标签。细节移入讲稿时保留影响结论的条件、单位、不确定性和来源。
 文本可声明text_layout={margin_inches:[左,上,右,下],line_spacing:1.2,paragraph_space_after_pt:4}，用于容量预警；实际换行仍须渲染。文字拥挤先重新分组、扩大解释区或拆成递进页，不自动缩字或删关键限定。
+有统一左缩进时在text_layout声明indent_pt（默认0，非负点数），从每行净宽扣除；复杂悬挂缩进与项目符号必须在实际原生文本框及渲染中核对。
 spacing_groups={axis:horizontal或vertical,members:[按空间顺序的对象ID],min_gap_inches:.16}以数组提供，区分组内/组间距离；caption_for关联真实证据对象，让图注靠近来源图而非漂在页底。
 单元素除材质光照外，还要写viewpoint、silhouette、edge_treatment、detail_level、optical_padding；配饰放大看精致、缩小看轮廓。
 同一图标系列统一视角、笔画和光源；结果页装饰退到最弱层，不能遮住坐标轴、误差条、单位或引用。
@@ -49,7 +50,10 @@ def text_pressure(item):
         raise ValueError('Text margins require four finite nonnegative inches')
     if type(spacing) not in (int,float) or not math.isfinite(spacing) or spacing<=0 or type(after) not in (int,float) or not math.isfinite(after) or after<0:
         raise ValueError('Invalid text spacing')
-    width = (item['box_inches'][2]-margins[0]-margins[2])*72
+    indent = settings.get('indent_pt', 0)
+    if type(indent) not in (int,float) or not math.isfinite(indent) or indent < 0:
+        raise ValueError('Text indent requires finite nonnegative points')
+    width = (item['box_inches'][2]-margins[0]-margins[2])*72 - indent
     height = (item['box_inches'][3]-margins[1]-margins[3])*72
     paragraphs = text.replace('\r\n','\n').replace('\r','\n').split('\n')
     lines, wide_glyph = 0, False
@@ -67,7 +71,7 @@ def text_pressure(item):
     return {'estimated_lines':lines,'estimated_height_pt':round(needed,1),'available_height_pt':round(max(0,height),1),
             'width_pressure':width<=0 or wide_glyph,
             'pressure':width<=0 or height<=0 or wide_glyph or needed>height,
-            'method':'Approximate CJK/Latin character widths; no font shaping, word breaking, bullet indents or renderer measurements.'}
+            'method':'Approximate CJK/Latin widths with declared uniform indent; no font shaping, word breaking, hanging indents or renderer measurements.'}
 
 
 def audit(plan):

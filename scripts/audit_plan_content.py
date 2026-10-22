@@ -7,8 +7,27 @@ from pathlib import Path
 
 def audit(plan):
     pages = []
-    for slide in plan.get('slides', []):
+    slides = plan.get('slides', [])
+    positions = {s.get('slide_id'): i for i, s in enumerate(slides)}
+    takeaways = {}
+    for index, slide in enumerate(slides):
         signals = []
+        dependencies = slide.get('depends_on', [])
+        if not isinstance(dependencies, list) or any(not isinstance(s, str) for s in dependencies):
+            signals.append('invalid_dependency: depends_on must be an array of slide IDs')
+        else:
+            for dependency in dependencies:
+                if dependency not in positions:
+                    signals.append('unknown_dependency: missing prerequisite ' + dependency)
+                elif positions[dependency] == index:
+                    signals.append('invalid_dependency: a slide cannot be its own prerequisite')
+                elif positions[dependency] >= index and not str(slide.get('nonlinear_reason', '')).strip():
+                    signals.append('forward_dependency: explain or reorder prerequisite ' + dependency)
+        takeaway = ''.join(str(slide.get('takeaway', '')).split())
+        if takeaway:
+            if takeaway in takeaways and not str(slide.get('content_repeat_reason', '')).strip():
+                signals.append('repeated_takeaway: clarify progression from ' + takeaways[takeaway])
+            takeaways[takeaway] = str(slide.get('slide_id', index + 1))
         variant = slide.get('theme_variant', 'content')
         blocks = slide.get('content_blocks', [])
         if variant not in ('cover', 'section', 'closing'):

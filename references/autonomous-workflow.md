@@ -70,3 +70,8 @@ python scripts/auto_workflow.py status --workspace <workspace> --write
 接收网页规划时可给`receive_web_plan.py --workspace <workspace>`，在来源哈希与几何检查通过后自动写入`planning/deck_plan.json`；接收目录和原始回复保留。已有不同主规划不会被覆盖。接收器同时输出`content-plan-audit.json`，状态器把内容浅薄、缺来源定位与缺讲稿列为`content_plan_review`信号；Codex实际读材料补足，不能用套话消除信号，也不将启发式报告当作事实核验。
 
 状态器本身不操作浏览器、不调用模型、不授予权限，也不编写通过审查记录。它报告待执行动作。只有实际delivery_gate通过才产生review_evidence_complete，终稿审美与事实仍需真实检查。正式在线任务遵守原Bridge授权范围，不因自动化增加公网、shell、写权限或后台启动。
+
+## 恢复状态一致性补充
+
+`advance`每次正常返回均保存`qa/workflow-status.json`，包括资料缺失、几何需修复、重复任务需选择等提前停止状态；返回值与保存值一致。抛出异常不记作成功，本地状态也不证明网页提交或视觉审查完成。内容依赖、重复论点、缩进容量与素材比例提示进入现有修订任务单，修订后重新运行检查并查看实际渲染。
+

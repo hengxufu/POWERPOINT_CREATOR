@@ -1,5 +1,6 @@
 """Reusable visual defaults and advisory checks; never an aesthetic verdict."""
 import copy
+import math
 import re
 
 PRESETS = {
@@ -29,6 +30,7 @@ design_system用color_roles（background/surface/text/muted/primary/accent）、
 每页可用background_color和visual_context，单素材可覆盖，但系列中改变光照/材质/视角需style_override_reason。文本在纯色背景声明text_color/background_color便于对比检查；照片/渐变/透明叠层须渲染后判断。
 representative_slides用{cover:slide_id,technical:slide_id,dense:slide_id}选择封面、关键方法/解释、密集证据页。先实际渲染和查看，再推广全篇。
 封面以主体和题目形成大小对比；解释页用主证据+原生解读；密集结果页保留坐标、图例、误差和来源空间。配饰、阴影与艺术字不得抢主证据。
+逐素材声明aspect为宽:高，并结合box_inches设计完整轮廓与安全留白；默认普通元素1:1、艺术字3:1。主概念承担焦点，辅助图标帮助辨识，ornament只作低对比陪衬。比例不匹配先等比留白或调整构图，不拉伸、不裁切科学证据；原生与来源对象不套用生成素材的材质光照要求。
 内容排版用一句论点引导阅读；标题、证据、解释、条件/来源分层，不把整段讲稿塞进正文。比较页对齐基线与尺度，密集页优先拆成概览和关键证据两层，保留条件与不确定性。
 美术精修先统一线宽、圆角、边缘和阴影强度；同系列素材按主体可见轮廓而非PNG外框比较光学大小。在实际背景上检查白边、暗边、阴影截断与接触位置，不给每个文本框加阴影，不给证据图添加虚构景深、透视或颜色修饰。
 审查逐项记录焦点、层级、对齐留白、色彩与可读性、素材融合、证据可读性；给具体对象与修订，禁止只写高级/美观/通过。'''
@@ -118,6 +120,22 @@ def audit(plan):
                 findings.append({'slide_id':slide['slide_id'], 'object_id':block.get('object_id'), 'code':'low_contrast',
                                  'ratio':round(ratio,2), 'action':'提高文字与背景明暗差，再按投影尺寸检查；4.5为本技能建议预警值。'})
         for request in slide.get('asset_requests', []):
+            if request.get('decision') == 'native_or_source':
+                continue
+            from design_layout import box_valid
+            box = request.get('box_inches')
+            aspect = str(request.get('aspect', '3:1' if request.get('kind') == 'art_text' else '1:1'))
+            try:
+                w, h = map(float, aspect.split(':'))
+                ratio = w / h if math.isfinite(w) and math.isfinite(h) and w > 0 and h > 0 else None
+            except (ValueError, ZeroDivisionError):
+                ratio = None
+            if ratio is None or not math.isfinite(ratio) or ratio <= 0:
+                findings.append({'slide_id':slide['slide_id'], 'object_id':request.get('object_id'), 'code':'invalid_asset_aspect',
+                                 'action':'用正数宽:高声明 aspect，核对实际生成端支持的比例。'})
+            elif box_valid(box) and max(ratio/(box[2]/box[3]), (box[2]/box[3])/ratio) > 1.8:
+                findings.append({'slide_id':slide['slide_id'], 'object_id':request.get('object_id'), 'code':'asset_aspect_fit',
+                                 'action':'检查主体轮廓与摆放框；等比留白、调整框或重新构图，不拉伸素材、不裁掉科学证据。'})
             context = asset_context(plan, slide, request)
             drift = [k for k in ('material','lighting','viewpoint') if context.get(k) != resolved['image_defaults'].get(k)]
             if drift and not request.get('style_override_reason') and not slide.get('style_override_reason'):
