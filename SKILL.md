@@ -70,6 +70,8 @@ Codex 本地脚本必须负责原生标题正文、引文页码、图表表格�
 
 ## 复用已有技能
 
+规划接收后、选择组装路线前，读取 [外部PPT能力接入](references/external-ppt-workflows.md)。按实际来源选择原生组装、presentation源工作空间、模板预条件修改或可选DOM转换，保存assembly-route.json；执行源字段/数据/讲稿核对与共同验收。外部导出成功仍须经过本项目delivery_gate。
+
 - 有 `presentation-skill` 工作区时，沿用其 outline、证据计划和 deck_ir，修改源文件，使用其 build/finalize/repair 流程，不能用本技能样例生成器替代现有源文件。
 - 论文/文献汇报进入本包的论文模块：读取 [paper_manifest.json](paper_manifest.json) 及其always_load，只加载识别出的paper_type参考。遵循 [references/paper-workflow.md](references/paper-workflow.md) 的九步流程、术语表、证据图提取和修正验收。已有论文PPT仅做局部修改，不重新摄取整篇。
 - 新建独立 PPT 使用 `pptx` 的 PptxGenJS，或 `nature-paper2ppt` 允许的 python-pptx，保留生成源文件。
