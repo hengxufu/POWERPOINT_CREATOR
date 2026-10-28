@@ -1,0 +1,8 @@
+references/large_style_corpus_catalog.json
+references/large_style_corpus_catalog_enriched.json
+references/large_style_corpus_sources.json
+references/large_style_corpus_catalog.md
+scripts/__pycache__/
+tests/__pycache__/
+**/*.pyc
+**/.DS_Store

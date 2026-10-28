@@ -1,0 +1,45 @@
+{
+  "name": "dom-to-pptx-exporter",
+  "version": "2.1.2",
+  "type": "module",
+  "description": "Headless CLI tool to convert HTML/CSS/URLs to PPTX presentation files using Puppeteer and dom-to-pptx",
+  "main": "bin/cli.js",
+  "bin": {
+    "dom-to-pptx-exporter": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atharva9167j/dom-to-pptx.git"
+  },
+  "keywords": [
+    "dom-to-pptx",
+    "html-to-pptx",
+    "dom-to-pptx-exporter",
+    "browser-export",
+    "export-pptx",
+    "ppt",
+    "pptx",
+    "powerpoint",
+    "pptx-generator",
+    "slide-generator",
+    "presentation-generator",
+    "dom",
+    "export",
+    "server-side-pptx",
+    "html-to-powerpoint",
+    "convert-html",
+    "pptx-creator",
+    "presentation-tools",
+    "slides",
+    "slide-creation"
+  ],
+  "author": "Atharva Dharmendra Jagtap",
+  "license": "MIT",
+  "dependencies": {
+    "dom-to-pptx": "workspace:*"
+  }
+}

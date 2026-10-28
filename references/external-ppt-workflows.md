@@ -1,5 +1,23 @@
 # 外部 PPT 能力接入制作流程
 
+## 本地实现入口
+
+### HTML导出与跨文件合并
+
+可通过环境变量PPT_BROWSER_PATH指定本地兼容浏览器；统一入口还会查找项目.ppt-runtime/browser内的chrome-headless-shell.exe。真实浏览器回归使用PPT_HTML_INTEGRATION=1运行scripts/test_html_export.py；未通过前不得声称HTML路线已验收。2026-10-28的安装、编译、合并测试及本机浏览器失败见项目validation/local-engine/report.md。
+
+首次在当前项目根运行 `powershell -File POWERPOINT_CREATOR/scripts/setup_html.ps1` 安装主包依赖并编译本地bundle。导出使用 `python POWERPOINT_CREATOR/scripts/local_engine.py html -- <绝对路径/slides.html> --output <新文件.pptx> --inject`，可加--selector、--width/--height及--template/--base-layout。入口使用本机Chrome/Edge，不自动安装浏览器；实际等待字体和图片，坏图失败，输出存在时拒绝覆盖。保留HTML源与data-pptx-notes。转换结果仍需核对原生文字、备注、SVG/图片边界与实际渲染。
+
+跨PPTX合并使用 `python POWERPOINT_CREATOR/scripts/local_engine.py merge -- --spec <merge.json> --out <新文件.pptx>`。规格示例：`{"sources":[{"path":"C:/work/a.pptx","slides":[2,1]},{"path":"C:/work/b.pptx","slides":[1]}]}`。路径使用绝对路径，页码从1开始，省略slides则选全部。输出按源列表及各自slides顺序排列。实现为每个源分配独立包内命名空间，递归复制所选页及图片、图表、嵌入工作簿、布局、母版、主题、备注和内部超链接的依赖关系；保留外部超链接，不下载外链目标。内部跳转可能依赖未选页面并保留其部件，但不将其加入放映页序，需实际复核跳转。
+
+当前拒绝覆盖已有输出、同一source条目内重复选页和尺寸不同的源；需要重复页可用独立source条目。以第一份文件作为包级属性基底，移除失效的原章节与自定义放映列表。保留内容关系不等于完整支持宏、签名、OLE播放、音视频或动画；这些复杂内容需在目标PowerPoint实际测试。合并后重新生成对象清单与规划页序，旧的素材位置和视觉审查不能直接复用。
+
+实现源码已保存在本包vendor/presentation-skill与vendor/dom-to-pptx，保留各自MIT LICENSE；运行无需查找外部技能。统一使用 `python scripts/local_engine.py <engine> -- <参数>`，engine为presentation、html、template或retention。presentation支持brief/init/build/finalize/audition/doctor，参数直接交给本地scripts/present.py。html调用本地DOM导出CLI；首次使用必须完成该目录依赖安装与bundle构建，并实际验证导出，不以源码存在代替可用性。
+
+模板清单：`python scripts/local_engine.py template -- input.pptx --out inventory.json`。模板填充及同源页库选取：`python scripts/local_engine.py template -- input.pptx --spec replacements.json --out output.pptx`，使用textReplacements与slideSelections格式。支持跨run替换，保留未命中run样式；跨run替换文字采用首个命中run样式。slideNumbers按选取重排后的输出页序解释；拒绝重复页面与覆盖已有输出。保留包内依赖关系，但python-pptx重新序列化不保证原包字节不变，动画及复杂扩展必须实际复核。此入口尚不支持跨不同PPTX的页面合并。
+
+源内容检查使用retention入口，参数为--pptx、--plan、--out。它实际核对页数、模板标签、逐页讲稿和required_visible_text；交付前必须执行。上文及下文关于未接入代码的历史状态以本节为准，安装/导出是否成功仍按真实验证记录判断。
+
 本文件在规划接收后、选择组装路线前读取；适用于模板填充、已有 presentation-skill 工作空间和 HTML 来源页面。这里定义流程接入，不表示外部运行时已安装或已通过本项目测试。默认仍使用项目原生组装流程；所有路线执行相同的网页规划、素材、主题、40元素和 delivery_gate 合同。
 
 ## 路线选择与记录

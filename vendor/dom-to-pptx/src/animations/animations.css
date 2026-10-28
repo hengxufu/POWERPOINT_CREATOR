@@ -1,0 +1,618 @@
+/* src/animations/animations.css
+ * Minimal browser preview keyframes for dom-to-pptx animations.
+ * Features 10 basic entrance and 10 basic exit animations.
+ * 
+ * Usage:
+ *   Entrance: class="fade-in" or class="zoom-in", etc.
+ *   Exit:     class="fade-out" or class="zoom-out", etc.
+ */
+
+/* ── Entrance Animations (10) ── */
+
+.fade-in {
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.appear {
+  animation-name: appear;
+  animation-duration: 0.01s;
+  animation-fill-mode: both;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.zoom-in {
+  animation-name: zoom-in;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+@keyframes zoom-in {
+  from {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fly-in {
+  animation-name: fly-in-to-up;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+.fly-in.to-up,
+.fly-in-top {
+  animation-name: fly-in-to-up;
+}
+.fly-in.to-down {
+  animation-name: fly-in-to-down;
+}
+.fly-in.to-left,
+.fly-in-left {
+  animation-name: fly-in-to-left;
+}
+.fly-in.to-right,
+.fly-in-right {
+  animation-name: fly-in-to-right;
+}
+@keyframes fly-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fly-in-to-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fly-in-to-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fly-in-to-left {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes fly-in-to-right {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.wipe-in {
+  animation-name: wipe-in-to-down;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+.wipe-in.to-down {
+  animation-name: wipe-in-to-down;
+}
+.wipe-in.to-up {
+  animation-name: wipe-in-to-up;
+}
+.wipe-in.to-left {
+  animation-name: wipe-in-to-left;
+}
+.wipe-in.to-right {
+  animation-name: wipe-in-to-right;
+}
+@keyframes wipe-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes wipe-in-to-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes wipe-in-to-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes wipe-in-to-left {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes wipe-in-to-right {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.split-in {
+  animation-name: split-in-vertical;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+.split-in.vertical {
+  animation-name: split-in-vertical;
+}
+.split-in.horizontal {
+  animation-name: split-in-horizontal;
+}
+@keyframes split-in {
+  from {
+    clip-path: inset(0 50% 0 50%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes split-in-vertical {
+  from {
+    clip-path: inset(0 50% 0 50%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes split-in-horizontal {
+  from {
+    clip-path: inset(50% 0 50% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.wheel {
+  animation-name: wheel;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+@keyframes wheel {
+  from {
+    transform: rotate(-180deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.bounce-in {
+  animation-name: bounce-in;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkerboard-in {
+  animation-name: checkerboard-in;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+@keyframes checkerboard-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.random-bars-in {
+  animation-name: random-bars-in-horizontal;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+.random-bars-in.horizontal {
+  animation-name: random-bars-in-horizontal;
+}
+.random-bars-in.vertical {
+  animation-name: random-bars-in-vertical;
+}
+@keyframes random-bars-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes random-bars-in-horizontal {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+@keyframes random-bars-in-vertical {
+  from {
+    opacity: 0;
+    transform: scaleX(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* ── Exit Animations (10) ── */
+
+.fade-out {
+  animation-name: fade-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.disappear {
+  animation-name: disappear;
+  animation-duration: 0.01s;
+  animation-fill-mode: backwards;
+}
+@keyframes disappear {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.zoom-out {
+  animation-name: zoom-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+@keyframes zoom-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+}
+
+.fly-out {
+  animation-name: fly-out-to-down;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+.fly-out.to-down {
+  animation-name: fly-out-to-down;
+}
+.fly-out.to-up,
+.fly-out-top {
+  animation-name: fly-out-to-up;
+}
+.fly-out.to-left,
+.fly-out-left {
+  animation-name: fly-out-to-left;
+}
+.fly-out.to-right,
+.fly-out-right {
+  animation-name: fly-out-to-right;
+}
+@keyframes fly-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+@keyframes fly-out-to-down {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+@keyframes fly-out-to-up {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+@keyframes fly-out-to-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+@keyframes fly-out-to-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.wipe-out {
+  animation-name: wipe-out-to-down;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+.wipe-out.to-down {
+  animation-name: wipe-out-to-down;
+}
+.wipe-out.to-up {
+  animation-name: wipe-out-to-up;
+}
+.wipe-out.to-left {
+  animation-name: wipe-out-to-left;
+}
+.wipe-out.to-right {
+  animation-name: wipe-out-to-right;
+}
+@keyframes wipe-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+@keyframes wipe-out-to-down {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+@keyframes wipe-out-to-up {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+@keyframes wipe-out-to-left {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+@keyframes wipe-out-to-right {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+.split-out {
+  animation-name: split-out-vertical;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+.split-out.vertical {
+  animation-name: split-out-vertical;
+}
+.split-out.horizontal {
+  animation-name: split-out-horizontal;
+}
+@keyframes split-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 50% 0 50%);
+  }
+}
+@keyframes split-out-vertical {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 50% 0 50%);
+  }
+}
+@keyframes split-out-horizontal {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(50% 0 50% 0);
+  }
+}
+
+.wheel-out {
+  animation-name: wheel-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+@keyframes wheel-out {
+  from {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(180deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.bounce-out {
+  animation-name: bounce-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+@keyframes bounce-out {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+
+.checkerboard-out {
+  animation-name: checkerboard-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+@keyframes checkerboard-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.random-bars-out {
+  animation-name: random-bars-out-horizontal;
+  animation-duration: 0.5s;
+  animation-fill-mode: backwards;
+}
+.random-bars-out.horizontal {
+  animation-name: random-bars-out-horizontal;
+}
+.random-bars-out.vertical {
+  animation-name: random-bars-out-vertical;
+}
+@keyframes random-bars-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes random-bars-out-horizontal {
+  from {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  to {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+}
+@keyframes random-bars-out-vertical {
+  from {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  to {
+    opacity: 0;
+    transform: scaleX(0.8);
+  }
+}

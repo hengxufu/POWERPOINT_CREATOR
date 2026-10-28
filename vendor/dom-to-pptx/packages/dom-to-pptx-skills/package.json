@@ -1,0 +1,36 @@
+{
+  "name": "dom-to-pptx-skills",
+  "version": "2.1.2",
+  "type": "module",
+  "description": "Interactive CLI installer to configure dom-to-pptx presentation engineering skills for AI agents",
+  "main": "bin/cli.js",
+  "bin": {
+    "dom-to-pptx-skills": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "README.md"
+  ],
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atharva9167j/dom-to-pptx.git"
+  },
+  "keywords": [
+    "dom-to-pptx",
+    "dom-to-pptx-skills",
+    "ppt-creation-skills",
+    "powerpoint-skills",
+    "html-to-pptx",
+    "pptx-skills",
+    "pptx-generator",
+    "client-side-pptx",
+    "html-to-powerpoint",
+    "presentation-tools"
+  ],
+  "author": "Atharva Dharmendra Jagtap",
+  "license": "MIT",
+  "dependencies": {
+    "dom-to-pptx": "workspace:*"
+  }
+}

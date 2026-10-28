@@ -1,0 +1,61 @@
+{
+  "schema_version": "lab_monochrome_comparison/v1",
+  "same_content": true,
+  "builds": {
+    "assay_notebook": {
+      "outline": "outline_assay_notebook.json",
+      "pptx": "rapid_lrgs_assay_notebook.pptx",
+      "duration_seconds": 5.003,
+      "finalize_total_duration_seconds": 4.866,
+      "passed": true,
+      "qa_counts": {
+        "accessibility_error_count": 0,
+        "accessibility_warning_count": 0,
+        "design_error_count": 0,
+        "design_warning_count": 0,
+        "geometry_error_count": 0,
+        "geometry_warning_count": 0,
+        "overflow_count": 0,
+        "overlap_count": 0,
+        "visual_review_warning_count": 0,
+        "visual_warning_count": 0,
+        "whitespace_warning_count": 0
+      },
+      "style": {
+        "style_preset": "lab-report",
+        "composition_grammar": "scientific-evidence-plate",
+        "palette_key": "lab_monochrome_v1",
+        "style_seed": "rapid-lrgs-assay-notebook-20260823",
+        "visual_density": "high"
+      }
+    },
+    "journal_appendix": {
+      "outline": "outline_journal_appendix.json",
+      "pptx": "rapid_lrgs_journal_appendix.pptx",
+      "duration_seconds": 4.017,
+      "finalize_total_duration_seconds": 3.877,
+      "passed": true,
+      "qa_counts": {
+        "accessibility_error_count": 0,
+        "accessibility_warning_count": 0,
+        "design_error_count": 0,
+        "design_warning_count": 0,
+        "geometry_error_count": 0,
+        "geometry_warning_count": 0,
+        "overflow_count": 0,
+        "overlap_count": 0,
+        "visual_review_warning_count": 0,
+        "visual_warning_count": 0,
+        "whitespace_warning_count": 0
+      },
+      "style": {
+        "style_preset": "paper-journal",
+        "composition_grammar": "editorial-spread",
+        "palette_key": "journal_monochrome_v1",
+        "style_seed": "rapid-lrgs-journal-appendix-20260823",
+        "visual_density": "medium"
+      }
+    }
+  },
+  "contact_sheet": "rapid_lrgs_monochrome_ab_contact_sheet.jpg"
+}

@@ -1,0 +1,71 @@
+{
+  "name": "presentation-skill",
+  "version": "0.14.0",
+  "description": "Open-source presentation skill for Codex, ChatGPT agents, and OpenAI-style agents that build, edit, and QA polished PowerPoint PPTX presentations, slides, and slide decks.",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siril9/presentation-skill.git"
+  },
+  "homepage": "https://github.com/siril9/presentation-skill#readme",
+  "bugs": {
+    "url": "https://github.com/siril9/presentation-skill/issues"
+  },
+  "keywords": [
+    "codex-skill",
+    "codex-skills",
+    "codex-plugin",
+    "codex-agent",
+    "chatgpt",
+    "chatgpt-skill",
+    "chatgpt-agent",
+    "openai-agent",
+    "openai-agents",
+    "ai-agent",
+    "agent-skill",
+    "agentic-documents",
+    "presentation-skill",
+    "powerpoint",
+    "powerpoint-deck-builder",
+    "powerpoint-skill",
+    "powerpoint-automation",
+    "pptx",
+    "pptx-skill",
+    "slides",
+    "slides-generator",
+    "slide-deck",
+    "slide-deck-generator",
+    "deck-builder",
+    "presentation",
+    "presentation-generator",
+    "presentation-design",
+    "presentation-agent",
+    "powerpoint-generator",
+    "pptx-generator",
+    "slide-generator",
+    "deck-generator",
+    "deck-qa",
+    "layout-validation",
+    "presentation-workspace",
+    "lab-report-deck",
+    "scientific-figure-slides",
+    "consulting-deck",
+    "pptxgenjs",
+    "openai",
+    "image-generation"
+  ],
+  "scripts": {
+    "setup:python": "python3 scripts/runtime_doctor.py --bootstrap",
+    "doctor": "python3 scripts/runtime_doctor.py",
+    "check:runtime": "python3 scripts/runtime_doctor.py"
+  },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "pptxgenjs": "4.0.1",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "react-icons": "5.6.0",
+    "sharp": "0.35.3"
+  }
+}

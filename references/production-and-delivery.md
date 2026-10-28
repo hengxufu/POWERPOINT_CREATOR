@@ -30,6 +30,8 @@ assets/asset_manifest.json每项补充request_id，对应唯一请求。不要�
 
 ## 最终作品证据核对
 
+必须执行本地源内容保留检查：`python scripts/audit_source_retention.py --pptx <final.pptx> --plan <workspace>/deck_plan.json --out <workspace>/qa/source-retention.json`。每页规划的speaker_notes与实际备注按忽略空白后的全文比较；关键值、单位、条件和来源可声明为required_visible_text字符串数组，脚本核对实际文本框及表格。发现页数不符、未替换模板标签或内容缺失时修改制作源并重建；该命令非零时不得正式交付。图表、公式和图片仍按专用审计核对。
+
 组装前执行[外部能力路线选择](external-ppt-workflows.md)，记录实际源、运行时和输出。模板及HTML来源先验证代表页；所有路线核对最终页序、占位符、源数据、来源文字和真实讲稿，再进入以下验收。
 
 每页必须至少40个独立元素，封面、章节页和结尾也检查。组装后先运行audit_element_density.py检查实际对象数量；报告按页给element_count、deficit与suggested_web_asset_requests。Codex将提案按本页内容具体化，加入实际deck_plan的asset_requests，再用网页版逐个生成和现有任务流水线审核、插入。重新渲染后再审查，不能使用空文本、隐藏或画布外对象补数。delivery_gate将不足40的页面判为草稿；数量通过也不能替代可读性、内容和证据审查。

@@ -1,0 +1,550 @@
+{
+  "title": "Rapid Genomics for ICU Care",
+  "subtitle": "What three recent nanopore long-read studies show about analytical validity, turnaround time, and clinical utility",
+  "deck_style": {
+    "style_preset": "lab-report",
+    "composition_grammar": "scientific-evidence-plate",
+    "palette_key": "lab_monochrome_v1",
+    "style_seed": "rapid-lrgs-assay-notebook-20260823",
+    "visual_density": "high",
+    "header_variant": "auto",
+    "footer_mode": "source-line",
+    "footer_page_numbers": true,
+    "readability_contract": {
+      "min_title_pt": 28,
+      "min_body_pt": 15,
+      "min_support_pt": 13,
+      "min_caption_pt": 9,
+      "min_footer_pt": 9,
+      "min_metadata_pt": 9,
+      "max_title_lines": 2
+    }
+  },
+  "slides": [
+    {
+      "type": "title",
+      "role": "title",
+      "variant": "title",
+      "slide_intent": "premise",
+      "kicker": "TRANSLATIONAL GENOMICS REVIEW",
+      "title": "Rapid Genomics for ICU Care",
+      "subtitle": "What three recent nanopore long-read studies show about analytical validity, turnaround time, and clinical utility",
+      "footer": "Three-study evidence synthesis | August 2026"
+    },
+    {
+      "type": "content",
+      "role": "evidence",
+      "variant": "stats",
+      "role_layout_variant": "primary",
+      "slide_intent": "evidence landscape",
+      "title": "The evidence now spans benchmark validity and frontline use",
+      "facts": [
+        {
+          "value": "3",
+          "label": "primary studies",
+          "detail": "Published 2024-2025",
+          "source": "S1-S3"
+        },
+        {
+          "value": "6",
+          "label": "benchmark genomes",
+          "detail": "GIAB analytical validation",
+          "source": "S1"
+        },
+        {
+          "value": "14",
+          "label": "clinical trios",
+          "detail": "Prospective workflow validation",
+          "source": "S1"
+        },
+        {
+          "value": "44",
+          "label": "ICU participants",
+          "detail": "Two implementation cohorts; outcomes kept separate",
+          "source": "S2-S3"
+        }
+      ],
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "evidence",
+      "variant": "timeline",
+      "role_layout_variant": "alternate",
+      "slide_intent": "workflow",
+      "title": "One assay links specimen, genome, methylome, and interpretation",
+      "timeline_mode": "open-events",
+      "milestones": [
+        {
+          "label": "01 / PREP",
+          "title": "Extract native DNA",
+          "body": "Preserve long molecules and native methylation signal."
+        },
+        {
+          "label": "02 / READ",
+          "title": "Sequence in real time",
+          "body": "Nanopore reads accumulate while coverage is monitored."
+        },
+        {
+          "label": "03 / CALL",
+          "title": "Resolve variant classes",
+          "body": "SNVs, indels, SVs, CNVs, repeats, and methylation share one dataset."
+        },
+        {
+          "label": "04 / INTERPRET",
+          "title": "Phase and report",
+          "body": "Read-backed phasing and phenotype review connect findings to urgent care."
+        }
+      ],
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "chart",
+      "variant": "chart",
+      "role_layout_variant": "primary",
+      "slide_intent": "analytical validity",
+      "title": "Small variants were accurate; indels remain the harder class",
+      "chart_treatment": "threshold-band",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "SNV precision",
+          "SNV recall",
+          "Indel precision",
+          "Indel recall"
+        ],
+        "series": [
+          {
+            "name": "GIAB benchmark (%)",
+            "values": [
+              99.7,
+              99.2,
+              92.2,
+              83.8
+            ]
+          }
+        ],
+        "options": {
+          "catAxisTitle": "Variant-class metric",
+          "valAxisTitle": "Percent"
+        }
+      },
+      "facts": [
+        {
+          "value": "16/16",
+          "label": "pathogenic CNVs detected",
+          "detail": "Two were detected near 2x coverage",
+          "source": "S1"
+        },
+        {
+          "value": "28.8M",
+          "label": "CpGs profiled",
+          "detail": "98% of GRCh38 CpGs",
+          "source": "S1"
+        },
+        {
+          "value": "0.949",
+          "label": "methylation correlation (r)",
+          "detail": "Compared with WGBS",
+          "source": "S1"
+        }
+      ],
+      "caption": "Six Genome in a Bottle reference samples; values are precision and recall reported by Nyaga et al.",
+      "sources": [
+        "S1"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "chart",
+      "variant": "chart",
+      "role_layout_variant": "alternate",
+      "slide_intent": "coverage tradeoff",
+      "title": "Doubling coverage helped indels more than SNVs",
+      "chart_treatment": "sparse-wide",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "40x",
+          "80x"
+        ],
+        "series": [
+          {
+            "name": "SNV F1 (%)",
+            "values": [
+              99.5,
+              99.2
+            ]
+          },
+          {
+            "name": "Indel F1 (%)",
+            "values": [
+              92.5,
+              94.1
+            ]
+          }
+        ],
+        "options": {
+          "catAxisTitle": "Mean genome coverage",
+          "valAxisTitle": "F1 score (%)"
+        }
+      },
+      "facts": [
+        {
+          "value": "1.6",
+          "label": "indel F1 point gain",
+          "detail": "40x to 80x",
+          "source": "S1"
+        },
+        {
+          "value": "0.3",
+          "label": "SNV F1 point decrease",
+          "detail": "No practical gain at 80x in this benchmark",
+          "source": "S1"
+        }
+      ],
+      "caption": "A higher sequencing target should be justified by the variant classes and turnaround constraint, not by SNV performance alone.",
+      "sources": [
+        "S1"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "table",
+      "variant": "table",
+      "role_layout_variant": "dense",
+      "slide_intent": "study design",
+      "title": "The three studies answer different questions",
+      "table_treatment": "compact-ledger",
+      "headers": [
+        "Study",
+        "Setting",
+        "Design",
+        "N",
+        "Reported TAT",
+        "Primary contribution"
+      ],
+      "rows": [
+        [
+          "Nyaga 2024",
+          "Australia",
+          "Benchmark + prospective trios",
+          "6 + 14",
+          "~5 working days",
+          "Analytical validity across variant classes"
+        ],
+        [
+          "Kamolvisit 2025",
+          "Thailand, 2 ICUs",
+          "Prospective singleton rLR-GS",
+          "18",
+          "9 days, median",
+          "First-tier diagnosis and management change"
+        ],
+        [
+          "Smits 2025",
+          "Netherlands ICUs",
+          "LR-GS alongside standard care",
+          "26",
+          "5.3 vs 18.4 days, mean",
+          "Concurrent TAT and care-impact comparison"
+        ]
+      ],
+      "column_weights": [
+        1.0,
+        1.0,
+        1.8,
+        0.55,
+        1.3,
+        2.0
+      ],
+      "caption": "Turnaround measures are not directly interchangeable: mean versus median, trio versus singleton, and differing start/stop definitions.",
+      "takeaway": "Compare study-specific signals; do not pool the diagnostic yields.",
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "chart",
+      "variant": "chart",
+      "role_layout_variant": "primary",
+      "slide_intent": "clinical yield",
+      "title": "Both ICU cohorts found diagnoses, with context-dependent yield",
+      "chart_treatment": "facts-right",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Thailand",
+          "Netherlands"
+        ],
+        "series": [
+          {
+            "name": "Diagnostic yield (%)",
+            "values": [
+              61,
+              42
+            ]
+          }
+        ],
+        "options": {
+          "catAxisTitle": "Implementation cohort",
+          "valAxisTitle": "Percent diagnosed"
+        }
+      },
+      "facts": [
+        {
+          "value": "11/18",
+          "label": "Thailand diagnosed",
+          "detail": "Singleton first-tier workflow",
+          "source": "S2"
+        },
+        {
+          "value": "11/26",
+          "label": "Netherlands diagnosed",
+          "detail": "Alongside standard genomic care",
+          "source": "S3"
+        }
+      ],
+      "caption": "Descriptive comparison only. Referral, case mix, family structure, analysis, and diagnostic criteria differed.",
+      "sources": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "chart",
+      "variant": "chart",
+      "role_layout_variant": "alternate",
+      "slide_intent": "turnaround",
+      "title": "Turnaround was the clearest comparative gain",
+      "chart_treatment": "threshold-band",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Thailand LR-GS",
+          "NL LR-GS",
+          "NL standard care"
+        ],
+        "series": [
+          {
+            "name": "Reported days",
+            "values": [
+              9,
+              5.3,
+              18.4
+            ]
+          }
+        ],
+        "options": {
+          "catAxisTitle": "Workflow",
+          "valAxisTitle": "Days to result"
+        }
+      },
+      "facts": [
+        {
+          "value": "2.0d",
+          "label": "sample preparation",
+          "detail": "Mean, Netherlands LR-GS",
+          "source": "S3"
+        },
+        {
+          "value": "1.6d",
+          "label": "sequencing",
+          "detail": "Mean, Netherlands LR-GS",
+          "source": "S3"
+        },
+        {
+          "value": "1.6d",
+          "label": "analysis + interpretation",
+          "detail": "Mean, Netherlands LR-GS",
+          "source": "S3"
+        }
+      ],
+      "caption": "Thailand reports a median; the Netherlands reports means. Only the Netherlands study provides the concurrent standard-care comparison (p=4.01e-9).",
+      "sources": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "evidence",
+      "variant": "stats",
+      "role_layout_variant": "alternate",
+      "slide_intent": "interpretation gain",
+      "title": "Long reads changed interpretation, not just detection",
+      "facts": [
+        {
+          "value": "3",
+          "label": "pathogenic SVs",
+          "detail": "19 kb, 2.4 kb, and 10.1 kb",
+          "source": "S2"
+        },
+        {
+          "value": "6",
+          "label": "recessive cases phased",
+          "detail": "Two variants phased in each case",
+          "source": "S2"
+        },
+        {
+          "value": "3",
+          "label": "SNVs reclassified",
+          "detail": "VUS to likely pathogenic using SV + phase context",
+          "source": "S2"
+        },
+        {
+          "value": "3/26",
+          "label": "methylation-expedited diagnoses",
+          "detail": "Netherlands implementation cohort",
+          "source": "S3"
+        }
+      ],
+      "sources": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "decision",
+      "variant": "matrix",
+      "role_layout_variant": "alternate",
+      "slide_intent": "limitations",
+      "title": "Evidence supports controlled adoption, not broad equivalence",
+      "matrix_mode": "open-quadrants",
+      "quadrants": [
+        {
+          "title": "Selection",
+          "body": "Selected ICU cohorts limit generalizability."
+        },
+        {
+          "title": "Comparability",
+          "body": "Family structure, referral criteria, pipelines, and TAT definitions differ."
+        },
+        {
+          "title": "Endpoints",
+          "body": "Diagnosis and care change are reported; survival, stay, and cost are not."
+        },
+        {
+          "title": "Operations",
+          "body": "DNA quality, interpretation coverage, confirmation, and governance remain local."
+        }
+      ],
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "comparison",
+      "variant": "comparison-2col",
+      "role_layout_variant": "primary",
+      "slide_intent": "recommendation",
+      "title": "Move from evidence signal to a bounded implementation study",
+      "comparison_mode": "open-columns",
+      "left": {
+        "title": "Evidence supports",
+        "body": [
+          "SNV benchmark accuracy",
+          "Faster in S3",
+          "Phase + methylation"
+        ],
+        "metrics": [
+          {
+            "label": "One-test workflow",
+            "value": "1",
+            "note": "Versus 1.9 standard tests on average in S3"
+          },
+          {
+            "label": "Immediate care change",
+            "value": "7/11",
+            "note": "Solved cases in S3"
+          }
+        ]
+      },
+      "right": {
+        "title": "Local validation must establish",
+        "body": [
+          "Local sensitivity",
+          "Receipt-to-report",
+          "Utility + cost"
+        ],
+        "metrics": [
+          {
+            "label": "Primary denominator",
+            "value": "All eligible",
+            "note": "No cherry-picked exclusions"
+          },
+          {
+            "label": "Decision gate",
+            "value": "Prospective",
+            "note": "Defined before enrollment"
+          }
+        ]
+      },
+      "verdict": "Run a prospective local service study with frozen eligibility, turnaround, utility, and management endpoints.",
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "type": "content",
+      "role": "references",
+      "variant": "table",
+      "role_layout_variant": "dense",
+      "slide_intent": "references",
+      "title": "Primary sources",
+      "table_treatment": "journal-grid",
+      "headers": [
+        "ID",
+        "Study",
+        "DOI",
+        "Evidence used"
+      ],
+      "rows": [
+        [
+          "S1",
+          "Nyaga et al. (2024), npj Genom Med",
+          "10.1038/s41525-024-00445-5",
+          "Accuracy, CNV, methylation, trio workflow"
+        ],
+        [
+          "S2",
+          "Kamolvisit et al. (2025), EJHG",
+          "10.1038/s41431-025-01818-9",
+          "Yield, TAT, SVs, phasing, reclassification"
+        ],
+        [
+          "S3",
+          "Smits et al. (2025), EJHG",
+          "10.1038/s41431-025-01959-x",
+          "TAT, yield, methylation, test burden, care change"
+        ]
+      ],
+      "column_weights": [
+        0.45,
+        2.4,
+        1.9,
+        3.3
+      ],
+      "caption": "Primary reports; metrics transcribed from article text or PubMed."
+    }
+  ]
+}

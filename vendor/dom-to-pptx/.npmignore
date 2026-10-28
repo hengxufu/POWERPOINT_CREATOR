@@ -1,0 +1,37 @@
+# Dependencies (always excluded from publish)
+node_modules/
+
+# Environment variables (never publish secrets)
+.env
+
+# OS files
+.DS_Store
+
+# IDE / editor configs
+.vscode/
+
+# Git internals (not needed in package)
+.git/
+.gitignore
+
+# Project-specific directories
+test-playground/
+demo/
+exported-pptx/
+.agent/
+scratch/
+
+# Test and binary files
+test*
+*.pptx
+*.zip
+pnpm-lock.yaml
+
+# Internal / documentation / config files
+ins.md
+code_context.txt
+*.config.js
+.prettierrc
+
+# Temp / backup files
+*~

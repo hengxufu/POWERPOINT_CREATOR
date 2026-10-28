@@ -1,0 +1,56 @@
+{
+  "name": "presentation-skill",
+  "version": "0.14.0",
+  "description": "Source-first PowerPoint/PPTX generation for Codex and ChatGPT agents.",
+  "author": {
+    "name": "Sirilsengolraj",
+    "url": "https://github.com/siril9"
+  },
+  "homepage": "https://github.com/siril9/presentation-skill#readme",
+  "repository": "https://github.com/siril9/presentation-skill",
+  "license": "MIT",
+  "keywords": [
+    "codex-skill",
+    "chatgpt-skill",
+    "openai-agents",
+    "powerpoint",
+    "pptx",
+    "presentation",
+    "slide-deck",
+    "deck-builder",
+    "pptxgenjs",
+    "deck-qa",
+    "lab-report-deck",
+    "scientific-figure-slides"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Presentation Skill",
+    "shortDescription": "Editable decks with visual QA",
+    "longDescription": "A lightweight source-first PowerPoint/PPTX workflow for coding agents. One capable model chooses content-led composition, with optional questions and style previews. Native methods, charts and tables remain editable; scientific figures reserve readable captions and interpretation. Deterministic checks preserve source content and expose focused repairs. Verified render reuse speeds unchanged rebuilds without reusing visual approval.",
+    "developerName": "Sirilsengolraj",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Files",
+      "Presentations",
+      "Quality assurance"
+    ],
+    "websiteURL": "https://github.com/siril9/presentation-skill",
+    "supportURL": "https://github.com/siril9/presentation-skill/issues",
+    "defaultPrompt": [
+      "Build a 7-slide editable PowerPoint deck.",
+      "Turn this CSV into a lab-style PPTX report.",
+      "Redesign this deck and run slide QA."
+    ],
+    "brandColor": "#2563EB",
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg",
+    "screenshots": [
+      "./assets/v0.14_lab_showcase.jpg",
+      "./assets/white_calibration_contact_sheet.jpg",
+      "./assets/dark_contrast_contact_sheet.jpg",
+      "./assets/light_river_report_contact_sheet.jpg"
+    ]
+  }
+}

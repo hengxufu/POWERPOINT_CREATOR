@@ -1,0 +1,54 @@
+{
+  "release": "v0.2.0",
+  "artifact_version": "style_reference_corpus_release_evidence_v1",
+  "gallery": "decks/style-reference-gallery-20260620-corpus-v1",
+  "summary": {
+    "preset_count": 13,
+    "per_preset_contact_sheet_count": 39,
+    "global_contact_sheet_count": 11,
+    "required_per_preset_use_cases": [
+      "overview",
+      "data_evidence",
+      "decision_sources"
+    ],
+    "release_evidence_gate": true,
+    "qa_totals": {
+      "passed_render_free_gate_count": 13,
+      "overflow_count": 0,
+      "overlap_count": 0,
+      "geometry_error_count": 0,
+      "design_error_count": 0,
+      "design_warning_count": 0,
+      "visual_warning_count": 0,
+      "placeholder_count": 0
+    }
+  },
+  "primary_files": [
+    "decks/style-reference-gallery-20260620-corpus-v1/RELEASE_NOTES_v0.2.0.md",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_structure_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_footer_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/preset_contact_collections/"
+  ],
+  "treatment_contact_sheets": [
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_title_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_comparison_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_chart_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_table_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_figure_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_dashboard_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_decision_contact_sheet.jpg",
+    "decks/style-reference-gallery-20260620-corpus-v1/style_reference_treatment_references_contact_sheet.jpg"
+  ],
+  "preset_contact_collection_root": "decks/style-reference-gallery-20260620-corpus-v1/preset_contact_collections",
+  "validation_commands": [
+    "python3 scripts/style_inspiration_corpus.py --validate",
+    "npm run check:style-corpus",
+    "npm run check:style-router",
+    "npm run check:style-reference-gallery",
+    "npm run check:style-reference-release",
+    "npm run check:python",
+    "npm run check:focused -- --jobs 4",
+    "git diff --check"
+  ]
+}

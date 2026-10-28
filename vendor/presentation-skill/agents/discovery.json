@@ -1,0 +1,122 @@
+{
+  "schema": "presentation_skill_discovery_v1",
+  "name": "presentation-skill",
+  "version": "0.14.0",
+  "license": "MIT",
+  "repository": "https://github.com/siril9/presentation-skill",
+  "summary": "Source-first, editable PowerPoint/PPTX generation and content-retention QA for coding agents with local tool access.",
+  "one_line": "Author outline.json, build native editable slides, check mapped source retention and layout, and inspect actual renders before delivery.",
+  "primary_audience": [
+    "coding agents with local filesystem and execution tools",
+    "developers building generated PowerPoint workflows",
+    "people who need rebuildable lab, clinical, investor, board, editorial, or operational decks"
+  ],
+  "trigger_phrases": [
+    "build a PowerPoint",
+    "create a PPTX",
+    "generate a slide deck",
+    "make a presentation",
+    "redesign this deck",
+    "run layout QA on this deck",
+    "make a lab report deck",
+    "make a clinical summary deck",
+    "make an investor deck",
+    "make a board memo deck",
+    "turn this CSV or Excel file into slides",
+    "create scientific figure slides",
+    "make the deck rebuildable"
+  ],
+  "aliases": [
+    "powerpoint-deck-builder",
+    "pptx-skill",
+    "PowerPoint skill",
+    "PPTX skill",
+    "slide-deck generator",
+    "slides generator",
+    "deck builder",
+    "presentation generator",
+    "presentation maker",
+    "agent presentation skill",
+    "Codex presentation skill",
+    "ChatGPT presentation skill"
+  ],
+  "capabilities": [
+    "source-first PowerPoint generation from outline.json, with native editable text, charts, and tables where supported",
+    "compact brief, source authoring, and finalization for one-off decks",
+    "optional intake, style auditions, and saved planning workspaces",
+    "content-led layouts across 16 content variants, 13 style families, and eight composition grammars",
+    "bounded primary, alternate, and dense role layouts without a mandatory slide sequence",
+    "on-demand descriptor style context and original visual references",
+    "versioned coordinate-free Deck IR with stable semantic object identity",
+    "preserve-by-default supported text and alt-text patching for standalone PowerPoint decks",
+    "reproducible chart, table, and figure artifacts from local data",
+    "native ordered methods with 2-4 editable title/detail stages and auto, strip, or bands allocation",
+    "scientific panel-grid, primary-rail, ledger-rail, and strip-readout layouts with open, ruled, or panel frames",
+    "measured figure sidebars that retain declared interpretation at readable type",
+    "measured comparison fits and modern headers that preserve evidence space",
+    "fast briefs expose supported evidence fallbacks without claiming v2 slot execution",
+    "geometry, readability, placeholder, accessibility, and rendered-review checks",
+    "mapped semantic visible-source retention checks for method titles/details, figure/sidebar interpretation, captions, caveats, units, denominators, table cells, and native chart values",
+    "source-pointer repair packets for focused corrections",
+    "verified render caching without stale visual-approval reuse",
+    "hash-bound human or model visual-review receipts"
+  ],
+  "entrypoints": {
+    "skill_contract": "SKILL.md",
+    "agent_prompt": "agents/openai.yaml",
+    "quick_example": "examples/outline.json",
+    "present_cli": "scripts/present.py",
+    "benchmark_protocol": "references/benchmark_protocol.md",
+    "human_discovery": "DISCOVERY.md",
+    "readme": "https://github.com/siril9/presentation-skill#readme",
+    "plugin_publication": "https://github.com/siril9/presentation-skill/blob/main/docs/PLUGIN_PUBLICATION.md",
+    "optional_local_preview": "extensions/preview/README.md"
+  },
+  "proof_assets": {
+    "showcase": "https://github.com/siril9/presentation-skill/blob/main/examples/v0.14_lab_showcase.jpg",
+    "showcase_manifest": "https://github.com/siril9/presentation-skill/blob/main/examples/v0.14_lab_studies/release_manifest.json",
+    "lab_contact_sheet": "https://github.com/siril9/presentation-skill/blob/main/examples/v0.14_lab_studies/white_calibration_contact_sheet.jpg",
+    "dark_contrast_contact_sheet": "https://github.com/siril9/presentation-skill/blob/main/examples/v0.14_lab_studies/dark_contrast_contact_sheet.jpg",
+    "light_river_report_contact_sheet": "https://github.com/siril9/presentation-skill/blob/main/examples/v0.14_lab_studies/light_river_report_contact_sheet.jpg",
+    "design_studies_zip": "https://github.com/siril9/presentation-skill/releases/download/v0.14.0/presentation-skill-v0.14-lab-studies.zip",
+    "white_calibration_pptx": "https://github.com/siril9/presentation-skill/releases/download/v0.14.0/white_calibration.pptx",
+    "dark_contrast_pptx": "https://github.com/siril9/presentation-skill/releases/download/v0.14.0/dark_contrast.pptx",
+    "light_river_report_pptx": "https://github.com/siril9/presentation-skill/releases/download/v0.14.0/light_river_report.pptx",
+    "historical_proof_release": "https://github.com/siril9/presentation-skill/releases/tag/v0.13.1",
+    "release_url": "https://github.com/siril9/presentation-skill/releases/tag/v0.14.0",
+    "latest_release_url": "https://github.com/siril9/presentation-skill/releases/latest"
+  },
+  "default_commands": {
+    "quick_brief": "python3 scripts/present.py brief --topic \"Deck topic\" --prompt \"Original request\" --profile auto --output quick_deck_agent_brief.json",
+    "quick_finalize": "python3 scripts/present.py finalize --outline /absolute/path/outline.json --output /absolute/path/out.pptx --qa-dir /absolute/path/qa",
+    "workspace_init": "python3 scripts/present.py init --workspace /absolute/path/decks/my-deck --title \"My Deck Title\" --prompt \"Original request\" --profile auto",
+    "workspace_build": "python3 scripts/present.py build --workspace /absolute/path/decks/my-deck",
+    "accessible_final_build": "python3 scripts/present.py build --workspace /absolute/path/decks/my-deck"
+  },
+  "do_not_use_for": [
+    "pure text brainstorming with no deck artifact",
+    "mutating a generated PPTX when source workspace files exist",
+    "shipping a deliverable deck without QA",
+    "ordinary chat without local execution tools",
+    "claiming synthetic design studies are benchmarks or current cross-generator superiority evidence"
+  ],
+  "proof_asset_scope": "Repository/release evidence, not bundled npm/plugin runtime assets. Three eight-slide studies, 24 actual slides, with invented synthetic nonclinical data and reproducible source. The release manifest maps slides to source and review evidence. These are not empirical findings or model/generator benchmarks. Previous proof is historical.",
+  "installation": {
+    "skills_index": "https://www.skills.sh/siril9/presentation-skill/presentation-skill",
+    "skills_cli": "npx skills add https://github.com/siril9/presentation-skill --skill presentation-skill",
+    "skills_cli_documentation": "https://github.com/vercel-labs/skills",
+    "codex_plugin_marketplace": "codex plugin marketplace add siril9/presentation-skill --ref v0.14.0",
+    "codex_plugin_next_step": "Open /plugins and install presentation-skill from the repository-provided Presentation Skill marketplace.",
+    "setup_documentation": "https://github.com/siril9/presentation-skill#install",
+    "support_boundary": "Installer-supported agents are not all tested here. No official/global marketplace curation claim. Local execution tools and runtime dependencies are required."
+  },
+  "workflow_boundaries": [
+    "One capable model, including GPT-6.1, can use the workflow; no required recursive agents, provider, or model-specific orchestration. This is not a model-quality benchmark.",
+    "Supported figure, sidebar, and native-method fallbacks are not v2 slot-execution claims.",
+    "The optional Slide Review extension is a local pilot, not a globally hosted service or curated marketplace listing.",
+    "Source retention checks cover explicitly mapped visible fields, not factual truth or every possible source field.",
+    "Inspect actual rendered slides; static QA or a render cache hit is not visual approval.",
+    "Keep images and rendered figures distinct from editable native chart/table objects.",
+    "SKILL.md frontmatter uses name and description trigger phrases; aliases here are separate discovery metadata, not a frontmatter aliases field."
+  ]
+}

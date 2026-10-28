@@ -39,6 +39,10 @@ def check(workspace, pptx):
     except (OSError, ValueError, KeyError) as error:
         return {'ready': False, 'status': 'draft', 'problems': [str(error)], 'warnings': []}
     deck_hash = digest(pptx)
+    from audit_source_retention import audit as audit_retention
+    retention = audit_retention(pptx, plan)
+    for finding in retention['findings']:
+        require(False, 'Source retention page '+str(finding['page'])+': '+finding['code'])
     session = load(workspace/'session.json') if (workspace/'session.json').is_file() else {}
     visual_reviews = None
     if session.get('visual_review_contract'):

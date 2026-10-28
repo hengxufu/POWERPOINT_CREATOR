@@ -1,0 +1,4 @@
+interface:
+  display_name: "Presentation Skill"
+  short_description: "Content-led editable decks with visual QA"
+  default_prompt: "Use $presentation-skill to create a clean, content-led editable PowerPoint deck with a coherent design, suitable slide structures, reproducible source, and rendered visual QA."

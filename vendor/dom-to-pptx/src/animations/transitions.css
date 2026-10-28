@@ -1,0 +1,150 @@
+/* transitions.css
+ * ─────────────────────────────────────────────────────────────────────────────
+ * These classes are parsed by dom-to-pptx to generate native PowerPoint slide
+ * transitions. Apply them to your slide container elements.
+ *
+ * Usage:
+ *   <div class="slide slide-transition-push transition-dir-u transition-dur-1500">
+ *     ...slide content...
+ *   </div>
+ *
+ * Modifier classes (combine with any transition below):
+ *   transition-dir-{u|d|l|r|ld|rd|lu|ru|horz|vert|in|out}  → direction
+ *   transition-orient-{horz|vert}                           → orientation (split, blinds)
+ *   transition-pattern-{hexagon|diamond|rectangle}          → pattern (glitter, checker)
+ *   transition-spokes-{1|2|3|4|8}                           → spokes count (wheel)
+ *   transition-dur-{ms}                                     → duration in ms (e.g. 1500)
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* ── Classic Native P: Transitions ─────────────────────────────────────────── */
+.slide-transition-fade {
+} /* Simple crossfade */
+.slide-transition-cut {
+} /* Instant cut, no animation */
+.slide-transition-push {
+} /* Push slide in from direction (use transition-dir-*) */
+.slide-transition-wipe {
+} /* Wipe in from direction (use transition-dir-*) */
+.slide-transition-pull {
+} /* Pull/cover effect (use transition-dir-*) */
+.slide-transition-split {
+} /* Split from center (use transition-orient-* + transition-dir-in/out) */
+.slide-transition-strips {
+} /* Diagonal strips (use transition-dir-ld|rd|lu|ru) */
+.slide-transition-dissolve {
+} /* Pixel dissolve */
+.slide-transition-checker {
+} /* Checkerboard pattern (use transition-dir-horz|vert) */
+.slide-transition-randomBar {
+} /* Random bars (use transition-dir-horz|vert) */
+.slide-transition-circle {
+} /* Circle/iris wipe */
+.slide-transition-comb {
+} /* Comb teeth (use transition-dir-vert for vertical) */
+.slide-transition-wheel {
+} /* Spinning wheel (use transition-spokes-1|2|3|4|8) */
+.slide-transition-newsflash {
+} /* Newsflash zoom */
+.slide-transition-blinds {
+} /* Venetian blinds (use transition-dir-horz|vert) */
+.slide-transition-flash {
+} /* Flash white */
+.slide-transition-reveal {
+} /* Reveal/uncover (use transition-dir-*) */
+.slide-transition-zoom {
+} /* Zoom in/out (use transition-dir-in|out) */
+.slide-transition-cover {
+} /* Cover from direction (use transition-dir-*) */
+.slide-transition-uncover {
+} /* Uncover from direction (use transition-dir-*) */
+
+/* ── P14 (PowerPoint 2010+) Transitions ─────────────────────────────────────── */
+.slide-transition-honeycomb {
+} /* Honeycomb tiles */
+.slide-transition-ripple {
+} /* Ripple effect */
+.slide-transition-glitter {
+} /* Glitter (use transition-pattern-hexagon|diamond) */
+.slide-transition-vortex {
+} /* Vortex spin (use transition-dir-l|r|u|d) */
+.slide-transition-shred {
+} /* Shred (use transition-pattern-rectangle for rect) */
+.slide-transition-shred-in {
+} /* Shred, pieces fly in */
+.slide-transition-shred-out {
+} /* Shred, pieces fly out */
+.slide-transition-shred-rect-in {
+} /* Rectangle shred, pieces fly in */
+.slide-transition-shred-rect-out {
+} /* Rectangle shred, pieces fly out */
+.slide-transition-switch {
+} /* Switch/page turn (use transition-dir-l|r) */
+.slide-transition-flip {
+} /* Flip like a card (use transition-dir-l|r) */
+.slide-transition-gallery {
+} /* Gallery slide (use transition-dir-l|r) */
+.slide-transition-conveyor {
+} /* Conveyor belt (use transition-dir-l|r) */
+.slide-transition-prism {
+} /* Prism light refraction (use transition-dir-l|r|u|d) */
+.slide-transition-prism-inverted {
+} /* Prism, reversed */
+.slide-transition-prism-inverted-r {
+} /* Prism inverted, right direction */
+.slide-transition-prism-inverted-u {
+} /* Prism inverted, up direction */
+.slide-transition-prism-inverted-d {
+} /* Prism inverted, down direction */
+.slide-transition-warp {
+} /* Warp (use transition-dir-in|out) */
+.slide-transition-doors {
+} /* Doors open/close (use transition-dir-horz|vert) */
+.slide-transition-window {
+} /* Window (use transition-dir-horz|vert) */
+.slide-transition-ferris {
+} /* Ferris wheel (use transition-dir-l|r) */
+.slide-transition-flythrough {
+} /* Fly through (use transition-dir-l|r) */
+
+/* ── P15 (PowerPoint 2013+) Preset Transitions ──────────────────────────────── */
+/* Note: Directional variants of P15 transitions are separate named classes,
+   because they use invX="1" internally, not a standard dir attribute. */
+.slide-transition-wind-left {
+} /* Wind blow from left */
+.slide-transition-wind-right {
+} /* Wind blow from right (mirrored) */
+.slide-transition-airplane-left {
+} /* Paper airplane from left */
+.slide-transition-airplane-right {
+} /* Paper airplane from right (mirrored) */
+.slide-transition-origami-left {
+} /* Origami fold from left */
+.slide-transition-origami-right {
+} /* Origami fold from right (mirrored) */
+.slide-transition-fallover-left {
+} /* Fall over from left */
+.slide-transition-fallover-right {
+} /* Fall over from right (mirrored) */
+.slide-transition-drape-left {
+} /* Curtain drape from left */
+.slide-transition-drape-right {
+} /* Curtain drape from right (mirrored) */
+.slide-transition-prestige {
+} /* Prestige roll-down */
+.slide-transition-fracture {
+} /* Fracture shatter */
+.slide-transition-crush {
+} /* Crush collapse */
+.slide-transition-pagecurldouble {
+} /* Double page curl from left */
+.slide-transition-pagecurldouble-r {
+} /* Double page curl from right */
+.slide-transition-pagecurlsingle {
+} /* Single page curl from left */
+.slide-transition-pagecurlsingle-r {
+} /* Single page curl from right */
+.slide-transition-curtains {
+} /* Curtain reveal */
+.slide-transition-peelOff {
+} /* Peel off corner */
